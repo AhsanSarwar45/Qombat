@@ -1,2 +1,3 @@
-# Spitfire
+# QOMBAT
+
 An RTS Game Engine
