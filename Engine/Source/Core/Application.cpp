@@ -1,5 +1,6 @@
 #include "Application.hpp"
-#include <iostream>
+
+#include "Log.hpp"
 
 namespace QMBT
 {
@@ -13,9 +14,9 @@ namespace QMBT
 
     void Application::Run()
     {
+        QMBT_CORE_INFO("Started Run Loop");
         while (true)
         {
-            std::cout << "Running\n";
         }
     }
 }

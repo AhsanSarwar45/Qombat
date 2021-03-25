@@ -1,5 +1,5 @@
 # Create the executable
-add_executable(Editor "src/Editor.cpp")
+add_executable(Editor "Source/Editor.cpp")
 
 # Link the static library from Engine
 # This will cause the include directories for that target to be added to this project
