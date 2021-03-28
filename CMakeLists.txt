@@ -1,4 +1,11 @@
-cmake_minimum_required (VERSION 3.12)
+# ===============================================
+# QOMBAT BUILD SYSTEM
+
+# This is the root CMakeLists.txt that set ups
+# the general environment.
+# ===============================================
+
+cmake_minimum_required (VERSION 3.16) #3.16 for support for precompiled headers
 
 project(Qombat)
 

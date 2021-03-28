@@ -1,3 +1,12 @@
+# ===================================================
+# QOMBAT BUILD SYSTEM
+
+# This is the CMakeLists.txt that generates the
+# actual executable for the frontend application
+# created using Qombat. The Engine is linked to it
+# as a Static Library
+# ===================================================
+
 # Create the executable
 add_executable(Editor "Source/Editor.cpp")
 

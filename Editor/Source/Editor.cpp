@@ -5,6 +5,7 @@ class Editor : public QMBT::Application
 public:
     Editor()
     {
+    
     }
     ~Editor()
     {

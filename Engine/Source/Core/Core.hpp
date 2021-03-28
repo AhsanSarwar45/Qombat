@@ -1,18 +1,18 @@
 #pragma once
 
-#include <memory>
+#include <QMBTPCH.hpp>
 
 // #ifdef QMBT_DEBUG
-// 	#define XENOS_ENABLE_ASSERTS
+// 	#define QMBT_ENABLE_ASSERTS
 // #endif
 
-// #ifdef  XENOS_ENABLE_ASSERTS
+// #ifdef  QMBT_ENABLE_ASSERTS
 // 	#define XS_ASSERT(x, ...) {if(!(x)) {XS_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak();}}
 // 	#define XS_CORE_ASSERT(x, ...) {if(!(x)) {XS_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak();}}
 // #else
 // 	#define XS_ASSERT(x, ...)
 // 	#define XS_CORE_ASSERT(x, ...)
-// #endif //  XENOS_ENABLE_ASSERTS
+// #endif //  QMBT_ENABLE_ASSERTS
 
 #define BIT(x) (1 << x)
 #define NON_COPYABLE(Type)       \

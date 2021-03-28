@@ -1,3 +1,6 @@
+// Pragma once is used instead of header guards throught the codebase as
+// they are less prone to bugs and is more convenient. The downside is that
+// we cannot have multiple files with the same name across our project
 #pragma once
 
 #include "Log.hpp"
@@ -12,7 +15,7 @@ void InitializeThirdParty()
 {
     // Initializing the Spdlog Logger
     QMBT::Logger::InitializeCoreLogger();
-    QMBT_CORE_INFO("Initialized Core Logger");
+    LOG_CORE_INFO("Initialized Core Logger");
     //QMBT::Logger::InitializeClientLogger();
 }
 
@@ -20,7 +23,7 @@ int main(int argc, char *argv[])
 {
     InitializeThirdParty();
     auto app = QMBT::CreateApplication();
-    QMBT_CORE_INFO("Initialized Application");
+    LOG_CORE_INFO("Initialized Application");
     app->Run();
     delete app;
 }
