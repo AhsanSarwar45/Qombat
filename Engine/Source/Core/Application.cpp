@@ -1,12 +1,16 @@
 #include "Application.hpp"
 
-#include "Log.hpp"
+#include "Core/Log.hpp"
 #include "Events/ApplicationEvent.hpp"
 
 namespace QMBT
 {
-    Application::Application()
+
+    Application::Application(const std::string &name)
+        : m_Name(name)
     {
+        m_Window = Window::Create(WindowProperties(name));
+        m_Window->SetEventCallback(QMBT_BIND_EVENT_FUNCTION(Application::OnEvent));
     }
 
     Application::~Application()
@@ -15,11 +19,15 @@ namespace QMBT
 
     void Application::Run()
     {
-        LOG_CORE_INFO("Started Run Loop");
-        WindowResizeEvent e(1280, 720);
-        LOG_CORE_INFO(e);
-        while (true)
+        QMBT_CORE_ASSERT(m_Window, "Window was not initialized!");
+        while (m_Running)
         {
+            m_Window->OnUpdate();
         }
+    }
+
+    void Application::OnEvent(const Event &event)
+    {
+        LOG_CORE_TRACE(event);
     }
 }

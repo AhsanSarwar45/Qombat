@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QMBTPCH.hpp>
+#include "Utility/Enums.hpp"
 
 namespace QMBT
 {
@@ -140,5 +141,10 @@ namespace QMBT
 		Menu = 348
 	};
 
-	//std::string_view GetKeyCodeString(Key::KeyCode keyCode);
+	inline std::ostream &operator<<(std::ostream &os, KeyCode keyCode)
+	{
+		return os << Utility::EnumToString(keyCode) << " (" << Utility::EnumToIntegral(keyCode) << ")"
+				  << "\n";
+	}
+
 }

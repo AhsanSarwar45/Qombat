@@ -21,6 +21,8 @@ namespace QMBT
 		//Protected constructor to inhibit creation
 		KeyEvent(KeyCode keyCode)
 			: m_KeyCode(keyCode) {}
+		KeyEvent(int keyCode)
+			: m_KeyCode(static_cast<KeyCode>(keyCode)) {}
 
 		KeyCode m_KeyCode;
 	};
@@ -28,9 +30,10 @@ namespace QMBT
 	class KeyPressedEvent : public KeyEvent
 	{
 	public:
-		KeyPressedEvent(const KeyCode keyCode, int repeatCount)
+		KeyPressedEvent(KeyCode keyCode, int repeatCount)
 			: KeyEvent(keyCode), m_RepeatCount(repeatCount) {}
-
+		KeyPressedEvent(int keyCode, int repeatCount)
+			: KeyEvent(keyCode), m_RepeatCount(repeatCount) {}
 		using RepeatCount = uint32_t;
 		inline RepeatCount GetRepeatCount() const { return m_RepeatCount; }
 
@@ -38,7 +41,7 @@ namespace QMBT
 		{
 			std::stringstream ss;
 			//Prints in the form: KeyPressedEvent: keyCode (x repeats)
-			ss << "KeyPressedEvent: " << EnumToIntegral(m_KeyCode) << " (" << m_RepeatCount << " repeats)";
+			ss << "KeyPressedEvent: " << m_KeyCode << " (" << m_RepeatCount << " repeats)";
 			return ss.str();
 		}
 
@@ -51,14 +54,15 @@ namespace QMBT
 	class KeyTypedEvent : public KeyEvent
 	{
 	public:
-		KeyTypedEvent(const KeyCode keyCode)
+		KeyTypedEvent(KeyCode keyCode)
 			: KeyEvent(keyCode) {}
-
+		KeyTypedEvent(int keyCode)
+			: KeyEvent(keyCode) {}
 		std::string ToString() const override
 		{
 			std::stringstream ss;
 			//Prints in the form: KeyTypedEvent: keyCode
-			ss << "KeyTypedEvent: " << EnumToIntegral(m_KeyCode);
+			ss << "KeyTypedEvent: " << m_KeyCode;
 			return ss.str();
 		}
 
@@ -68,14 +72,16 @@ namespace QMBT
 	class KeyReleasedEvent : public KeyEvent
 	{
 	public:
-		KeyReleasedEvent(const KeyCode keyCode)
+		KeyReleasedEvent(KeyCode keyCode)
+			: KeyEvent(keyCode) {}
+		KeyReleasedEvent(int keyCode)
 			: KeyEvent(keyCode) {}
 
 		std::string ToString() const override
 		{
 			std::stringstream ss;
 			//Prints in the form: KeyReleasedEvent: keyCode
-			ss << "KeyReleasedEvent: " << EnumToIntegral(m_KeyCode);
+			ss << "KeyReleasedEvent: " << m_KeyCode;
 			return ss.str();
 		}
 

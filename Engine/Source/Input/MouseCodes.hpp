@@ -22,4 +22,9 @@ namespace QMBT
 		ButtonMiddle = Button2
 	};
 
+	inline std::ostream &operator<<(std::ostream &os, MouseCode mouseCode)
+	{
+		return os << Utility::EnumToString(mouseCode) << " (" << Utility::EnumToIntegral(mouseCode) << ")"
+				  << "\n";
+	}
 }

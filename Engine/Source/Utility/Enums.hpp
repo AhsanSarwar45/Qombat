@@ -1,4 +1,7 @@
-#include <type_traits>
+#pragma once
+
+#include <QMBTPCH.hpp>
+#include <magic_enum.hpp>
 
 namespace QMBT
 {
@@ -32,5 +35,12 @@ namespace QMBT
          integralWritingFunction(enumIntegralValue);
          enumValue = IntegralToEnum<EnumType>(enumIntegralValue);
       }
+
+      template <typename EnumType>
+      std::string_view EnumToString(EnumType enumValue)
+      {
+         return magic_enum::enum_name(enumValue);
+      }
+
    }
 }

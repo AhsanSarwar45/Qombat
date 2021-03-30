@@ -1,0 +1,6 @@
+[submodule "Engine/Vendor/magic_enum"]
+	path = Engine/Vendor/magic_enum
+	url = https://github.com/Neargye/magic_enum
+[submodule "Engine/Vendor/glfw"]
+	path = Engine/Vendor/glfw
+	url = https://github.com/glfw/glfw

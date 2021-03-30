@@ -66,6 +66,8 @@ namespace QMBT
 	protected:
 		MouseButtonEvent(MouseCode button)
 			: m_Button(button) {}
+		MouseButtonEvent(int button)
+			: m_Button(static_cast<MouseCode>(button)) {}
 
 		MouseCode m_Button;
 	};
@@ -75,12 +77,14 @@ namespace QMBT
 	public:
 		MouseButtonClickedEvent(MouseCode button)
 			: MouseButtonEvent(button) {}
+		MouseButtonClickedEvent(int button)
+			: MouseButtonEvent(button) {}
 
 		std::string ToString() const override
 		{
 			std::stringstream ss;
 			//Prints it in the form: MouseMovedEvent: xPos, yPos
-			ss << "MouseButtonClikedEvent: " << EnumToIntegral(m_Button);
+			ss << "MouseButtonClickedEvent: " << m_Button;
 			return ss.str();
 		}
 
@@ -92,11 +96,13 @@ namespace QMBT
 	public:
 		MouseDoubleClickedEvent(MouseCode button)
 			: MouseButtonEvent(button) {}
+		MouseDoubleClickedEvent(int button)
+			: MouseButtonEvent(button) {}
 
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "MouseDoubleClickedEvent: " << EnumToIntegral(m_Button);
+			ss << "MouseDoubleClickedEvent: " << m_Button;
 			return ss.str();
 		}
 
@@ -108,11 +114,13 @@ namespace QMBT
 	public:
 		MouseButtonReleasedEvent(MouseCode button)
 			: MouseButtonEvent(button) {}
+		MouseButtonReleasedEvent(int button)
+			: MouseButtonEvent(button) {}
 
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "MouseButtonReleasedEvent: " << EnumToIntegral(m_Button);
+			ss << "MouseButtonReleasedEvent: " << m_Button;
 			return ss.str();
 		}
 

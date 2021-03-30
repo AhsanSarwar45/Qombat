@@ -23,7 +23,6 @@ int main(int argc, char *argv[])
 {
     InitializeThirdParty();
     auto app = QMBT::CreateApplication();
-    LOG_CORE_INFO("Initialized Application");
     app->Run();
     delete app;
 }

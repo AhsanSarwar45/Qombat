@@ -1,3 +1,7 @@
+#pragma once
+
+#include "Core/Core.hpp"
+#include "Display/Window.hpp"
 
 namespace QMBT
 {
@@ -5,11 +9,18 @@ namespace QMBT
     class Application
     {
     public:
-        Application();
+        Application(const std::string &name = "Application");
         virtual ~Application();
 
         // The main loop for the engine
         void Run();
+
+        void OnEvent(const Event &event);
+
+    private:
+        Scope<Window> m_Window;
+        bool m_Running = true;
+        std::string m_Name;
     };
 
     /*

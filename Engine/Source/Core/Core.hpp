@@ -1,25 +1,10 @@
 #pragma once
 
 #include <QMBTPCH.hpp>
+#include "Compatibility/DebugBreak.hpp"
+#include "Compatibility/PlatformDetection.hpp"
 
-// #ifdef QMBT_DEBUG
-// 	#define QMBT_ENABLE_ASSERTS
-// #endif
-
-// #ifdef  QMBT_ENABLE_ASSERTS
-// 	#define XS_ASSERT(x, ...) {if(!(x)) {XS_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak();}}
-// 	#define XS_CORE_ASSERT(x, ...) {if(!(x)) {XS_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak();}}
-// #else
-// 	#define XS_ASSERT(x, ...)
-// 	#define XS_CORE_ASSERT(x, ...)
-// #endif //  QMBT_ENABLE_ASSERTS
-
-#define BIT(x) (1 << x)
-#define NON_COPYABLE(Type)       \
-	Type(const Type &) = delete; \
-	Type &operator=(const Type &) = delete
-
-#define QMBT_BIND_EVENT_FN(fn) [this](auto &&...args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
+//Contains common Aliases, Macros and Helper Functions.
 
 namespace QMBT
 {
@@ -46,9 +31,69 @@ namespace QMBT
 	{
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
+
 	template <typename T>
 	bool IsUninitialized(WeakRef<T> const &weak)
 	{
 		return !weak.owner_before(WeakRef<T>{}) && !WeakRef<T>{}.owner_before(weak);
 	}
 }
+
+#ifdef QMBT_DEBUG
+#define QMBT_ENABLE_ASSERTS
+#define QMBT_ENABLE_VERIFICATION
+#endif
+
+#ifdef QMBT_ENABLE_ASSERTS
+
+#define QMBT_ASSERT(x, ...)                                  \
+	{                                                        \
+		if (!(x))                                            \
+		{                                                    \
+			LOG_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
+			debug_break();                                   \
+		}                                                    \
+	}
+#define QMBT_CORE_ASSERT(x, ...)                                  \
+	{                                                             \
+		if (!(x))                                                 \
+		{                                                         \
+			LOG_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
+			debug_break();                                        \
+		}                                                         \
+	}
+#else
+#define QMBT_ASSERT(x, ...)
+#define QMBT_CORE_ASSERT(x, ...)
+#endif //  QMBT_ENABLE_ASSERTS
+
+#ifdef QMBT_ENABLE_VERIFICATION
+
+#define QMBT_VERIFY(x, ...)                                     \
+	{                                                           \
+		if (!(x))                                               \
+		{                                                       \
+			LOG_ERROR("Verification Failed: {0}", __VA_ARGS__); \
+			debug_break();                                      \
+		}                                                       \
+	}
+#define QMBT_CORE_VERIFY(x, ...)                                     \
+	{                                                                \
+		if (!(x))                                                    \
+		{                                                            \
+			LOG_CORE_ERROR("Verification Failed: {0}", __VA_ARGS__); \
+			debug_break();                                           \
+		}                                                            \
+	}
+#else
+#define QMBT_VERIFY(x, ...) x
+#define QMBT_CORE_VERIFY(x, ...) x
+#endif //  QMBT_ENABLE_ASSERTS
+
+#define BIT(x) (1 << x)
+
+#define NON_COPYABLE(Type)       \
+	Type(const Type &) = delete; \
+	Type &operator=(const Type &) = delete
+
+#define QMBT_BIND_EVENT_FUNCTION(function) [this](auto &&...args) -> decltype(auto) { return this->function(std::forward<decltype(args)>(args)...); }
