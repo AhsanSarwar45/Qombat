@@ -69,8 +69,6 @@ namespace QMBT
 		//If set to true, the layer underneath will not get notified of the event.
 		bool m_Handled = false;
 
-		OVERLOAD_NEW("Event");
-
 	  private:
 		friend class EventDispatcher;
 	};

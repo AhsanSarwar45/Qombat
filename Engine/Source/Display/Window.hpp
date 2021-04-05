@@ -49,8 +49,6 @@ namespace QMBT
 		virtual void* GetNativeWindow() const = 0;
 
 		static Scope<Window> Create(const WindowProperties& props = WindowProperties());
-
-		OVERLOAD_NEW("Window");
 	};
 
 } // namespace QMBT
