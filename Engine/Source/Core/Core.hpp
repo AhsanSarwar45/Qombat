@@ -1,43 +1,28 @@
 #pragma once
 
 #include <QMBTPCH.hpp>
-#include "Compatibility/DebugBreak.hpp"
-#include "Compatibility/PlatformDetection.hpp"
 
-//Contains common Aliases, Macros and Helper Functions.
+#include "Core/Compatibility/DebugBreak.hpp"
+#include "Core/Compatibility/PlatformDetection.hpp"
 
-namespace QMBT
-{
-	template <typename T>
-	using Scope = std::unique_ptr<T>;
-	template <typename T, typename... Args>
-	constexpr Scope<T> CreateScope(Args &&...args)
-	{
-		return std::make_unique<T>(std::forward<Args>(args)...);
-	}
+#include "Core/Aliases.hpp"
+#include "Core/Logger.hpp"
 
-	template <typename T>
-	using Ref = std::shared_ptr<T>;
-	template <typename T, typename... Args>
-	constexpr Ref<T> CreateRef(Args &&...args)
-	{
-		return std::make_shared<T>(std::forward<Args>(args)...);
-	}
+// Contains common Aliases, Macros and Helper Functions.
 
-	template <typename T>
-	using WeakRef = std::weak_ptr<T>;
-	template <typename T, typename... Args>
-	constexpr WeakRef<T> CreateWeakRef(Args &&...args)
-	{
-		return std::make_shared<T>(std::forward<Args>(args)...);
-	}
-
-	template <typename T>
-	bool IsUninitialized(WeakRef<T> const &weak)
-	{
-		return !weak.owner_before(WeakRef<T>{}) && !WeakRef<T>{}.owner_before(weak);
-	}
-}
+#define OVERLOAD_NEW(name) \
+	// inline void* operator new(size_t size)                                           \
+	// {                                                                                \
+	// 	LOG_CORE_TRACE("Allocated {0}: {1} bytes", name, size);                      \
+	// 	return malloc(size * sizeof(char));                                          \
+	// }                                                                                \
+	// inline void operator delete(void* ptr) noexcept                                  \
+	// {                                                                                \
+	// 	LOG_CORE_TRACE("Freed {0}", name);                                           \
+	// 	std::free(ptr);                                                              \
+	// }                                                                                \
+	// inline void* operator new[](size_t size) { return malloc(size * sizeof(char)); } \
+	// inline void operator delete[](void* ptr) noexcept { std::free(ptr); }
 
 #ifdef QMBT_DEBUG
 #define QMBT_ENABLE_ASSERTS
@@ -92,8 +77,11 @@ namespace QMBT
 
 #define BIT(x) (1 << x)
 
-#define NON_COPYABLE(Type)       \
-	Type(const Type &) = delete; \
-	Type &operator=(const Type &) = delete
+#define NON_COPYABLE(Type)      \
+	Type(const Type&) = delete; \
+	Type& operator=(const Type&) = delete
 
-#define QMBT_BIND_EVENT_FUNCTION(function) [this](auto &&...args) -> decltype(auto) { return this->function(std::forward<decltype(args)>(args)...); }
+#define BIND_EVENT_FUNCTION(function)                                 \
+	[this](auto&&... args) -> decltype(auto) {                        \
+		return this->function(std::forward<decltype(args)>(args)...); \
+	}

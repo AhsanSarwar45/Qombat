@@ -2,55 +2,55 @@
 
 #include <GLFW/glfw3.h>
 
+#include "Core/Logger.hpp"
 #include "Display/Window.hpp"
 #include "Rendering/GraphicsContext.hpp"
-#include "Core/Log.hpp"
 
 namespace QMBT
 {
 
-    class LinuxWindow : public Window
-    {
-    public:
-        LinuxWindow(const WindowProperties &properties);
-        virtual ~LinuxWindow();
+	class LinuxWindow : public Window
+	{
+	  public:
+		LinuxWindow(const WindowProperties& properties);
+		virtual ~LinuxWindow();
 
-        //Update GLFW stuff, swap buffers, poll the input events
-        void OnUpdate() override;
+		//Update GLFW stuff, swap buffers, poll the input events
+		void OnUpdate() override;
 
-        inline WindowDimension GetWidth() const override { return m_Data.Width; }
-        inline WindowDimension GetHeight() const override { return m_Data.Height; }
+		inline WindowDimension GetWidth() const override { return m_Data.Width; }
+		inline WindowDimension GetHeight() const override { return m_Data.Height; }
 
-        //For multi-screen setups
-        inline WindowDimension GetWidthVirtual() const override { return m_Data.Width; }
-        inline WindowDimension GetHeightVirtual() const override { return m_Data.Height; }
+		//For multi-screen setups
+		inline WindowDimension GetWidthVirtual() const override { return m_Data.Width; }
+		inline WindowDimension GetHeightVirtual() const override { return m_Data.Height; }
 
-        // Window attributes
-        inline void SetEventCallback(const EventCallbackFunction &callback) override { m_Data.EventCallback = callback; }
-        void SetVSync(bool enabled) override;
-        bool IsVSync() const override;
+		// Window attributes
+		inline void SetEventCallback(const EventCallbackFunction& callback) override { m_Data.EventCallback = callback; }
+		void SetVSync(bool enabled) override;
+		bool IsVSync() const override;
 
-        inline virtual void *GetNativeWindow() const { return m_Window; }
+		inline virtual void* GetNativeWindow() const { return m_Window; }
 
-    private:
-        virtual void Init(const WindowProperties &properties);
-        virtual void Shutdown();
+	  private:
+		virtual void Init(const WindowProperties& properties);
+		virtual void Shutdown();
 
-    private:
-        GLFWwindow *m_Window;
-        GraphicsContext *m_Context;
+	  private:
+		GLFWwindow* m_Window;
+		Scope<GraphicsContext> m_Context;
 
-        //Struct to pass windows data to GLFW as custom user data
-        struct WindowData
-        {
-            std::string Title;
-            WindowDimension Width, Height;
-            bool VSync;
+		//Struct to pass windows data to GLFW as custom user data
+		struct WindowData
+		{
+			std::string Title;
+			WindowDimension Width, Height;
+			bool VSync;
 
-            EventCallbackFunction EventCallback;
-        };
+			EventCallbackFunction EventCallback;
+		};
 
-        WindowData m_Data;
-    };
+		WindowData m_Data;
+	};
 
-}
+} // namespace QMBT

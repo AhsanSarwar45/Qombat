@@ -43,7 +43,7 @@ namespace QMBT
 #define EVENT_CLASS_TYPE(type)                                                  \
 	static EventType GetStaticType() { return EventType::type; }                \
 	virtual EventType GetEventType() const override { return GetStaticType(); } \
-	virtual const char *GetName() const override { return #type; }
+	virtual const char* GetName() const override { return #type; }
 
 	//Macro for implementing the GetCategoryFlags() function in derived classes
 #define EVENT_CLASS_CATEGORY(category) \
@@ -54,14 +54,13 @@ namespace QMBT
 
 	class Event
 	{
-		friend class EventDispatcher;
 
-	public:
+	  public:
 		virtual EventType GetEventType() const = 0;
 		virtual int GetCategoryFlags() const = 0;
 
 		//TODO: Only intended to be used for debugging. Enclose in compiler condition.
-		virtual const char *GetName() const = 0;
+		virtual const char* GetName() const = 0;
 		inline virtual std::string ToString() const { return GetName(); }
 
 		inline bool IsInCategory(EventCategory category) { return GetCategoryFlags() & category; }
@@ -69,38 +68,48 @@ namespace QMBT
 		//Helps us control how deep down the even will be propagated.
 		//If set to true, the layer underneath will not get notified of the event.
 		bool m_Handled = false;
+
+		OVERLOAD_NEW("Event");
+
+	  private:
+		friend class EventDispatcher;
 	};
 
 	/*
 	Allows us to dispatch events based on their type. In our OnEvent function, we will receive
 	events as pointers. We do not know the category the Event belongs to. The dispatcher takes
-	care of that.	
+	care of that.
+	========
+
+	========	
 	*/
 	class EventDispatcher
 	{
 
-	public:
-		EventDispatcher(Event &event)
+	  public:
+		EventDispatcher(Event& event)
 			: m_Event(event) {}
 
 		template <typename T, typename Function>
-		inline bool Dispatch(const Function &func) // func is a callable that returns true if handled
+		inline bool Dispatch(const Function& func) // func is a callable that returns true if handled
 		{
 			if (m_Event.GetEventType() == T::GetStaticType())
 			{
-				m_Event.m_Handled = func(static_cast<T &>(m_Event));
+				m_Event.m_Handled = func(static_cast<T&>(m_Event));
 				return true;
 			}
 			return false;
 		}
 
-	private:
-		Event &m_Event;
+		OVERLOAD_NEW("Dispatcher");
+
+	  private:
+		Event& m_Event;
 	};
 
 	// For use by the logging system
-	inline std::ostream &operator<<(std::ostream &os, const Event &e)
+	inline std::ostream& operator<<(std::ostream& os, const Event& e)
 	{
 		return os << e.ToString();
 	}
-}
+} // namespace QMBT

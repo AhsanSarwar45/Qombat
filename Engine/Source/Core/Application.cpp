@@ -1,33 +1,84 @@
 #include "Application.hpp"
 
-#include "Core/Log.hpp"
+#include "Core/Logger.hpp"
 #include "Events/ApplicationEvent.hpp"
 
 namespace QMBT
 {
 
-    Application::Application(const std::string &name)
-        : m_Name(name)
-    {
-        m_Window = Window::Create(WindowProperties(name));
-        m_Window->SetEventCallback(QMBT_BIND_EVENT_FUNCTION(Application::OnEvent));
-    }
+	Application* Application::s_Instance = nullptr;
+	Application::Application(const std::string& name)
+		: m_Name(name)
+	{
+		LOG_CORE_INFO("Initialized Application {0}", m_Name);
+		s_Instance = this;
 
-    Application::~Application()
-    {
-    }
+		m_Window = Window::Create(WindowProperties(m_Name));
+		QMBT_CORE_ASSERT(m_Window, "Window was not initialized properly!");
+		m_Window->SetEventCallback(BIND_EVENT_FUNCTION(Application::OnEvent));
+	}
 
-    void Application::Run()
-    {
-        QMBT_CORE_ASSERT(m_Window, "Window was not initialized!");
-        while (m_Running)
-        {
-            m_Window->OnUpdate();
-        }
-    }
+	Application::~Application()
+	{
+	}
 
-    void Application::OnEvent(const Event &event)
-    {
-        LOG_CORE_TRACE(event);
-    }
-}
+	void Application::Run()
+	{
+		while (m_Running)
+		{
+			m_Window->OnUpdate();
+		}
+	}
+
+	// void Application::PushLayer(Layer* layer)
+	// {
+	// 	//XS_PROFILE_FUNCTION();
+	// 	LOG_CORE_INFO("Pushed Layer to Application LayerStack: {0}", layer->GetName());
+
+	// 	m_LayerStack.PushLayer(layer);
+	// 	layer->OnAttach();
+	// }
+
+	// void Application::PushOverlay(Layer* layer)
+	// {
+	// 	//XS_PROFILE_FUNCTION();
+	// 	LOG_CORE_INFO("Pushed Overlay to Application LayerStack: {0}", layer->GetName());
+
+	// 	m_LayerStack.PushOverlay(layer);
+	// 	layer->OnAttach();
+	// }
+
+	// void Application::CloseEditor()
+	// {
+	// 	LOG_CORE_INFO("Editor Closed.");
+	// 	m_Running = false;
+	// }
+
+	void Application::OnEvent(Event& event)
+	{
+		// //Create a new EventDispatcher with the received event
+		// EventDispatcher dispatcher(event);
+
+		// //If the received event is WindowCloseEvent, then OnWindowClose will be called
+		// //This is handled by the application only. Most other events are passed to the layers,
+		// //so they can do whatever they see fit
+		// dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
+		// dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
+
+		// for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
+		// {
+		// 	//Decrement the iterator and call its OnEvent
+		// 	(*--it)->OnEvent(event);
+
+		// 	//If event is handled by the current layer, donot propagate it further
+		// 	if (event.Handled)
+		// 		break;
+		// }
+	}
+
+	bool Application::OnWindowClose(const WindowCloseEvent& event)
+	{
+		m_Running = false;
+		return true;
+	}
+} // namespace QMBT

@@ -13,7 +13,7 @@ namespace QMBT
 		m_HeadPtr = malloc(m_Data->TotalSize);
 		m_Offset = 0;
 
-		LOG_CORE_INFO("Initialized {0} of size {1}", m_Data->DebugName, m_Data->TotalSize);
+		LOG_MEMORY_INFO("Initialized {0} of size {1}", m_Data->DebugName, m_Data->TotalSize);
 	}
 
 	StackAllocator::~StackAllocator()

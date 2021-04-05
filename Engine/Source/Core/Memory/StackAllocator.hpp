@@ -52,7 +52,7 @@ namespace QMBT
 
 		if (m_Offset + padding + size > m_Data->TotalSize)
 		{
-			LOG_CORE_CRITICAL("{0}: Allocation exceeded maximum size of {1}!", m_Data->DebugName, m_Data->TotalSize);
+			LOG_MEMORY_CRITICAL("{0}: Allocation exceeded maximum size of {1}!", m_Data->DebugName, m_Data->TotalSize);
 			return nullptr;
 		}
 		m_Offset += padding;
@@ -66,7 +66,7 @@ namespace QMBT
 		m_Offset += size;
 
 		m_Data->UsedSize = m_Offset;
-		LOG_CORE_INFO("{0} Allocated {1} bytes with alignment {2}", m_Data->DebugName, size, alignment);
+		LOG_MEMORY_INFO("{0} Allocated {1} bytes with alignment {2}", m_Data->DebugName, size, alignment);
 		return (Object*)nextAddress;
 	}
 
@@ -82,7 +82,7 @@ namespace QMBT
 		m_Offset = currentAddress - allocationHeader->padding - (Size)m_HeadPtr;
 		m_Data->UsedSize = m_Offset;
 
-		LOG_CORE_INFO("{0} Deallocated {1} bytes", m_Data->DebugName, initialOffset - m_Offset);
+		LOG_MEMORY_INFO("{0} Deallocated {1} bytes", m_Data->DebugName, initialOffset - m_Offset);
 	}
 
 } // namespace QMBT
