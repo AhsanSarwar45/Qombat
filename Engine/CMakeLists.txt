@@ -4,7 +4,7 @@
 # Library for the Engine, which will then be linked to the
 # to the frontend Application. 
 # ========================================================
-
+project(Engine)
 # We add all the source files manually to the library instead of 
 # GLOB/Wildcards. This is recommended by the CMake documentation.
 add_library(Engine STATIC 
@@ -13,12 +13,16 @@ add_library(Engine STATIC
 "Source/Core/Log.cpp"
 "Source/Core/Console.cpp"
 "Source/Platform/OS/Linux/LinuxWindow.cpp"
+"Source/Core/Memory/PoolAllocator.cpp"
+"Source/Core/Memory/StackAllocator.cpp"
+"Source/Core/Memory/MemoryManager.cpp"
+
 )
 
-set_target_properties(Engine PROPERTIES LINKER_LANGUAGE CXX)
-target_precompile_headers(Engine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Source/QMBTPCH.hpp")
+set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
+target_precompile_headers(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Source/QMBTPCH.hpp")
 
-target_compile_definitions(Engine
+target_compile_definitions(${PROJECT_NAME}
     PRIVATE
       _CRT_SECURE_NO_WARNINGS
     PUBLIC
@@ -29,7 +33,7 @@ target_compile_definitions(Engine
 )
 
 
-target_include_directories(Engine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Source")
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Source")
 
 # =======================================================
 # Appending to CMAKE_PREFIX_PATH for vendor libraries
@@ -43,7 +47,7 @@ target_include_directories(Engine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Source")
 # =======================================================
 # Including vendor libraries
 # =======================================================
-target_include_directories(Engine PUBLIC "${CMAKE_SOURCE_DIR}/Vendor")
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_SOURCE_DIR}/Vendor")
 
 # =======================================================
 # Adding libraries with CMakeLists.txt as subdirectories
@@ -55,9 +59,9 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/glfw")
 # =======================================================
 # Linking vendor libraries
 # =======================================================
-target_link_libraries(Engine PUBLIC spdlog::spdlog)
-target_link_libraries(Engine PRIVATE magic_enum::magic_enum)
-target_link_libraries(Engine PRIVATE glfw)
+target_link_libraries(${PROJECT_NAME} PUBLIC spdlog::spdlog)
+target_link_libraries(${PROJECT_NAME} PRIVATE magic_enum::magic_enum)
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
 
 
 
