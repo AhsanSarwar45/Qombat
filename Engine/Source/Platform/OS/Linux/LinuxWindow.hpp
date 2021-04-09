@@ -2,7 +2,7 @@
 
 #include <GLFW/glfw3.h>
 
-#include "Core/Logger.hpp"
+#include "Core/Logging/Logger.hpp"
 #include "Display/Window.hpp"
 #include "Rendering/GraphicsContext.hpp"
 

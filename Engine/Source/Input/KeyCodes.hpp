@@ -1,11 +1,13 @@
 #pragma once
 
 #include <QMBTPCH.hpp>
+
+#include "Core/Aliases.hpp"
 #include "Utility/Enums.hpp"
 
 namespace QMBT
 {
-	enum class KeyCode : uint16_t
+	enum class KeyCode : UInt16
 	{
 		// From glfw3.h
 		Space = 32 ,

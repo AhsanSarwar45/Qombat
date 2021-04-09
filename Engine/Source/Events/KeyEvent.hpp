@@ -18,7 +18,7 @@ namespace QMBT
 		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 
 	protected:
-		//Protected constructor to inhibit creation
+		//Protected constructor to inhibit direct creation
 		KeyEvent(KeyCode keyCode)
 			: m_KeyCode(keyCode) {}
 		KeyEvent(int keyCode)

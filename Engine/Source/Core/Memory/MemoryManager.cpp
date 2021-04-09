@@ -7,7 +7,7 @@ namespace QMBT
 		static MemoryManager* s_MemoryManager = nullptr;
 		if (s_MemoryManager == nullptr)
 		{
-			s_MemoryManager = new MemoryManager(MB(500));
+			s_MemoryManager = new MemoryManager(500_MB);
 			LOG_MEMORY_INFO("Instantiated Memory Manager with total memory budget of {0} bytes ({1} MB)",
 							s_MemoryManager->GetApplicationMemoryBudget(),
 							ToMB(s_MemoryManager->GetApplicationMemoryBudget()));

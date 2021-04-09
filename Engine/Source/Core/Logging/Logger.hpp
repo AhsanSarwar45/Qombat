@@ -9,14 +9,11 @@
 
 #include <Core/Aliases.hpp>
 
-#define LOG_CORE 1
-#define LOG_MEMORY 0
-#define LOG_INITIALIZATION 0
-
 namespace QMBT
 {
 	class Console; // Forward declaration
 
+	
 	class Logger
 	{
 	  public:

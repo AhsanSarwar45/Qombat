@@ -19,36 +19,9 @@ namespace QMBT
 
 	using ULLInt = unsigned long long int;
 
-	inline Size operator"" _KB(ULLInt x) { return 1024 * x; }
-	inline Size operator"" _MB(ULLInt x) { return 1024 * 1024 * x; }
-	inline Size operator"" _GB(ULLInt x) { return 1024 * 1024 * 1024 * x; }
-
-	constexpr Size Bits(Size x)
-	{
-		return 8 * x;
-	}
-	constexpr Size Kb(Size x)
-	{
-		return 8 * 1024 * x;
-	}
-	constexpr Size Mb(Size x)
-	{
-		return 8 * 1024 * 1024 * x;
-	}
-	// ToGb gives integer overflow with type "Size"
-
-	constexpr Size KB(Size x)
-	{
-		return 1024 * x;
-	}
-	constexpr Size MB(Size x)
-	{
-		return 1024 * 1024 * x;
-	}
-	constexpr Size GB(Size x)
-	{
-		return 1024 * 1024 * 1024 * x;
-	}
+	constexpr inline Size operator"" _KB(ULLInt x) { return 1024 * x; }
+	constexpr inline Size operator"" _MB(ULLInt x) { return 1024 * 1024 * x; }
+	constexpr inline Size operator"" _GB(ULLInt x) { return 1024 * 1024 * 1024 * x; }
 
 	constexpr Size ToKB(Size x)
 	{

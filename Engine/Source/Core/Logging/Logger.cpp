@@ -2,17 +2,18 @@
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
-#include <Core/Console.hpp>
+#include "Core/Logging/Console.hpp"
 
 namespace QMBT
 {
+
 	std::shared_ptr<spdlog::logger> Logger::s_CoreLogger;
 	std::shared_ptr<spdlog::logger> Logger::s_MemoryLogger;
 	std::shared_ptr<spdlog::logger> Logger::s_AppLogger;
 	std::shared_ptr<spdlog::logger> Logger::s_ClientLogger;
 
 	bool Logger::s_LogCoreOn = true;
-	bool Logger::s_LogMemoryOn = false;
+	bool Logger::s_LogMemoryOn = true;
 	bool Logger::s_LogAppOn = true;
 
 	const char* Logger::s_Pattern = "%^[%T] %n: %v%$";

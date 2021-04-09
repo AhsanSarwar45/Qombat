@@ -1,18 +1,39 @@
 #include <QMBT.hpp>
 
-class Editor : public QMBT::Application
+class TestLayer : public QMBT::Layer
 {
-public:
-    Editor()
-        : Application("QCreate")
-    {
-    }
-    ~Editor()
-    {
-    }
+  public:
+	TestLayer()
+		: Layer("Test Layer")
+	{
+	}
+
+	void OnUpdate(const QMBT::TimeStep& timeStep) override
+	{
+		LOG_CORE_INFO("Update App");
+	}
+
+	void OnEvent(QMBT::Event& event) override
+	{
+		LOG_CORE_INFO("QCreate {0}", event);
+	}
 };
 
-QMBT::Application *QMBT::CreateApplication()
+class Editor : public QMBT::Application
 {
-    return new Editor();
+  public:
+	Editor()
+		: Application("QCreate")
+	{
+		TestLayer* testLayer = m_LayerStackAllocator.New<TestLayer>();
+		PushLayer(testLayer);
+	}
+	~Editor()
+	{
+	}
+};
+
+QMBT::Application* QMBT::CreateApplication()
+{
+	return new Editor();
 }

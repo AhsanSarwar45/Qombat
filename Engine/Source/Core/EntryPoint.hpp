@@ -4,8 +4,7 @@
 #pragma once
 
 #include "Core/Core.hpp"
-// #include "Core/Memory/PoolAllocator.hpp"
-// #include "Core/Memory/StackAllocator.hpp"
+#include "Core/Testing.hpp"
 
 /*
 This functions is defined in the client. It will
@@ -13,41 +12,6 @@ return a new instance of a custom class inherited from Application.
 */
 extern QMBT::Application*
 QMBT::CreateApplication();
-
-// namespace QMBT
-// {
-// 	struct TestingPools
-// 	{
-
-// 		char a = 'g';
-// 		double b = 5;
-// 		int c;
-// 	};
-
-// 	void TestMemory()
-// 	{
-// 		StackAllocator allocator = StackAllocator("Stack Allocator");
-
-// 		TestingPools* objects[10];
-// 		for (int i = 0; i < 8; ++i)
-// 		{
-// 			objects[i] = allocator.Allocate<TestingPools>();
-// 			objects[i]->a = 'a' + i;
-// 			objects[i]->b = i;
-// 		}
-
-// 		for (int i = 0; i < 8; ++i)
-// 		{
-// 			LOG_CORE_INFO("Info {0}, {1}, {2}", objects[i]->a, objects[i]->b, objects[i]->c);
-// 		}
-
-// 		for (int i = 7; i >= 0; --i)
-// 		{
-// 			allocator.Deallocate<TestingPools>(objects[i]);
-// 		}
-// 	}
-
-// } // namespace QMBT
 
 void LogSystemInfo()
 {
@@ -63,7 +27,7 @@ int main(int argc, char* argv[])
 {
 	QMBT::Logger::InitializeEngineLoggers();
 
-	//QMBT::TestMemory();
+	QMBT::Test();
 
 	LogSystemInfo();
 

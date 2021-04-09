@@ -10,12 +10,13 @@ project(Engine)
 add_library(Engine STATIC 
 "Source/QMBT.hpp"
 "Source/Core/Application.cpp"
-"Source/Core/Logger.cpp"
-"Source/Core/Console.cpp"
+"Source/Core/Logging/Logger.cpp"
+"Source/Core/Logging/Console.cpp"
 "Source/Platform/OS/Linux/LinuxWindow.cpp"
 "Source/Core/Memory/StackAllocator.cpp"
 "Source/Core/Memory/MemoryManager.cpp"
 "Source/Core/LayerStack.cpp"
+"Source/Core/Layer.cpp"
 "Source/Core/Configuration/ConfigManager.cpp"
 
 )

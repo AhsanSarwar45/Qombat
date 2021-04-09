@@ -2,9 +2,10 @@
 
 #include "Core/Core.hpp"
 
+
 namespace QMBT
 {
-	enum class EventType : uint8_t
+	enum class EventType : UInt8
 	{
 		None = 0,
 		WindowClosed,
@@ -67,7 +68,7 @@ namespace QMBT
 
 		//Helps us control how deep down the even will be propagated.
 		//If set to true, the layer underneath will not get notified of the event.
-		bool m_Handled = false;
+		bool m_IsHandled = false;
 
 	  private:
 		friend class EventDispatcher;
@@ -93,7 +94,7 @@ namespace QMBT
 		{
 			if (m_Event.GetEventType() == T::GetStaticType())
 			{
-				m_Event.m_Handled = func(static_cast<T&>(m_Event));
+				m_Event.m_IsHandled = func(static_cast<T&>(m_Event));
 				return true;
 			}
 			return false;

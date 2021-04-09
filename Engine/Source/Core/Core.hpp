@@ -6,7 +6,7 @@
 #include "Core/Compatibility/PlatformDetection.hpp"
 
 #include "Core/Aliases.hpp"
-#include "Core/Logger.hpp"
+#include "Core/Logging/Logger.hpp"
 
 // Contains common Aliases, Macros and Helper Functions.
 
