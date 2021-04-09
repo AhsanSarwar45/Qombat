@@ -1,5 +1,7 @@
 #include "LinuxWindow.hpp"
-#include "QMBTPCH.hpp"
+#include <QMBTPCH.hpp>
+
+#include <glad/glad.h>
 
 #include "Events/ApplicationEvent.hpp"
 #include "Events/KeyEvent.hpp"
@@ -37,9 +39,11 @@ namespace QMBT
 		}
 
 		m_Window = glfwCreateWindow(static_cast<int>(properties.Width), static_cast<int>(properties.Height), m_Data.Title.c_str(), nullptr, nullptr);
-
+		glfwMakeContextCurrent(m_Window);
 		//m_Context = new OpenGLContext(m_Window);
 		//m_Context->Init();
+
+		QMBT_CORE_VERIFY(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Could not initialize GLAD!");
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);

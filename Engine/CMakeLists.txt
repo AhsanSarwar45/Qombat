@@ -27,12 +27,14 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/S
 target_compile_definitions(${PROJECT_NAME}
     PRIVATE
       _CRT_SECURE_NO_WARNINGS
+      GLFW_INCLUDE_NONE
     PUBLIC
       $<$<CONFIG:Debug>:QMBT_DEBUG>
       $<$<CONFIG:RelWithDebInfo>:QMBT_DEBUG>
       $<$<CONFIG:Release>:QMBT_RELEASE>
       $<$<CONFIG:MinSizeRel>:QMBT_RELEASE>
 )
+
 
 
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Source")
@@ -57,6 +59,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_SOURCE_DIR}/Vendor")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/spdlog")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/magic_enum")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/glfw")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/glad")
 
 # =======================================================
 # Linking vendor libraries
@@ -64,6 +67,7 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/glfw")
 target_link_libraries(${PROJECT_NAME} PUBLIC spdlog::spdlog)
 target_link_libraries(${PROJECT_NAME} PRIVATE magic_enum::magic_enum)
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
+target_link_libraries(${PROJECT_NAME} PRIVATE glad)
 
 
 

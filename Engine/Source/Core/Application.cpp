@@ -56,7 +56,7 @@ namespace QMBT
 		//If the received event is WindowCloseEvent, then OnWindowClose will be called
 		//This is handled by the application only. Most other events are passed to the layers,
 		//so they can do whatever they see fit
-		//dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNCTION(OnWindowClose));
+		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNCTION(OnWindowClose));
 		//dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FUNCTION(OnWindowResize));
 
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
@@ -70,8 +70,9 @@ namespace QMBT
 		}
 	}
 
-	bool Application::OnWindowClose(const WindowCloseEvent& event)
+		bool Application::OnWindowClose(const WindowCloseEvent& event)
 	{
+		LOG_CORE_INFO("Window Closed");
 		m_Running = false;
 		return true;
 	}

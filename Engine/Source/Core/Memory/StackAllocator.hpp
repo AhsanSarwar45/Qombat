@@ -28,7 +28,7 @@ namespace QMBT
 		Object* New(Args... argList);
 
 		template <typename Object>
-		void Deallocate(Object* chunk);
+		void Deallocate(Object* ptr);
 
 	  private:
 		//StackAllocator(StackAllocator& stackAllocator); //Restrict copying
@@ -52,17 +52,18 @@ namespace QMBT
 	}
 
 	template <typename Object>
-	void StackAllocator::Deallocate(Object* chunk)
+	void StackAllocator::Deallocate(Object* ptr)
 	{
 		const Size initialOffset = m_Offset;
 		// Move offset back to clear address
-		const Size currentAddress = (Size)chunk;
+		const Size currentAddress = (Size)ptr;
 		const Size headerAddress = currentAddress - sizeof(AllocationHeader);
 		const AllocationHeader* allocationHeader{(AllocationHeader*)headerAddress};
 
 		m_Offset = currentAddress - allocationHeader->padding - (Size)m_HeadPtr;
 		m_Data->UsedSize = m_Offset;
 
+		ptr->~Object();
 		LOG_MEMORY_INFO("{0} Deallocated {1} bytes", m_Data->DebugName, initialOffset - m_Offset);
 	}
 

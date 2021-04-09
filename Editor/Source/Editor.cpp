@@ -25,12 +25,15 @@ class Editor : public QMBT::Application
 	Editor()
 		: Application("QCreate")
 	{
-		TestLayer* testLayer = m_LayerStackAllocator.New<TestLayer>();
-		PushLayer(testLayer);
+		m_TestLayer = m_LayerStackAllocator.New<TestLayer>();
+		PushLayer(m_TestLayer);
 	}
 	~Editor()
 	{
+		m_LayerStackAllocator.Deallocate<TestLayer>(m_TestLayer);
 	}
+
+	TestLayer* m_TestLayer;
 };
 
 QMBT::Application* QMBT::CreateApplication()
