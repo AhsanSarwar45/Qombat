@@ -12,24 +12,26 @@ namespace QMBT
 	{
 	  public:
 		StackAllocator() = delete;
-		StackAllocator(const StackAllocator&) = delete;
-		StackAllocator(StackAllocator&&) = delete;
+		// StackAllocator(const StackAllocator&) = delete;
+		// StackAllocator(StackAllocator&&) = delete;
 
-		StackAllocator& operator=(const StackAllocator&) = delete;
-		StackAllocator& operator=(StackAllocator&&) = delete;
+		// StackAllocator& operator=(const StackAllocator&) = delete;
+		// StackAllocator& operator=(StackAllocator&&) = delete;
 
 		StackAllocator(const std::string& debugName = "Allocator", const Size totalSize = 50_MB);
 
 		~StackAllocator();
 
-		template <typename Object>
-		Object* Allocate(const Size alignment = 8);
+		void* Allocate(const Size size, const Size alignment = 8);
+
+		template <typename Object, typename... Args>
+		Object* New(Args... argList);
 
 		template <typename Object>
 		void Deallocate(Object* chunk);
 
 	  private:
-		StackAllocator(StackAllocator& stackAllocator); //Restrict copying
+		//StackAllocator(StackAllocator& stackAllocator); //Restrict copying
 
 		Ref<AllocatorData> m_Data;
 
@@ -42,32 +44,11 @@ namespace QMBT
 		};
 	};
 
-	template <typename Object>
-	Object* StackAllocator::Allocate(const Size alignment)
+	template <typename Object, typename... Args>
+	Object* StackAllocator::New(Args... argList)
 	{
-		const Size size = sizeof(Object);
-		const Size currentAddress = (Size)m_HeadPtr + m_Offset;
-
-		Size padding = Utils::CalculatePaddingWithHeader(currentAddress, alignment, sizeof(AllocationHeader));
-
-		if (m_Offset + padding + size > m_Data->TotalSize)
-		{
-			LOG_MEMORY_CRITICAL("{0}: Allocation exceeded maximum size of {1}!", m_Data->DebugName, m_Data->TotalSize);
-			return nullptr;
-		}
-		m_Offset += padding;
-
-		const Size nextAddress = currentAddress + padding;
-		const Size headerAddress = nextAddress - sizeof(AllocationHeader);
-		AllocationHeader allocationHeader{padding};
-		AllocationHeader* headerPtr = (AllocationHeader*)headerAddress;
-		headerPtr = &allocationHeader;
-
-		m_Offset += size;
-
-		m_Data->UsedSize = m_Offset;
-		LOG_MEMORY_INFO("{0} Allocated {1} bytes with alignment {2}", m_Data->DebugName, size, alignment);
-		return (Object*)nextAddress;
+		void* address = Allocate(sizeof(Object));
+		return new (address) Object(argList...);
 	}
 
 	template <typename Object>
