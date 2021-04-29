@@ -18,7 +18,6 @@ add_library(Engine STATIC
 "Source/Core/LayerStack.cpp"
 "Source/Core/Layer.cpp"
 "Source/Core/Configuration/ConfigManager.cpp"
-
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
@@ -68,6 +67,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC spdlog::spdlog)
 target_link_libraries(${PROJECT_NAME} PUBLIC magic_enum::magic_enum)
 target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
 target_link_libraries(${PROJECT_NAME} PUBLIC glad)
+
+
+
 
 
 
