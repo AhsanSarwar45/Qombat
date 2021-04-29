@@ -7,7 +7,7 @@
 #include "Events/KeyEvent.hpp"
 #include "Events/MouseEvent.hpp"
 
-#include "Platform/RenderAPIs/OpenGL/OpenGLContext.hpp"
+#include "Rendering/OpenGL/OpenGLContext.hpp"
 
 namespace QMBT
 {
@@ -198,11 +198,6 @@ namespace QMBT
 		}
 
 		m_Data.VSync = enabled;
-	}
-
-	bool LinuxWindow::IsVSync() const
-	{
-		return m_Data.VSync;
 	}
 
 } // namespace QMBT

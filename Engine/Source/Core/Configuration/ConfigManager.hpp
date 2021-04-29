@@ -74,7 +74,7 @@ namespace QMBT
 		static void SetConfigString(const char* groupName, const char* configName, const std::string& value);
 
 	  private:
-		inline static ConfigGroupMap m_ConfigGroupMap;
+		static inline ConfigGroupMap m_ConfigGroupMap;
 	};
 
 	template <typename... Args>

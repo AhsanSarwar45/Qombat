@@ -3,12 +3,13 @@
 #include "Core/Logging/Logger.hpp"
 #include "Events/ApplicationEvent.hpp"
 
+#include "glad/glad.h"
 namespace QMBT
 {
 
 	Application* Application::s_Instance = nullptr;
 	Application::Application(const std::string& name)
-		: m_Name(name), m_LayerStackAllocator(StackAllocator("LayerStack Allocator"))
+		: m_Name(name), m_LayerStackAllocator("LayerStack Allocator")
 	{
 		LOG_CORE_INFO("Initialized Application {0}", m_Name);
 		s_Instance = this;
@@ -26,6 +27,21 @@ namespace QMBT
 	{
 		while (m_Running)
 		{
+			float time = m_Window->GetTime();
+			TimeStep timeStep = time - m_LastFrameTime;
+			m_LastFrameTime = time;
+
+			if (!m_Minimized)
+			{
+				glClearColor(0, 0, 0, 1);
+				glClear(GL_COLOR_BUFFER_BIT);
+
+				for (Layer* layer : m_LayerStack)
+				{
+					layer->OnUpdate(timeStep);
+				}
+			}
+
 			m_Window->OnUpdate();
 		}
 	}
@@ -65,12 +81,12 @@ namespace QMBT
 			(*--it)->OnEvent(event);
 
 			//If event is handled by the current layer, do not propagate it further
-			if (event.m_IsHandled)
+			if (event.IsHandled)
 				break;
 		}
 	}
 
-		bool Application::OnWindowClose(const WindowCloseEvent& event)
+	bool Application::OnWindowClose(const WindowCloseEvent& event)
 	{
 		LOG_CORE_INFO("Window Closed");
 		m_Running = false;

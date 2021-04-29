@@ -12,7 +12,7 @@ add_library(Engine STATIC
 "Source/Core/Application.cpp"
 "Source/Core/Logging/Logger.cpp"
 "Source/Core/Logging/Console.cpp"
-"Source/Platform/OS/Linux/LinuxWindow.cpp"
+"Source/Display/Linux/LinuxWindow.cpp"
 "Source/Core/Memory/StackAllocator.cpp"
 "Source/Core/Memory/MemoryManager.cpp"
 "Source/Core/LayerStack.cpp"
@@ -51,7 +51,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/S
 # =======================================================
 # Including vendor libraries
 # =======================================================
-target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_SOURCE_DIR}/Vendor")
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/Vendor")
 
 # =======================================================
 # Adding libraries with CMakeLists.txt as subdirectories
@@ -65,9 +65,9 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/glad")
 # Linking vendor libraries
 # =======================================================
 target_link_libraries(${PROJECT_NAME} PUBLIC spdlog::spdlog)
-target_link_libraries(${PROJECT_NAME} PRIVATE magic_enum::magic_enum)
-target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
-target_link_libraries(${PROJECT_NAME} PRIVATE glad)
+target_link_libraries(${PROJECT_NAME} PUBLIC magic_enum::magic_enum)
+target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
+target_link_libraries(${PROJECT_NAME} PUBLIC glad)
 
 
 

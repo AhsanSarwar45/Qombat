@@ -28,7 +28,9 @@ namespace QMBT
 		// Window attributes
 		inline void SetEventCallback(const EventCallbackFunction& callback) override { m_Data.EventCallback = callback; }
 		void SetVSync(bool enabled) override;
-		bool IsVSync() const override;
+		inline bool IsVSync() const override { return m_Data.VSync; }
+
+		inline float GetTime() const override { return static_cast<float>(glfwGetTime()); }
 
 		inline virtual void* GetNativeWindow() const { return m_Window; }
 

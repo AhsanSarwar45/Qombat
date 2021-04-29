@@ -10,8 +10,7 @@
 This functions is defined in the client. It will
 return a new instance of a custom class inherited from Application.
 */
-extern QMBT::Application*
-QMBT::CreateApplication();
+extern QMBT::Application* QMBT::CreateApplication();
 
 void LogSystemInfo()
 {
@@ -27,7 +26,7 @@ int main(int argc, char* argv[])
 {
 	QMBT::Logger::InitializeEngineLoggers();
 
-	QMBT::Test();
+	//QMBT::Test();
 
 	LogSystemInfo();
 

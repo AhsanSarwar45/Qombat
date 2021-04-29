@@ -7,3 +7,7 @@
 [submodule "Engine/Vendor/spdlog"]
 	path = Engine/Vendor/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "Editor/Vendor/imgui"]
+	path = Editor/Vendor/imgui
+	url = https://github.com/AhsanSarwar45/imgui
+	branch = docking

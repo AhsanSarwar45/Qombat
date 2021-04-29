@@ -19,7 +19,6 @@ namespace QMBT
 		inline virtual void OnAttach() {}
 		inline virtual void OnDetach() {}
 		inline virtual void OnUpdate(const TimeStep& timeStep) {}
-		inline virtual void OnImGuiRender() {}
 		inline virtual void OnEvent(Event& event) {}
 
 		inline const std::string& GetName() const { return m_DebugName; }

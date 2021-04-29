@@ -49,4 +49,17 @@ namespace QMBT
 		return (void*)nextAddress;
 	}
 
+	void StackAllocator::Deallocate(const Size ptr)
+	{
+		const Size initialOffset = m_Offset;
+		// Move offset back to clear address
+		const Size headerAddress = ptr - sizeof(AllocationHeader);
+		const AllocationHeader* allocationHeader{(AllocationHeader*)headerAddress};
+
+		m_Offset = ptr - allocationHeader->padding - (Size)m_HeadPtr;
+		m_Data->UsedSize = m_Offset;
+
+		LOG_MEMORY_INFO("{0} Deallocated {1} bytes", m_Data->DebugName, initialOffset - m_Offset);
+	}
+
 } // namespace QMBT
