@@ -9,6 +9,7 @@
 #include <functional>
 #include <memory>
 #include <mutex>
+#include <random>
 #include <thread>
 #include <type_traits>
 #include <utility>

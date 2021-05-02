@@ -14,6 +14,7 @@ add_executable(${PROJECT_NAME}
 "Source/Editor.cpp"
 "Source/Panels/PanelManager.cpp"
 "Source/Panels/TestPanel.cpp"
+"Source/Panels/ProfilerPanel.cpp"
 "Source/ImGui/ImGuiLayer.cpp"
 "Vendor/imgui/imgui.cpp"
 "Vendor/imgui/imgui_draw.cpp"
@@ -22,9 +23,12 @@ add_executable(${PROJECT_NAME}
 "Vendor/imgui/imgui_widgets.cpp"
 "Source/ImGui/OpenGL/ImGuiOpenGL.cpp"
 "Source/ImGui/GLFW/ImGuiGLFW.cpp"
+"Source/ImGui/Utility/Colors.cpp"
+
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Source")
+
 
 target_compile_definitions(${PROJECT_NAME}
     PRIVATE
@@ -37,6 +41,7 @@ target_compile_definitions(${PROJECT_NAME}
 # Including vendor libraries
 # =======================================================
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Vendor")
+
 
 # Link the static library from Engine
 # This will cause the include directories for that target to be added to this project

@@ -4,7 +4,7 @@
 
 namespace QMBT
 {
-	namespace Utils
+	namespace Utility
 	{
 		inline const Size CalculatePadding(const Size baseAddress, const Size alignment)
 		{
@@ -37,5 +37,5 @@ namespace QMBT
 
 			return padding;
 		}
-	} // namespace Utils
+	} // namespace Utility
 } // namespace QMBT

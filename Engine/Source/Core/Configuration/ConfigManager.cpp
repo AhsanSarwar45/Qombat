@@ -10,7 +10,7 @@ namespace QMBT
 			m_Ranged = true;
 		}
 
-		m_NameHash = GenerateHash(name);
+		m_NameHash = Utility::GenerateHash(name);
 	}
 
 	void ConfigInt::SetData(int data)
@@ -37,7 +37,7 @@ namespace QMBT
 		: m_Data(dataReference), m_Name(name), m_Description(description)
 	{
 
-		m_NameHash = GenerateHash(name);
+		m_NameHash = Utility::GenerateHash(name);
 	}
 
 	void ConfigManager::Register(const UInt32 groupHash, const ConfigVariant& configVar)
@@ -50,10 +50,10 @@ namespace QMBT
 
 	void ConfigManager::SetConfigInt(const char* groupName, const char* configName, int value)
 	{
-		auto groupHash = GenerateHash(groupName);
+		auto groupHash = Utility::GenerateHash(groupName);
 		QMBT_CORE_ASSERT(m_ConfigGroupMap.find(groupHash) != m_ConfigGroupMap.end(), "Group does not exist!");
 
-		auto nameHash = GenerateHash(configName);
+		auto nameHash = Utility::GenerateHash(configName);
 		QMBT_CORE_ASSERT(m_ConfigGroupMap[groupHash].find(nameHash) != m_ConfigGroupMap[groupHash].end(), "Config variable doesnot exist!");
 
 		std::get<ConfigInt>(*m_ConfigGroupMap[groupHash][nameHash]).SetData(value);
@@ -61,10 +61,10 @@ namespace QMBT
 
 	void ConfigManager::SetConfigString(const char* groupName, const char* configName, const std::string& value)
 	{
-		auto groupHash = GenerateHash(groupName);
+		auto groupHash = Utility::GenerateHash(groupName);
 		QMBT_CORE_ASSERT(m_ConfigGroupMap.find(groupHash) != m_ConfigGroupMap.end(), "Group does not exist!");
 
-		auto nameHash = GenerateHash(configName);
+		auto nameHash = Utility::GenerateHash(configName);
 		QMBT_CORE_ASSERT(m_ConfigGroupMap[groupHash].find(nameHash) != m_ConfigGroupMap[groupHash].end(), "Config variable doesnot exist!");
 
 		std::get<ConfigString>(*m_ConfigGroupMap[groupHash][nameHash]).SetData(value);

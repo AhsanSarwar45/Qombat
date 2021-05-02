@@ -16,6 +16,8 @@ namespace QMBT
 			: DebugName(debugName), TotalSize(totalSize), UsedSize(0) {}
 	};
 
+	using AllocatorVector = std::vector<Ref<AllocatorData>>;
+
 	class MemoryManager
 	{
 	  public:
@@ -28,15 +30,16 @@ namespace QMBT
 		void Register(Ref<AllocatorData> allocatorData);
 		void UnRegister(Ref<AllocatorData> allocatorData);
 
-		inline void UpdateTotalSize(Size size) { m_TotalSizeAllocated += size; }
+		inline void UpdateTotalSize(Size size) { m_TotalAllocatedSize += size; }
 
 		Size GetUsedAllocatedSize() const;
-		inline Size GetTotalSizeAllocated() const { return m_TotalSizeAllocated; }
+		inline Size GetTotalAllocatedSize() const { return m_TotalAllocatedSize; }
 		inline Size GetApplicationMemoryBudget() const { return m_ApplicationBudget; }
+		inline const AllocatorVector& GetAllocators() const { return allocators; }
 
 	  private:
-		std::vector<Ref<AllocatorData>> allocators;
+		AllocatorVector allocators;
 		Size m_ApplicationBudget;
-		Size m_TotalSizeAllocated;
+		Size m_TotalAllocatedSize;
 	};
 } // namespace QMBT

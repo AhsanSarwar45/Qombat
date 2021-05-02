@@ -1,6 +1,6 @@
-#include <QMBT.hpp>
+#include <Qombat/Core.hpp>
 
-#include <Core/EntryPoint.hpp>
+#include <EntryPoint.hpp>
 
 #include "ImGui/ImGuiLayer.hpp"
 
@@ -39,8 +39,14 @@ class Editor : public QMBT::Application
 	}
 	~Editor()
 	{
-		m_LayerStackAllocator.Delete(m_TestLayer);
+		/*
+		 ! If you are going to use the StackAllocator, either just 
+		 ! delete the layer you added first, or delete them in the reverse order 
+		 ! in which you added them
+		*/
+
 		m_LayerStackAllocator.Delete(m_ImGuiLayer);
+		m_LayerStackAllocator.Delete(m_TestLayer);
 	}
 
 	TestLayer* m_TestLayer;

@@ -8,7 +8,6 @@ project(Engine)
 # We add all the source files manually to the library instead of 
 # GLOB/Wildcards. This is recommended by the CMake documentation.
 add_library(Engine STATIC 
-"Source/QMBT.hpp"
 "Source/Core/Application.cpp"
 "Source/Core/Logging/Logger.cpp"
 "Source/Core/Logging/Console.cpp"
@@ -35,8 +34,11 @@ target_compile_definitions(${PROJECT_NAME}
 )
 
 
-
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Source")
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Source/Core/EntryPoint")
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Include")
+
+
 
 # =======================================================
 # Appending to CMAKE_PREFIX_PATH for vendor libraries
@@ -59,6 +61,8 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/spdlog")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/magic_enum")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/glfw")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/glad")
+
+
 
 # =======================================================
 # Linking vendor libraries

@@ -20,23 +20,8 @@ namespace QMBT
 	using ULLInt = unsigned long long int;
 
 	constexpr inline Size operator"" _KB(ULLInt x) { return 1024 * x; }
-	constexpr inline Size operator"" _MB(ULLInt x) { return 1024 * 1024 * x; }
-	constexpr inline Size operator"" _GB(ULLInt x) { return 1024 * 1024 * 1024 * x; }
-
-	constexpr Size ToKB(Size x)
-	{
-		return x / 1024;
-	}
-
-	constexpr Size ToMB(Size x)
-	{
-		return ToKB(x) / 1024;
-	}
-
-	constexpr Size ToGB(Size x)
-	{
-		return ToMB(x) / 1024;
-	}
+	constexpr inline Size operator"" _MB(ULLInt x) { return 1048576 * x; }
+	constexpr inline Size operator"" _GB(ULLInt x) { return 1073741824 * x; }
 
 	template <typename T>
 	using Scope = std::unique_ptr<T>;

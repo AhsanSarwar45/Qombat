@@ -4,7 +4,6 @@
 #pragma once
 
 #include "Core/Core.hpp"
-#include "Core/Testing.hpp"
 
 /*
 This functions is defined in the client. It will

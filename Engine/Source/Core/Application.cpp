@@ -4,6 +4,7 @@
 #include "Events/ApplicationEvent.hpp"
 
 #include "glad/glad.h"
+
 namespace QMBT
 {
 

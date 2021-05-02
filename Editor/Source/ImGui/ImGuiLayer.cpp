@@ -2,10 +2,8 @@
 
 #include <imgui/imgui.h>
 
-#include <ImGui/GLFW/ImGuiGLFW.hpp>
-#include <ImGui/OpenGL/ImGuiOpenGL.hpp>
-
-#include <Core/Application.hpp>
+#include "ImGui/GLFW/ImGuiGLFW.hpp"
+#include "ImGui/OpenGL/ImGuiOpenGL.hpp"
 
 // TEMPORARY
 #include <GLFW/glfw3.h>
@@ -21,8 +19,10 @@ namespace QCreate
 
 	void ImGuiLayer::OnAttach()
 	{
+
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
+
 		ImGuiIO& io = ImGui::GetIO();
 		(void)io;
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
@@ -57,7 +57,11 @@ namespace QCreate
 	{
 		BeginFrame();
 
+		SetUpDockspace();
+
+		ImGui::ShowDemoWindow();
 		m_TestPanel.Draw();
+		m_ProfilerPanel.Draw();
 
 		EndFrame();
 	}
@@ -103,6 +107,56 @@ namespace QCreate
 			e.IsHandled |= e.IsInCategory(QMBT::EventCategoryMouse) & io.WantCaptureMouse;
 			e.IsHandled |= e.IsInCategory(QMBT::EventCategoryKeyboard) & io.WantCaptureKeyboard;
 		}
+	}
+
+	void ImGuiLayer::SetUpDockspace()
+	{
+		static bool dockSpaceOpen = true;
+		static bool opt_fullscreen = true;
+		static bool opt_padding = false;
+		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+
+		// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
+		// because it would be confusing to have two docking targets within each others.
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+		if (opt_fullscreen)
+		{
+			ImGuiViewport* viewport = ImGui::GetMainViewport();
+			ImGui::SetNextWindowPos(viewport->WorkPos);
+			ImGui::SetNextWindowSize(viewport->WorkSize);
+			ImGui::SetNextWindowViewport(viewport->ID);
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+			window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+			window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+		}
+		else
+		{
+			dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
+		}
+
+		if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+			window_flags |= ImGuiWindowFlags_NoBackground;
+
+		if (!opt_padding)
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+		ImGui::Begin("DockSpace Demo", &dockSpaceOpen, window_flags);
+		if (!opt_padding)
+			ImGui::PopStyleVar();
+
+		if (opt_fullscreen)
+			ImGui::PopStyleVar(2);
+
+		// DockSpace
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+		{
+			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+		}
+
+		ImGui::End();
 	}
 
 	void ImGuiLayer::SetDarkThemeColors()

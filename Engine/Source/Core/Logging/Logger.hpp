@@ -2,7 +2,9 @@
 
 #include <QMBTPCH.hpp>
 
+#ifndef SPDLOG_ACTIVE_LEVEL
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+#endif
 
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
@@ -13,7 +15,6 @@ namespace QMBT
 {
 	class Console; // Forward declaration
 
-	
 	class Logger
 	{
 	  public:
