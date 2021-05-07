@@ -1,241 +1,278 @@
 #pragma once
 
-#include "Core/Core.hpp"
-#include "Core/Log.hpp"
+#include "QMBTPCH.hpp"
+
+#include "Core/Aliases.hpp"
+#include "Core/Logging/Logger.hpp"
+#include "Core/Macros.hpp"
 
 namespace QMBT
 {
 
-    using FloatingPointMicroseconds = std::chrono::duration<double, std::micro>;
+	enum class ProfileCategory : UInt8
+	{
+		Layers,
+		Rendering,
+		Physics,
+		Other
+	};
 
-    struct ProfileResult
-    {
-        std::string Name;
+	using FloatingPointMicroseconds = std::chrono::duration<double, std::micro>;
 
-        FloatingPointMicroseconds Start;
-        std::chrono::microseconds ElapsedTime;
-        std::thread::id ThreadID;
-    };
+	struct ProfileData
+	{
+		std::string Name;
+		ProfileCategory Category;
+		double StartTime;
+		double EndTime;
+		double ElapsedTime;
+		std::thread::id ThreadID;
+	};
 
-    struct InstrumentationSession
-    {
-        std::string Name;
-    };
+	struct Frame
+	{
+		std::vector<Ref<ProfileData>> Data;
+	};
 
-    class Instrumentor
-    {
-    public:
-        Instrumentor(const Instrumentor &) = delete;
-        Instrumentor(Instrumentor &&) = delete;
+	struct InstrumentationSession
+	{
+		std::string Name;
+	};
 
-        void BeginSession(const std::string &name, const std::string &filepath = "results.json")
-        {
-            std::lock_guard<std::mutex> lock(m_Mutex); // For thread safety
-            if (m_CurrentSession)
-            {
-                // If there is already a current session, then close it before beginning new one.
-                // Subsequent profiling output meant for the original session will end up in the
-                // newly opened session instead.  That's better than having badly formatted
-                // profiling output.
-                if (Logger::GetCoreLogger()) // Edge case: BeginSession() might be before Log::Init()
-                {
-                    LOG_CORE_ERROR("Instrumentor::BeginSession('{0}') when session '{1}' already open.", name, m_CurrentSession->Name);
-                }
-                InternalEndSession();
-            }
+	using TimesArray = std::array<std::vector<float>, static_cast<int>(ProfileCategory::Other) + 1>;
 
-            m_OutputStream.open(filepath);
+	// Singleton class
+	class Instrumentor
+	{
+	  public:
+		Instrumentor(const Instrumentor&) = delete;
+		Instrumentor(Instrumentor&&) = delete;
 
-            if (m_OutputStream.is_open())
-            {
-                m_CurrentSession = new InstrumentationSession({name});
-                WriteHeader();
-            }
-            else
-            {
-                if (Logger::GetCoreLogger()) // Edge case: BeginSession() might be before Log::Init()
-                {
-                    LOG_CORE_ERROR("Instrumentor could not open results file '{0}'.", filepath);
-                }
-            }
-        }
+		void BeginSession()
+		{
+			std::lock_guard<std::mutex> lock(m_Mutex);
 
-        void EndSession()
-        {
-            std::lock_guard<std::mutex> lock(m_Mutex);
-            InternalEndSession();
-        }
+			if (m_CurrentSession)
+			{
+				// If there is already a current session, then close it before beginning new one.
+				// Subsequent profiling output meant for the original session will end up in the
+				// newly opened session instead.  That's better than having badly formatted
+				// profiling output.
+				if (Logger::GetCoreLogger()) // Edge case: BeginSession() might be before Log::Init()
+				{
+					LOG_CORE_ERROR("Instrumentor::BeginSession() when session one already open.");
+				}
+				InternalEndSession();
+			}
 
-        void WriteProfile(const ProfileResult &result)
-        {
-            std::stringstream json;
+			m_CurrentSession = new InstrumentationSession();
+			for (auto& vec : m_Times)
+			{
+				vec.clear();
+			}
+			m_Frames.clear();
 
-            json << std::setprecision(3) << std::fixed;
-            json << ",{";
-            json << "\"cat\":\"function\",";
-            json << "\"dur\":" << (result.ElapsedTime.count()) << ',';
-            json << "\"name\":\"" << result.Name << "\",";
-            json << "\"ph\":\"X\",";
-            json << "\"pid\":0,";
-            json << "\"tid\":" << result.ThreadID << ",";
-            json << "\"ts\":" << result.Start.count();
-            json << "}";
+			m_Recording = true;
+			m_SessionStartTime = FloatingPointMicroseconds{std::chrono::steady_clock::now().time_since_epoch()}.count();
+		}
 
-            std::lock_guard<std::mutex> lock(m_Mutex);
-            if (m_CurrentSession)
-            {
-                m_OutputStream << json.str();
-                m_OutputStream.flush();
-            }
-        }
+		void EndSession()
+		{
+			std::lock_guard<std::mutex> lock(m_Mutex);
+			InternalEndSession();
+		}
 
-        static Instrumentor &Get()
-        {
-            static Instrumentor instance;
-            return instance;
-        }
+		void AddProfile(ProfileData data)
+		{
+			data.StartTime -= m_SessionStartTime; // Normalize the time, making it the time from the start of the session
+			data.EndTime -= m_SessionStartTime;
+			m_Frames.back().Data.push_back(std::make_shared<ProfileData>(data));
+		}
 
-    private:
-        Instrumentor()
-            : m_CurrentSession(nullptr)
-        {
-        }
+		void EndFrame()
+		{
+			if (m_Recording)
+			{
+				Frame* frame = &m_Frames.back();
+				UInt64 size = m_Frames.size();
 
-        ~Instrumentor()
-        {
-            EndSession();
-        }
+				for (auto& data : frame->Data)
+				{
+					// Update the time of the category of the current frame (size - 1)
+					m_Times[static_cast<UInt8>(data->Category)][size - 1] += data->ElapsedTime;
+				}
+			}
+		}
 
-        void WriteHeader()
-        {
-            m_OutputStream << "{\"otherData\": {},\"traceEvents\":[{}";
-            m_OutputStream.flush();
-        }
+		void BeginFrame()
+		{
+			if (m_Recording)
+			{
+				m_Frames.push_back(Frame{});
 
-        void WriteFooter()
-        {
-            m_OutputStream << "]}";
-            m_OutputStream.flush();
-        }
+				for (auto& vec : m_Times)
+				{
+					vec.push_back(0);
+				}
+			}
+		}
 
-        // Note: you must already own lock on m_Mutex before
-        // calling InternalEndSession()
-        void InternalEndSession()
-        {
-            if (m_CurrentSession)
-            {
-                WriteFooter();
-                m_OutputStream.close();
-                delete m_CurrentSession;
-                m_CurrentSession = nullptr;
-            }
-        }
+		bool IsRecording() const { return m_Recording; }
 
-    private:
-        std::mutex m_Mutex;
-        InstrumentationSession *m_CurrentSession;
-        std::ofstream m_OutputStream;
-    };
+		void Pause() { m_Recording = false; }
 
-    class InstrumentationTimer
-    {
-    public:
-        InstrumentationTimer(const char *name)
-            : m_Name(name), m_Stopped(false)
-        {
-            m_StartTimepoint = std::chrono::steady_clock::now();
-        }
+		std::vector<Frame>* GetFrames()
+		{
+			return &m_Frames;
+		}
 
-        ~InstrumentationTimer()
-        {
-            if (!m_Stopped)
-                Stop();
-        }
+		TimesArray* GetTimes() { return &m_Times; }
 
-        void Stop()
-        {
-            auto endTimepoint = std::chrono::steady_clock::now();
-            auto highResStart = FloatingPointMicroseconds{m_StartTimepoint.time_since_epoch()};
-            auto elapsedTime = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch() - std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTimepoint).time_since_epoch();
+		static Instrumentor&
+		Get()
+		{
+			static Instrumentor instance;
+			return instance;
+		}
 
-            Instrumentor::Get().WriteProfile({m_Name, highResStart, elapsedTime, std::this_thread::get_id()});
+	  private:
+		Instrumentor()
+			: m_CurrentSession(nullptr)
+		{
+		}
 
-            m_Stopped = true;
-        }
+		~Instrumentor()
+		{
+			EndSession();
+		}
 
-    private:
-        const char *m_Name;
-        std::chrono::time_point<std::chrono::steady_clock> m_StartTimepoint;
-        bool m_Stopped;
-    };
+		// Note: you must already own lock on m_Mutex before
+		// calling InternalEndSession()
+		void InternalEndSession()
+		{
+			if (m_CurrentSession)
+			{
+				delete m_CurrentSession;
+				m_CurrentSession = nullptr;
+				m_Recording = false;
+			}
+		}
 
-    namespace InstrumentorUtils
-    {
+	  private:
+		std::mutex m_Mutex;
+		InstrumentationSession* m_CurrentSession;
+		TimesArray m_Times;
+		std::vector<Frame> m_Frames;
+		double m_SessionStartTime;
+		bool m_Recording;
+	};
 
-        template <size_t N>
-        struct ChangeResult
-        {
-            char Data[N];
-        };
+	class InstrumentationTimer
+	{
+	  public:
+		InstrumentationTimer(const char* name, ProfileCategory category = ProfileCategory::Other)
+			: m_Name(name), m_Category(category), m_Stopped(false)
+		{
+			m_StartTime = FloatingPointMicroseconds{std::chrono::steady_clock::now().time_since_epoch()}.count();
+		}
 
-        template <size_t N, size_t K>
-        constexpr auto CleanupOutputString(const char (&expr)[N], const char (&remove)[K])
-        {
-            ChangeResult<N> result = {};
+		~InstrumentationTimer()
+		{
+			if (!m_Stopped)
+			{
+				double endTime = FloatingPointMicroseconds{std::chrono::steady_clock::now().time_since_epoch()}.count();
+				Instrumentor::Get()
+					.AddProfile({
+						m_Name,
+						m_Category,
+						m_StartTime,
+						endTime,
+						endTime - m_StartTime,
+						std::this_thread::get_id(),
+					});
+				m_Stopped = true;
+			}
+		}
 
-            size_t srcIndex = 0;
-            size_t dstIndex = 0;
-            while (srcIndex < N)
-            {
-                size_t matchIndex = 0;
-                while (matchIndex < K - 1 && srcIndex + matchIndex < N - 1 && expr[srcIndex + matchIndex] == remove[matchIndex])
-                    matchIndex++;
-                if (matchIndex == K - 1)
-                    srcIndex += matchIndex;
-                result.Data[dstIndex++] = expr[srcIndex] == '"' ? '\'' : expr[srcIndex];
-                srcIndex++;
-            }
-            return result;
-        }
-    }
-}
+	  private:
+		bool m_Stopped;
+		const char* m_Name;
+		double m_StartTime;
+		ProfileCategory m_Category;
+	};
+
+	namespace InstrumentorUtils
+	{
+
+		template <size_t N>
+		struct ChangeResult
+		{
+			char Data[N];
+		};
+
+		template <size_t N, size_t K>
+		constexpr auto CleanupOutputString(const char (&expr)[N], const char (&remove)[K])
+		{
+			ChangeResult<N> result = {};
+
+			size_t srcIndex = 0;
+			size_t dstIndex = 0;
+			while (srcIndex < N)
+			{
+				size_t matchIndex = 0;
+				while (matchIndex < K - 1 && srcIndex + matchIndex < N - 1 && expr[srcIndex + matchIndex] == remove[matchIndex])
+					matchIndex++;
+				if (matchIndex == K - 1)
+					srcIndex += matchIndex;
+				result.Data[dstIndex++] = expr[srcIndex] == '"' ? '\'' : expr[srcIndex];
+				srcIndex++;
+			}
+			return result;
+		}
+	} // namespace InstrumentorUtils
+} // namespace QMBT
 
 #define QMBT_PROFILE 1
 #if QMBT_PROFILE
-// Resolve which function signature macro will be used. Note that this only
-// is resolved when the (pre)compiler starts, so the syntax highlighting
-// could mark the wrong one in your editor!
 
-// GCC / Metroworks / Intel C/C++ / Green Hill C/C++
-#if defined(__GNUC__) || (defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) || (defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)
-#define QMBT_FUNC_SIG __PRETTY_FUNCTION__
-#elif defined(__DMC__) && (__DMC__ >= 0x810) // Digital Mars
-#define QMBT_FUNC_SIG __PRETTY_FUNCTION__
-#elif (defined(__FUNCSIG__) || (_MSC_VER)) // Microsoft Visual C++
-#define QMBT_FUNC_SIG __FUNCSIG__
-#elif (defined(__INTEL_COMPILER) && (__INTEL_COMPILER >= 600)) || (defined(__IBMCPP__) && (__IBMCPP__ >= 500)) // Intel C/C++ / IBM Compilers
-#define QMBT_FUNC_SIG __FUNCTION__
-#elif defined(__BORLANDC__) && (__BORLANDC__ >= 0x550) // Borland C++
-#define QMBT_FUNC_SIG __FUNC__
-#elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901) // C Standard is >= C99(199901)
-#define QMBT_FUNC_SIG __func__
-#elif defined(__cplusplus) && (__cplusplus >= 201103) // C++ Standard is >= C++11(201103)
-#define QMBT_FUNC_SIG __func__
-#else
-#define QMBT_FUNC_SIG "QMBT_FUNC_SIG unknown!"
-#endif
+#define PROFILE_SCOPE_LINE_INTERNAL2(name, line)                                                           \
+                                                                                                           \
+	if (::QMBT::Instrumentor::Get().IsRecording())                                                         \
+	{                                                                                                      \
+		constexpr auto fixedName##line = ::QMBT::InstrumentorUtils::CleanupOutputString(name, "__cdecl "); \
+		::QMBT::InstrumentationTimer timer##line(fixedName##line.Data);                                    \
+	}
+#define PROFILE_SCOPE_LINE_INTERNAL3(name, line, group)                                                    \
+                                                                                                           \
+	if (::QMBT::Instrumentor::Get().IsRecording())                                                         \
+	{                                                                                                      \
+		constexpr auto fixedName##line = ::QMBT::InstrumentorUtils::CleanupOutputString(name, "__cdecl "); \
+		::QMBT::InstrumentationTimer timer##line(fixedName##line.Data, group);                             \
+	}
 
-#define PROFILE_BEGIN_SESSION(name, filepath) ::QMBT::Instrumentor::Get().BeginSession(name, filepath)
-#define PROFILE_END_SESSION() ::QMBT::Instrumentor::Get().EndSession()
-#define PROFILE_SCOPE_LINE2(name, line)                                                                \
-    constexpr auto fixedName##line = ::QMBT::InstrumentorUtils::CleanupOutputString(name, "__cdecl "); \
-    ::QMBT::InstrumentationTimer timer##line(fixedName##line.Data)
-#define PROFILE_SCOPE_LINE(name, line) PROFILE_SCOPE_LINE2(name, line)
-#define PROFILE_SCOPE(name) PROFILE_SCOPE_LINE(name, __LINE__)
-#define PROFILE_FUNCTION() PROFILE_SCOPE(QMBT_FUNC_SIG)
+#define PROFILE_SCOPE_LINE_INTERNAL(...)                                                 \
+	GET_MACRO_3(__VA_ARGS__, PROFILE_SCOPE_LINE_INTERNAL3, PROFILE_SCOPE_LINE_INTERNAL2) \
+	(__VA_ARGS__)
+
+#define PROFILE_SCOPE_LINE2(name, line) PROFILE_SCOPE_LINE_INTERNAL(name, line)
+#define PROFILE_SCOPE_LINE3(name, line, group) PROFILE_SCOPE_LINE_INTERNAL(name, line, group)
+#define PROFILE_SCOPE_LINE(...)                                        \
+	GET_MACRO_3(__VA_ARGS__, PROFILE_SCOPE_LINE3, PROFILE_SCOPE_LINE2) \
+	(__VA_ARGS__)
+
+#define PROFILE_SCOPE2(name) PROFILE_SCOPE_LINE(name, __LINE__)
+#define PROFILE_SCOPE3(name, group) PROFILE_SCOPE_LINE(name, __LINE__, group)
+#define PROFILE_SCOPE(...)                                   \
+	GET_MACRO_2(__VA_ARGS__, PROFILE_SCOPE3, PROFILE_SCOPE2) \
+	(__VA_ARGS__)
+
+#define PROFILE_FUNCTION2() PROFILE_SCOPE(QMBT_FUNC_SIG)
+#define PROFILE_FUNCTION3(group) PROFILE_SCOPE(QMBT_FUNC_SIG, group)
+#define PROFILE_FUNCTION(...)                                                        \
+	GET_MACRO_1(_0 __VA_OPT__(, ) __VA_ARGS__, PROFILE_FUNCTION3, PROFILE_FUNCTION2) \
+	(__VA_ARGS__)
 #else
-#define PROFILE_BEGIN_SESSION(name, filepath)
-#define PROFILE_END_SESSION()
 #define PROFILE_SCOPE(name)
 #define PROFILE_FUNCTION()
+
 #endif

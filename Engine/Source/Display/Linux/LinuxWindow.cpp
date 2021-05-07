@@ -180,6 +180,7 @@ namespace QMBT
 
 	void LinuxWindow::OnUpdate()
 	{
+		PROFILE_FUNCTION();
 		//Process all pending events
 		glfwPollEvents();
 		glfwSwapBuffers(m_Window);

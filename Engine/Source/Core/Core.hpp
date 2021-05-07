@@ -4,25 +4,14 @@
 
 #include "Core/Compatibility/DebugBreak.hpp"
 #include "Core/Compatibility/PlatformDetection.hpp"
+#include "Core/Compatibility/PrettyFunction.hpp"
 
 #include "Core/Aliases.hpp"
 #include "Core/Logging/Logger.hpp"
+#include "Core/Macros.hpp"
+#include "Debug/Instrumentation.hpp"
 
 // Contains common Aliases, Macros and Helper Functions.
-
-#define OVERLOAD_NEW(name) \
-	// inline void* operator new(size_t size)                                           \
-	// {                                                                                \
-	// 	LOG_CORE_TRACE("Allocated {0}: {1} bytes", name, size);                      \
-	// 	return malloc(size * sizeof(char));                                          \
-	// }                                                                                \
-	// inline void operator delete(void* ptr) noexcept                                  \
-	// {                                                                                \
-	// 	LOG_CORE_TRACE("Freed {0}", name);                                           \
-	// 	std::free(ptr);                                                              \
-	// }                                                                                \
-	// inline void* operator new[](size_t size) { return malloc(size * sizeof(char)); } \
-	// inline void operator delete[](void* ptr) noexcept { std::free(ptr); }
 
 #ifdef QMBT_DEBUG
 #define QMBT_ENABLE_ASSERTS
@@ -76,12 +65,3 @@
 #endif //  QMBT_ENABLE_ASSERTS
 
 #define BIT(x) (1 << x)
-
-#define NON_COPYABLE(Type)      \
-	Type(const Type&) = delete; \
-	Type& operator=(const Type&) = delete
-
-#define BIND_EVENT_FUNCTION(function)                                 \
-	[this](auto&&... args) -> decltype(auto) {                        \
-		return this->function(std::forward<decltype(args)>(args)...); \
-	}

@@ -1,6 +1,7 @@
 #include "ImGuiLayer.hpp"
 
 #include <imgui/imgui.h>
+#include <implot/implot.h>
 
 #include "ImGui/GLFW/ImGuiGLFW.hpp"
 #include "ImGui/OpenGL/ImGuiOpenGL.hpp"
@@ -21,7 +22,9 @@ namespace QCreate
 	{
 
 		IMGUI_CHECKVERSION();
+
 		ImGui::CreateContext();
+		ImPlot::CreateContext();
 
 		ImGuiIO& io = ImGui::GetIO();
 		(void)io;
@@ -59,7 +62,8 @@ namespace QCreate
 
 		SetUpDockspace();
 
-		ImGui::ShowDemoWindow();
+		ImPlot::ShowDemoWindow();
+
 		m_TestPanel.Draw();
 		m_ProfilerPanel.Draw();
 
@@ -70,6 +74,8 @@ namespace QCreate
 	{
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
+
+		ImPlot::DestroyContext();
 		ImGui::DestroyContext();
 	}
 

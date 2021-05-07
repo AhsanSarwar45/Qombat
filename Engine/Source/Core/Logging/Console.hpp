@@ -6,7 +6,6 @@
 
 #include "Core/Core.hpp"
 
-
 namespace QMBT
 {
 
@@ -32,8 +31,6 @@ namespace QMBT
 		inline void Clear() { std::deque<Ref<Log>>().swap(*m_Logs); }
 
 		inline Ref<std::deque<Ref<Log>>> GetLogs() const { return m_Logs; }
-
-		OVERLOAD_NEW("Console");
 
 	  private:
 		void Initialize();
@@ -71,8 +68,6 @@ namespace spdlog::sinks
 		{
 			m_Console = console;
 		}
-
-		OVERLOAD_NEW("Console Sink");
 
 	  protected:
 		// log_msg is a struct containing the log entry info like level, timestamp, thread id etc.

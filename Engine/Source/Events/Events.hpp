@@ -99,8 +99,6 @@ namespace QMBT
 			return false;
 		}
 
-		OVERLOAD_NEW("Dispatcher");
-
 	  private:
 		Event& m_Event;
 	};

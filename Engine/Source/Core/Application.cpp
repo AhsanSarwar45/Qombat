@@ -26,6 +26,7 @@ namespace QMBT
 
 	void Application::Run()
 	{
+
 		while (m_Running)
 		{
 			float time = m_Window->GetTime();
@@ -34,6 +35,7 @@ namespace QMBT
 
 			if (!m_Minimized)
 			{
+
 				glClearColor(0, 0, 0, 1);
 				glClear(GL_COLOR_BUFFER_BIT);
 

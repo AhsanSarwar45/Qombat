@@ -20,5 +20,6 @@ namespace QCreate
 	  private:
 		UInt16 m_BarHeight;
 		RandomColors m_Colors;
+		std::vector<Frame>* m_Frames;
 	};
 } // namespace QCreate

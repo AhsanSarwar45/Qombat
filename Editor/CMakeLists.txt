@@ -16,14 +16,19 @@ add_executable(${PROJECT_NAME}
 "Source/Panels/TestPanel.cpp"
 "Source/Panels/ProfilerPanel.cpp"
 "Source/ImGui/ImGuiLayer.cpp"
+"Source/ImGui/OpenGL/ImGuiOpenGL.cpp"
+"Source/ImGui/GLFW/ImGuiGLFW.cpp"
+"Source/ImGui/Utility/Colors.cpp"
+
 "Vendor/imgui/imgui.cpp"
 "Vendor/imgui/imgui_draw.cpp"
 "Vendor/imgui/imgui_demo.cpp"
 "Vendor/imgui/imgui_tables.cpp"
 "Vendor/imgui/imgui_widgets.cpp"
-"Source/ImGui/OpenGL/ImGuiOpenGL.cpp"
-"Source/ImGui/GLFW/ImGuiGLFW.cpp"
-"Source/ImGui/Utility/Colors.cpp"
+
+"Vendor/implot/implot.cpp"
+"Vendor/implot/implot_items.cpp"
+"Vendor/implot/implot_demo.cpp"
 
 )
 
