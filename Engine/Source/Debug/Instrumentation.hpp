@@ -29,6 +29,8 @@ namespace QMBT
 		std::thread::id ThreadID;
 	};
 
+	using AddCallback = std::function<void(ProfileData*)>;
+
 	struct Frame
 	{
 		std::vector<Ref<ProfileData>> Data;
@@ -73,6 +75,7 @@ namespace QMBT
 			m_Frames.clear();
 
 			m_Recording = true;
+			m_Paused = false;
 			m_SessionStartTime = FloatingPointMicroseconds{std::chrono::steady_clock::now().time_since_epoch()}.count();
 		}
 
@@ -86,12 +89,18 @@ namespace QMBT
 		{
 			data.StartTime -= m_SessionStartTime; // Normalize the time, making it the time from the start of the session
 			data.EndTime -= m_SessionStartTime;
-			m_Frames.back().Data.push_back(std::make_shared<ProfileData>(data));
+			Ref<ProfileData> dataPtr = std::make_shared<ProfileData>(data);
+			m_Frames.back().Data.push_back(dataPtr);
+
+			// for (auto& func : m_AddCallbacks)
+			// {
+			// 	func(dataPtr.get());
+			// }
 		}
 
 		void EndFrame()
 		{
-			if (m_Recording)
+			if (IsRecording())
 			{
 				Frame* frame = &m_Frames.back();
 				UInt64 size = m_Frames.size();
@@ -106,7 +115,7 @@ namespace QMBT
 
 		void BeginFrame()
 		{
-			if (m_Recording)
+			if (IsRecording())
 			{
 				m_Frames.push_back(Frame{});
 
@@ -117,9 +126,27 @@ namespace QMBT
 			}
 		}
 
-		bool IsRecording() const { return m_Recording; }
+		inline void RegisterAddCallback(AddCallback callback)
+		{
+			m_AddCallbacks.push_back(callback);
+		}
 
-		void Pause() { m_Recording = false; }
+		inline bool IsRecording() const
+		{
+			return m_Recording && !m_Paused;
+		}
+		inline bool IsStopped() const
+		{
+			return !m_Recording;
+		}
+		inline bool IsPaused() const
+		{
+			return m_Paused;
+		}
+
+		void Pause() { m_Paused = true; }
+
+		void Resume() { m_Paused = false; }
 
 		std::vector<Frame>* GetFrames()
 		{
@@ -163,39 +190,36 @@ namespace QMBT
 		InstrumentationSession* m_CurrentSession;
 		TimesArray m_Times;
 		std::vector<Frame> m_Frames;
+		std::vector<AddCallback> m_AddCallbacks;
 		double m_SessionStartTime;
 		bool m_Recording;
+		bool m_Paused;
 	};
 
 	class InstrumentationTimer
 	{
 	  public:
 		InstrumentationTimer(const char* name, ProfileCategory category = ProfileCategory::Other)
-			: m_Name(name), m_Category(category), m_Stopped(false)
+			: m_Name(name), m_Category(category)
 		{
 			m_StartTime = FloatingPointMicroseconds{std::chrono::steady_clock::now().time_since_epoch()}.count();
 		}
 
 		~InstrumentationTimer()
 		{
-			if (!m_Stopped)
-			{
-				double endTime = FloatingPointMicroseconds{std::chrono::steady_clock::now().time_since_epoch()}.count();
-				Instrumentor::Get()
-					.AddProfile({
-						m_Name,
-						m_Category,
-						m_StartTime,
-						endTime,
-						endTime - m_StartTime,
-						std::this_thread::get_id(),
-					});
-				m_Stopped = true;
-			}
+			double endTime = FloatingPointMicroseconds{std::chrono::steady_clock::now().time_since_epoch()}.count();
+			Instrumentor::Get()
+				.AddProfile({
+					m_Name,
+					m_Category,
+					m_StartTime,
+					endTime,
+					endTime - m_StartTime,
+					std::this_thread::get_id(),
+				});
 		}
 
 	  private:
-		bool m_Stopped;
 		const char* m_Name;
 		double m_StartTime;
 		ProfileCategory m_Category;

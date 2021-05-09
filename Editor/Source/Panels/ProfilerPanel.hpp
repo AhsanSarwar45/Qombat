@@ -1,7 +1,9 @@
 #include <vector>
 
-#include <Qombat/Core.hpp>
 #include <imgui/imgui.h>
+
+#include <Qombat/Core.hpp>
+#include <Qombat/Events.hpp>
 
 #include "ImGui/Utility/Colors.hpp"
 
@@ -16,10 +18,19 @@ namespace QCreate
 		~ProfilerPanel();
 
 		void Draw();
+		void OnEvent(Event& event);
+
+	  private:
+		void SetFrameData();
+		bool OnMouseScroll(MouseScrolledEvent& event);
 
 	  private:
 		UInt16 m_BarHeight;
 		RandomColors m_Colors;
 		std::vector<Frame>* m_Frames;
+		std::vector<std::vector<ProfileData*>> m_FrameData;
+		Frame* m_SelectedFrame;
+		double m_FrameMarkerPos;
+		float m_FrameAnalyserZoom = 200;
 	};
 } // namespace QCreate

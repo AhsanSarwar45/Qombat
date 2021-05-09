@@ -62,6 +62,7 @@ namespace QCreate
 
 		SetUpDockspace();
 
+		ImGui::ShowDemoWindow();
 		ImPlot::ShowDemoWindow();
 
 		m_TestPanel.Draw();
@@ -105,13 +106,14 @@ namespace QCreate
 		}
 	}
 
-	void ImGuiLayer::OnEvent(QMBT::Event& e)
+	void ImGuiLayer::OnEvent(QMBT::Event& event)
 	{
+		m_ProfilerPanel.OnEvent(event);
 		if (m_BlockEvents)
 		{
 			ImGuiIO& io = ImGui::GetIO();
-			e.IsHandled |= e.IsInCategory(QMBT::EventCategoryMouse) & io.WantCaptureMouse;
-			e.IsHandled |= e.IsInCategory(QMBT::EventCategoryKeyboard) & io.WantCaptureKeyboard;
+			event.IsHandled |= event.IsInCategory(QMBT::EventCategoryMouse) & io.WantCaptureMouse;
+			event.IsHandled |= event.IsInCategory(QMBT::EventCategoryKeyboard) & io.WantCaptureKeyboard;
 		}
 	}
 

@@ -31,8 +31,9 @@ namespace QMBT
 		void OnEvent(Event& event);
 
 		void PushLayer(Layer* layer);
-
 		void PushOverlay(Layer* layer);
+
+		void PushEditorLayer(Layer* layer);
 
 		inline static Application& Get() { return *s_Instance; }
 		inline Window& GetWindow() { return *m_Window; }
@@ -42,12 +43,14 @@ namespace QMBT
 
 	  protected:
 		StackAllocator m_LayerStackAllocator;
+		//StackAllocator m_EditorLayerStackAllocator;
 
 	  private:
 		static Application* s_Instance;
 
 		Scope<Window> m_Window;
 		LayerStack m_LayerStack;
+		//LayerStack m_EditorLayerStack;
 
 		bool m_Running = true;
 		bool m_Minimized = false;

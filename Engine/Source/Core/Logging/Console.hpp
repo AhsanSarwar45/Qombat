@@ -64,7 +64,7 @@ namespace spdlog::sinks
 	{
 
 	  public:
-		explicit ConsoleSink(QMBT::Ref<QMBT::Console> console)
+		explicit ConsoleSink(Ref<QMBT::Console> console)
 		{
 			m_Console = console;
 		}
@@ -90,7 +90,7 @@ namespace spdlog::sinks
 		}
 
 	  private:
-		QMBT::Ref<QMBT::Console> m_Console;
+		Ref<QMBT::Console> m_Console;
 	};
 } // namespace spdlog::sinks
 
@@ -99,7 +99,7 @@ namespace spdlog
 	// A Factory for the multi threaded version of the CustomSink
 	// Multi-threaded version is slower than a single-threaded version due to thread locking but is thread-safe
 	template <typename Factory = synchronous_factory>
-	inline std::shared_ptr<logger> ConsoleSink_mt(const std::string& logger_name, QMBT::Ref<QMBT::Console> console)
+	inline std::shared_ptr<logger> ConsoleSink_mt(const std::string& logger_name, Ref<QMBT::Console> console)
 	{
 		return Factory::template create<sinks::ConsoleSink<std::mutex>>(logger_name, console);
 	}

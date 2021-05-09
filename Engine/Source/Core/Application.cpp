@@ -51,7 +51,7 @@ namespace QMBT
 
 	void Application::PushLayer(Layer* layer)
 	{
-		//XS_PROFILE_FUNCTION();
+		PROFILE_FUNCTION();
 		LOG_CORE_INFO("Pushed Layer to Application LayerStack: {0}", layer->GetName());
 
 		m_LayerStack.PushLayer(layer);
@@ -60,7 +60,7 @@ namespace QMBT
 
 	void Application::PushOverlay(Layer* layer)
 	{
-		//XS_PROFILE_FUNCTION();
+		PROFILE_FUNCTION();
 		LOG_CORE_INFO("Pushed Overlay to Application LayerStack: {0}", layer->GetName());
 
 		m_LayerStack.PushOverlay(layer);
@@ -69,6 +69,7 @@ namespace QMBT
 
 	void Application::OnEvent(Event& event)
 	{
+		PROFILE_FUNCTION();
 		//Create a new EventDispatcher with the received event
 		EventDispatcher dispatcher(event);
 

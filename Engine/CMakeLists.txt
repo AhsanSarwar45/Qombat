@@ -11,12 +11,15 @@ add_library(Engine STATIC
 "Source/Core/Application.cpp"
 "Source/Core/Logging/Logger.cpp"
 "Source/Core/Logging/Console.cpp"
-"Source/Display/Linux/LinuxWindow.cpp"
 "Source/Core/Memory/StackAllocator.cpp"
 "Source/Core/Memory/MemoryManager.cpp"
 "Source/Core/LayerStack.cpp"
 "Source/Core/Layer.cpp"
 "Source/Core/Configuration/ConfigManager.cpp"
+
+"Source/Display/Linux/LinuxWindow.cpp"
+
+"Source/Input/Linux/LinuxInput.cpp"
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
