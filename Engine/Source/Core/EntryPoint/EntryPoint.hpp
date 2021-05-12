@@ -1,6 +1,9 @@
-// Pragma once is used instead of header guards throught the codebase as
-// they are less prone to bugs and is more convenient. The downside is that
-// we cannot have multiple files with the same name across our project
+/* 
+Pragma once is used instead of header guards throught the codebase as
+they are less prone to bugs and is more convenient and often provide much
+faster build times. The downside is that we cannot have multiple files 
+with the same name across our project.
+*/
 #pragma once
 
 #include "Core/Core.hpp"

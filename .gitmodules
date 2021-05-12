@@ -17,3 +17,6 @@
 [submodule "Editor/Vendor/implot"]
 	path = Editor/Vendor/implot
 	url = https://github.com/epezent/implot
+[submodule "Tests/Vendor/Catch2"]
+	path = Tests/Vendor/Catch2
+	url = https://github.com/catchorg/Catch2
