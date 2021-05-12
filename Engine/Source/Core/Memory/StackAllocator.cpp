@@ -11,6 +11,8 @@ namespace QMBT
 
 		// Allows the memory manager to keep track of total allocated memory
 		MemoryManager::GetInstance().Register(m_Data);
+
+		// Allocate all the memory upfront using malloc and store the address
 		m_HeadPtr = malloc(m_Data->TotalSize);
 		m_Offset = 0;
 
@@ -21,7 +23,6 @@ namespace QMBT
 	{
 		MemoryManager::GetInstance().UnRegister(m_Data);
 		free(m_HeadPtr);
-		m_HeadPtr = nullptr;
 	}
 
 	void* StackAllocator::Allocate(const Size size, const Size alignment)
@@ -55,6 +56,7 @@ namespace QMBT
 	void StackAllocator::Deallocate(const Size ptr)
 	{
 		const Size initialOffset = m_Offset;
+
 		// Move offset back to clear address
 		const Size headerAddress = ptr - sizeof(AllocationHeader);
 		const AllocationHeader* allocationHeader{(AllocationHeader*)headerAddress};

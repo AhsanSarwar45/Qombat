@@ -19,25 +19,46 @@ namespace QMBT
 		Chunk* next;
 	};
 
+	/**
+	 * @brief A templated allocator that can only be used to allocate memory for a 
+	 * collection of the same type. 
+	 * 
+	 * @tparam Object 
+	 */
 	template <typename Object>
 	class PoolAllocator
 	{
 	  public:
+		//Prohibit default construction, moving and assignment
 		PoolAllocator() = delete;
-		// PoolAllocator(const PoolAllocator&) = delete;
-		// PoolAllocator(PoolAllocator&&) = delete;
+		PoolAllocator(const PoolAllocator&) = delete;
+		PoolAllocator(PoolAllocator&&) = delete;
+		PoolAllocator& operator=(const PoolAllocator&) = delete;
+		PoolAllocator& operator=(PoolAllocator&&) = delete;
 
-		// PoolAllocator& operator=(const PoolAllocator&) = delete;
-		// PoolAllocator& operator=(PoolAllocator&&) = delete;
-
+		/**
+		 * @brief Construct a new Pool Allocator object.
+		 * 
+		 * @param debugName The name that will appear in logs and any editor.
+		 * @param chunksPerBlock After this many items have been allocated, the allocator allocates
+		 * a new block of size equal to chunksPerBlock * sizeof(Object). 
+		 */
 		PoolAllocator(const std::string& debugName = "Allocator", Size chunksPerBlock = 8);
 		~PoolAllocator();
 
-		Object* Allocate();
+		/**
+		 * @brief Gets an address in the pool, constructs the object at the address and returns the address
+		 * 
+		 * @return Object* The pointer to the newly allocated memory
+		 */
+		void* Allocate();
+		Object* New(Args... argList);
 
 		void Deallocate(Object* ptr);
+		void Delete(Object* ptr);
 
 	  private:
+		PoolAllocator(PoolAllocator&);
 		Chunk* AllocateBlock(Size chunkSize);
 
 	  private:
@@ -58,7 +79,6 @@ namespace QMBT
 		m_ObjectSize = sizeof(Object);
 
 		m_Data = std::make_shared<AllocatorData>(debugName, 0);
-
 		m_HeadPtr = AllocateBlock(m_ObjectSize);
 
 		MemoryManager::GetInstance()
@@ -73,7 +93,7 @@ namespace QMBT
 	}
 
 	template <typename Object>
-	Object* PoolAllocator<Object>::Allocate()
+	void* PoolAllocator<Object>::Allocate()
 	{
 		// No chunks left in the current block, or no any block
 		// exists yet. Allocate a new one, passing the chunk size:
@@ -98,16 +118,22 @@ namespace QMBT
 		m_Data->UsedSize += m_ObjectSize;
 		LOG_CORE_INFO("{0} Allocated {1} bytes", m_Data->DebugName, m_ObjectSize);
 
-		return reinterpret_cast<Object*>(freeChunk);
+		return freeChunk;
+	}
+
+	template <typename Object>
+	Object* PoolAllocator<Object>::New(Args... argList)
+	{
+		void* address = Allocate();				 // Allocate the raw memory and get a pointer to it
+		return new (address) Object(argList...); //Call the placement new operator, which constructs the Object
 	}
 
 	template <typename Object>
 	void PoolAllocator<Object>::Deallocate(Object* ptr)
-	{ // The freed chunk's next pointer points to the
+	{
+		// The freed chunk's next pointer points to the
 		// current allocation pointer:
-
-		reinterpret_cast<Chunk*>(ptr)
-			->next = m_HeadPtr;
+		reinterpret_cast<Chunk*>(ptr)->next = m_HeadPtr;
 
 		// And the allocation pointer is now set
 		// to the returned (free) chunk:
@@ -116,6 +142,13 @@ namespace QMBT
 
 		m_Data->UsedSize -= m_ObjectSize;
 		LOG_CORE_INFO("{0} Deallocated {1} bytes", m_Data->DebugName, m_ObjectSize);
+	}
+
+	template <typename Object>
+	void PoolAllocator<Object>::Delete(Object* ptr)
+	{
+		ptr->~Object();	 // Call the destructor on the object
+		Deallocate(ptr); // Deallocate the pointer
 	}
 
 	template <typename Object>

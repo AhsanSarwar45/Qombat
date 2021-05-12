@@ -10,18 +10,30 @@ namespace QMBT
 
 	/**
 	 * @brief A custom memory allocator which allocates in a stack-like manner
-	 * @details 
+	 * @details All the memory will be allocated up-front. This means we will have
+	 * zero allocations during runtime. This also means that it will take the same
+	 * amount of RAM memory whether it is full or empty. Allocations and Deallocations
+	 * also need to be done in a stack-like manner. It is the task of the user to 
+	 * make sure that deallocations happen in an order that is the reverse of the allocation
+	 * order.
 	 */
 	class StackAllocator
 	{
 	  public:
+		//Prohibit default construction, moving and assignment
 		StackAllocator() = delete;
 		StackAllocator(const StackAllocator&) = delete;
 		StackAllocator(StackAllocator&&) = delete;
-
 		StackAllocator& operator=(const StackAllocator&) = delete;
 		StackAllocator& operator=(StackAllocator&&) = delete;
 
+		/**
+		 * @brief Construct a new Stack Allocator object.
+		 * 
+		 * @param debugName The name that will appear in logs and any editor.
+		 * @param totalSize This will be allocated up-front. Even if the stack allocator is empty, it will
+		 * consume this amount of memory.
+		 */
 		StackAllocator(const std::string& debugName = "Allocator", const Size totalSize = 50_MB);
 
 		~StackAllocator();
@@ -71,7 +83,7 @@ namespace QMBT
 
 		Ref<AllocatorData> m_Data;
 
-		void* m_HeadPtr = nullptr;
+		void* m_HeadPtr = nullptr; // Points to the first available location
 		Size m_Offset;
 
 		struct AllocationHeader
