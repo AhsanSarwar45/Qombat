@@ -58,6 +58,7 @@ namespace QCreate
 
 	void ImGuiLayer::OnUpdate(const QMBT::TimeStep& timeStep)
 	{
+		PROFILE_FUNCTION(QMBT::ProfileCategory::Editor);
 		BeginFrame();
 
 		SetUpDockspace();
@@ -82,6 +83,7 @@ namespace QCreate
 
 	void ImGuiLayer::BeginFrame()
 	{
+		PROFILE_FUNCTION(QMBT::ProfileCategory::Editor);
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
@@ -89,6 +91,7 @@ namespace QCreate
 
 	void ImGuiLayer::EndFrame()
 	{
+		PROFILE_FUNCTION(QMBT::ProfileCategory::Editor);
 		ImGuiIO& io = ImGui::GetIO();
 		QMBT::Application& app = QMBT::Application::Get();
 		io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
@@ -108,6 +111,7 @@ namespace QCreate
 
 	void ImGuiLayer::OnEvent(QMBT::Event& event)
 	{
+		PROFILE_FUNCTION(QMBT::ProfileCategory::Editor);
 		m_ProfilerPanel.OnEvent(event);
 		if (m_BlockEvents)
 		{

@@ -14,7 +14,6 @@ namespace QCreate
 	ProfilerPanel::ProfilerPanel()
 		: m_BarHeight(30), m_Colors(10)
 	{
-		m_FrameData.push_back(std::vector<ProfileData*>());
 	}
 
 	ProfilerPanel::~ProfilerPanel()
@@ -23,8 +22,7 @@ namespace QCreate
 
 	void ProfilerPanel::Draw()
 	{
-		Instrumentor::Get().EndFrame();
-
+		PROFILE_FUNCTION(ProfileCategory::Editor);
 		ImGui::Begin("Profiler");
 
 		ImDrawList* drawList = ImGui::GetWindowDrawList();
@@ -142,19 +140,29 @@ namespace QCreate
 				// ImPlot::PopStyleVar();
 
 				int length = (*m_Frames).size();
-				TimesArray* timesArray = Instrumentor::Get().GetTimes();
+				TimesArray* timesArray = Instrumentor::Get().GetCategoryTimes();
+				double* totalTimes = Instrumentor::Get().GetTotalTimes();
 
-				float* otherTimes = &(*timesArray)[3][0];
-				int otherLength = (*timesArray)[3].size();
+				Size numCategories = static_cast<Size>(ProfileCategory::Other) + 1;
 
-				ImPlot::PlotLine("Other", otherTimes, otherLength, 1);
+				for (int i = 0; i < numCategories; i++)
+				{
+					double* times = &(*timesArray)[i][0];
+					int length = (*timesArray)[i].size();
+
+					ImPlot::PlotLine(Utility::EnumToString(Utility::IntegralToEnum<ProfileCategory>(i)).data(),
+									 times, length, 1);
+				}
+
+				ImPlot::PlotLine("Total",
+								 totalTimes, length, 1);
 
 				if (ImGui::IsMouseClicked(0) && ImPlot::IsPlotHovered())
 				{
 					m_FrameMarkerPos = std::round(ImPlot::GetPlotMousePos().x);
 				}
 
-				ImPlot::PlotVLines("marker", &m_FrameMarkerPos, 1);
+				ImPlot::PlotVLines("##Marker", &m_FrameMarkerPos, 1);
 			}
 
 			ImPlot::EndPlot();
@@ -168,12 +176,12 @@ namespace QCreate
 			{
 
 				m_SelectedFrame = &((*m_Frames)[m_FrameMarkerPos]);
-				SetFrameData();
+				m_SelectedFrameTime = Instrumentor::Get().GetFrameTime(m_FrameMarkerPos);
 			}
 			else
 			{
 				m_SelectedFrame = nullptr;
-				m_FrameData.clear();
+				m_SelectedFrameTime = 0;
 			}
 		}
 
@@ -209,67 +217,77 @@ namespace QCreate
 
 			//ImGui::EndChild();
 
+			double frameStartTime = m_SelectedFrame->Data.back()[0].StartTime;
+
 			static ImPlotAxisFlags yAxisFlags = ImPlotAxisFlags_NoGridLines | ImPlotAxisFlags_NoLabel | ImPlotAxisFlags_NoTickMarks | ImPlotAxisFlags_NoTickLabels;
 
 			ImPlot::FitNextPlotAxes(false, true, false, false);
 			ImPlot::SetNextPlotLimitsY(-5, 0, ImGuiCond_Always);
+			ImPlot::SetNextPlotLimitsX(0, m_SelectedFrame->Data[0].back().EndTime);
 			if (ImPlot::BeginPlot("Frame Analyser", "Time since frame start (us)", (const char*)__null, ImVec2(-1, 150), 0, 0, yAxisFlags))
 			{
 				ImPlot::PushPlotClipRect();
-				Size frameDataLength = m_FrameData.size();
-				for (int r = 0; r < frameDataLength; r++)
+				Size frameDataLength = m_SelectedFrame->Data.size();
+				int index = 0;
+				for (int r = frameDataLength - 1; r >= 0; r--)
 				{
-					auto row = m_FrameData[r];
-					float endHeight = (r + 1) * m_BarHeight;
+					auto row = m_SelectedFrame->Data[r];
 
 					Size length = row.size();
 					for (Size i = 0; i < length; i++)
 					{
-						ProfileData* data = row[i];
+						ProfileData& data = row[i];
 
-						ImVec2 point1 = ImPlot::PlotToPixels(ImPlotPoint((data->StartTime - row[0]->StartTime), -r));
-						ImVec2 point2 = ImPlot::PlotToPixels(ImPlotPoint((data->EndTime - row[0]->StartTime), -r - 1));
+						ImVec2 point1 = ImPlot::PlotToPixels(ImPlotPoint((data.StartTime - frameStartTime), -index));
+						ImVec2 point2 = ImPlot::PlotToPixels(ImPlotPoint((data.EndTime - frameStartTime), -index - 1));
 						ImPlot::GetPlotDrawList()->AddRectFilled(point1, point2, ImColor::HSV(i / 7.0f, 0.6f, 0.6f));
 						ImGui::PushClipRect(point1, point2, true);
-						ImPlot::GetPlotDrawList()->AddText(point1, IM_COL32_WHITE, data->Name.c_str());
+						ImPlot::GetPlotDrawList()->AddText(point1, IM_COL32_WHITE, data.Name.c_str());
 						ImGui::PopClipRect();
 					}
-					ImPlot::PopPlotClipRect();
-					ImPlot::EndPlot();
+					index++;
 				}
+				ImPlot::PopPlotClipRect();
+				ImPlot::EndPlot();
 			}
 
 			ImGuiTableFlags tableFlags = ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_SizingFixedFit;
-			if (ImGui::BeginTable("table", 5, tableFlags))
+			if (ImGui::BeginTable("table", 6, tableFlags))
 			{
 				ImGui::TableSetupColumn("Function Name");
 				ImGui::TableSetupColumn("Elapsed Time");
 				ImGui::TableSetupColumn("Start Time");
 				ImGui::TableSetupColumn("End Time");
 				ImGui::TableSetupColumn("Thread");
+				ImGui::TableSetupColumn("Group");
 
 				ImGui::TableHeadersRow();
 
-				Size length = m_SelectedFrame->Data.size();
-				for (int i = 0; i < length; i++)
+				for (auto& row : m_SelectedFrame->Data)
 				{
-					auto data = m_SelectedFrame->Data[i].get();
-					ImGui::TableNextRow();
+					for (auto& data : row)
 
-					ImGui::TableSetColumnIndex(0);
-					ImGui::Text(data->Name.c_str());
+					{
+						ImGui::TableNextRow();
 
-					ImGui::TableSetColumnIndex(1);
-					ImGui::Text("%f", data->ElapsedTime);
+						ImGui::TableSetColumnIndex(0);
+						ImGui::Text(data.Name.c_str());
 
-					ImGui::TableSetColumnIndex(2);
-					ImGui::Text("%f", data->StartTime);
+						ImGui::TableSetColumnIndex(1);
+						ImGui::Text("%f", data.ElapsedTime);
 
-					ImGui::TableSetColumnIndex(3);
-					ImGui::Text("%f", data->EndTime);
+						ImGui::TableSetColumnIndex(2);
+						ImGui::Text("%f", data.StartTime);
 
-					ImGui::TableSetColumnIndex(4);
-					ImGui::Text("%d", data->ThreadID);
+						ImGui::TableSetColumnIndex(3);
+						ImGui::Text("%f", data.EndTime);
+
+						ImGui::TableSetColumnIndex(4);
+						ImGui::Text("%d", data.ThreadID);
+
+						ImGui::TableSetColumnIndex(5);
+						ImGui::Text("%s", Utility::EnumToString(data.Category).data());
+					}
 				}
 
 				ImGui::EndTable();
@@ -278,12 +296,11 @@ namespace QCreate
 
 		//ImGui::EndChild();
 		ImGui::End();
-
-		Instrumentor::Get().BeginFrame();
 	}
 
 	void ProfilerPanel::OnEvent(Event& event)
 	{
+		PROFILE_FUNCTION(ProfileCategory::Editor);
 		EventDispatcher dispatcher(event);
 
 		dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT_FUNCTION(ProfilerPanel::OnMouseScroll));
@@ -291,6 +308,7 @@ namespace QCreate
 
 	bool ProfilerPanel::OnMouseScroll(MouseScrolledEvent& event)
 	{
+		PROFILE_FUNCTION(ProfileCategory::Editor);
 		m_FrameAnalyserZoom += event.GetYOffset() * 50;
 
 		if (m_FrameAnalyserZoom < 1)
@@ -301,38 +319,38 @@ namespace QCreate
 		return false;
 	}
 
-	void ProfilerPanel::SetFrameData()
-	{
-		m_FrameData.clear();
-		Size length = m_SelectedFrame->Data.size();
-		for (int i = 0; i < length; i++)
-		{
-			auto data = m_SelectedFrame->Data[i].get();
+	// void ProfilerPanel::SetFrameData()
+	// {
+	// 	m_FrameData.clear();
+	// 	Size length = m_SelectedFrame->Data.size();
+	// 	for (int i = 0; i < length; i++)
+	// 	{
+	// 		auto data = m_SelectedFrame->Data[i].get();
 
-			bool found = false;
-			Size rowIndex = 0;
+	// 		bool found = false;
+	// 		Size rowIndex = 0;
 
-			while (!found)
-			{
-				if (rowIndex < m_FrameData.size())
-				{
-					auto& row = m_FrameData[rowIndex];
-					if (data->StartTime > row.back()->EndTime)
-					{
-						row.push_back(data);
-						found = true;
-					}
-				}
-				else
-				{
-					m_FrameData.push_back(std::vector<ProfileData*>());
-					m_FrameData.back().push_back(data);
-					found = true;
-				}
+	// 		while (!found)
+	// 		{
+	// 			if (rowIndex < m_FrameData.size())
+	// 			{
+	// 				auto& row = m_FrameData[rowIndex];
+	// 				if (data->StartTime > row.back()->EndTime)
+	// 				{
+	// 					row.push_back(data);
+	// 					found = true;
+	// 				}
+	// 			}
+	// 			else
+	// 			{
+	// 				m_FrameData.push_back(std::vector<ProfileData*>());
+	// 				m_FrameData.back().push_back(data);
+	// 				found = true;
+	// 			}
 
-				rowIndex++;
-			}
-		}
-	}
+	// 			rowIndex++;
+	// 		}
+	// 	}
+	// }
 
 } // namespace QCreate

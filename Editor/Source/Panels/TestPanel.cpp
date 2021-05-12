@@ -2,6 +2,8 @@
 
 #include <imgui/imgui.h>
 
+#include <Qombat/Core.hpp>
+
 namespace QCreate
 {
 	TestPanel::TestPanel()
@@ -14,6 +16,7 @@ namespace QCreate
 
 	void TestPanel::Draw()
 	{
+		PROFILE_FUNCTION(QMBT::ProfileCategory::Editor);
 		ImGui::Begin("Test");
 
 		ImGui::End();

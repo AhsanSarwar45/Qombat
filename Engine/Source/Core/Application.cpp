@@ -29,29 +29,33 @@ namespace QMBT
 
 		while (m_Running)
 		{
-			float time = m_Window->GetTime();
-			TimeStep timeStep = time - m_LastFrameTime;
-			m_LastFrameTime = time;
-
-			if (!m_Minimized)
+			Instrumentor::Get().BeginFrame();
 			{
+				float time = m_Window->GetTime();
+				TimeStep timeStep = time - m_LastFrameTime;
+				m_LastFrameTime = time;
 
-				glClearColor(0, 0, 0, 1);
-				glClear(GL_COLOR_BUFFER_BIT);
-
-				for (Layer* layer : m_LayerStack)
+				if (!m_Minimized)
 				{
-					layer->OnUpdate(timeStep);
+					glClearColor(0, 0, 0, 1);
+					glClear(GL_COLOR_BUFFER_BIT);
+
+					for (Layer* layer : m_LayerStack)
+					{
+						layer->OnUpdate(timeStep);
+					}
 				}
+
+				m_Window->OnUpdate();
 			}
 
-			m_Window->OnUpdate();
+			Instrumentor::Get().EndFrame();
 		}
 	}
 
 	void Application::PushLayer(Layer* layer)
 	{
-		PROFILE_FUNCTION();
+		PROFILE_FUNCTION(ProfileCategory::Layers);
 		LOG_CORE_INFO("Pushed Layer to Application LayerStack: {0}", layer->GetName());
 
 		m_LayerStack.PushLayer(layer);
@@ -60,7 +64,7 @@ namespace QMBT
 
 	void Application::PushOverlay(Layer* layer)
 	{
-		PROFILE_FUNCTION();
+		PROFILE_FUNCTION(ProfileCategory::Layers);
 		LOG_CORE_INFO("Pushed Overlay to Application LayerStack: {0}", layer->GetName());
 
 		m_LayerStack.PushOverlay(layer);
@@ -69,7 +73,7 @@ namespace QMBT
 
 	void Application::OnEvent(Event& event)
 	{
-		PROFILE_FUNCTION();
+		PROFILE_FUNCTION(ProfileCategory::Application);
 		//Create a new EventDispatcher with the received event
 		EventDispatcher dispatcher(event);
 

@@ -28,8 +28,8 @@ namespace QCreate
 		UInt16 m_BarHeight;
 		RandomColors m_Colors;
 		std::vector<Frame>* m_Frames;
-		std::vector<std::vector<ProfileData*>> m_FrameData;
 		Frame* m_SelectedFrame;
+		double m_SelectedFrameTime;
 		double m_FrameMarkerPos;
 		float m_FrameAnalyserZoom = 200;
 	};
