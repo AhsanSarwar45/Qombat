@@ -1,4 +1,3 @@
-#define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
 
 #include <Qombat/Tests.hpp>
@@ -23,7 +22,6 @@ class ConfigTestClass
 
 TEST_CASE("Config Test", "[core]")
 {
-	Logger::InitializeEngineLoggers();
 	ConfigTestClass::Init();
 
 	ConfigManager::SetConfigInt("TestGroup", "Member", 23);

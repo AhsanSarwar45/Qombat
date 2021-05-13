@@ -78,6 +78,8 @@ namespace QMBT
 		template <typename Object>
 		void Delete(Object* ptr);
 
+		inline Size GetUsedSpace() const { return m_Data->UsedSize; }
+
 	  private:
 		StackAllocator(StackAllocator& stackAllocator); //Restrict copying
 

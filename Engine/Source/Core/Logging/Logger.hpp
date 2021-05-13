@@ -45,6 +45,7 @@ namespace QMBT
 	};
 } // namespace QMBT
 
+#ifdef QMBT_DEBUG
 // Core log macros for the different log levels
 #define LOG_CORE_TRACE(...)          \
 	if (::QMBT::Logger::s_LogCoreOn) \
@@ -93,6 +94,13 @@ namespace QMBT
 #define LOG_APP_ERROR(...)             \
 	if (::QMBT::Logger::s_LogMemoryOn) \
 	SPDLOG_LOGGER_ERROR(::QMBT::Logger::GetAppLogger(), __VA_ARGS__)
+#else
+#define LOG_TRACE(...)
+#define LOG_INFO(...)
+#define LOG_WARN(...)
+#define LOG_CRITICAL(...)
+#define LOG_ERROR(...)
+#endif
 
 // Client log macros
 #define LOG_TRACE(...) SPDLOG_LOGGER_TRACE(::QMBT::Logger::GetClientLogger(), __VA_ARGS__)

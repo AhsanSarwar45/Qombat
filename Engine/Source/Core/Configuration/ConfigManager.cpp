@@ -43,9 +43,9 @@ namespace QMBT
 	void ConfigManager::Register(const UInt32 groupHash, const ConfigVariant& configVar)
 	{
 		m_ConfigGroupMap[groupHash][std::visit([](auto&& arg) -> UInt32 { return arg.GetNameHash(); }, configVar)] = std::make_shared<ConfigVariant>(configVar);
-		LOG_CORE_INFO("Added Config with Hash {0} in Group {1}",
-					  std::visit([](auto&& arg) -> const std::string& { return arg.GetName(); }, configVar),
-					  groupHash);
+		// LOG_CORE_INFO("Added Config with Hash {0} in Group {1}",
+		// 			  std::visit([](auto&& arg) -> const std::string& { return arg.GetName(); }, configVar),
+		// 			  groupHash);
 	}
 
 	void ConfigManager::SetConfigInt(const char* groupName, const char* configName, int value)

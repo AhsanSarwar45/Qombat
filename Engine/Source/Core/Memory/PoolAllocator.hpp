@@ -30,7 +30,8 @@ namespace QMBT
 	{
 	  public:
 		//Prohibit default construction, moving and assignment
-		PoolAllocator() = delete;
+		// ! For some reason, the default constructor does not get deleted
+		
 		PoolAllocator(const PoolAllocator&) = delete;
 		PoolAllocator(PoolAllocator&&) = delete;
 		PoolAllocator& operator=(const PoolAllocator&) = delete;
@@ -52,12 +53,21 @@ namespace QMBT
 		 * @return Object* The pointer to the newly allocated memory
 		 */
 		void* Allocate();
-		Object* New(Args... argList);
+
+		template <typename... Args>
+		Object* New(Args... argList)
+		{
+			void* address = Allocate();				 // Allocate the raw memory and get a pointer to it
+			return new (address) Object(argList...); //Call the placement new operator, which constructs the Object
+		}
 
 		void Deallocate(Object* ptr);
 		void Delete(Object* ptr);
 
+		inline Size GetUsedSpace() const { return m_Data->UsedSize; }
+
 	  private:
+	  PoolAllocator();
 		PoolAllocator(PoolAllocator&);
 		Chunk* AllocateBlock(Size chunkSize);
 
@@ -120,14 +130,6 @@ namespace QMBT
 
 		return freeChunk;
 	}
-
-	template <typename Object>
-	Object* PoolAllocator<Object>::New(Args... argList)
-	{
-		void* address = Allocate();				 // Allocate the raw memory and get a pointer to it
-		return new (address) Object(argList...); //Call the placement new operator, which constructs the Object
-	}
-
 	template <typename Object>
 	void PoolAllocator<Object>::Deallocate(Object* ptr)
 	{

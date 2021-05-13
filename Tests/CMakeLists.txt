@@ -10,8 +10,11 @@ project(Tests)
 add_subdirectory("Vendor/Catch2")
 
 add_executable(${PROJECT_NAME} 
-"Source/Test.cpp"
 "Source/Main.cpp"
+"Source/ConfigurationTest.cpp"
+"Source/StackAllocatorTest.cpp"
+"Source/PoolAllocatorTest.cpp"
+
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Catch2::Catch2)
