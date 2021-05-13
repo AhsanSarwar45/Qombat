@@ -22,7 +22,7 @@ namespace QMBT
 	{
 	  public:
 		MemoryManager(Size applicationBudget)
-			: m_ApplicationBudget(applicationBudget) {}
+			: m_ApplicationBudget(applicationBudget), m_TotalAllocatedSize(0) {}
 		~MemoryManager();
 
 		static MemoryManager& GetInstance();

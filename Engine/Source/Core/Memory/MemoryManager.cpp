@@ -6,7 +6,7 @@ namespace QMBT
 	MemoryManager& MemoryManager::GetInstance()
 	{
 		static MemoryManager* s_MemoryManager = nullptr;
-		if (s_MemoryManager == nullptr)
+		if (!s_MemoryManager)
 		{
 			s_MemoryManager = new MemoryManager(500_MB);
 			LOG_MEMORY_INFO("Instantiated Memory Manager with total memory budget of {0}",
@@ -22,7 +22,7 @@ namespace QMBT
 
 		LOG_MEMORY_INFO("Registering Allocator of total size {0}",
 						Utility::ToReadable(allocatorData->TotalSize));
-		LOG_MEMORY_INFO("Total size allocated increased to  {0}. Total budget left is {1}",
+		LOG_MEMORY_INFO("Total size allocated increased to {0}. Total budget left is {1}",
 						Utility::ToReadable(m_TotalAllocatedSize),
 						Utility::ToReadable(m_ApplicationBudget - m_TotalAllocatedSize));
 		QMBT_CORE_ASSERT(m_TotalAllocatedSize < m_ApplicationBudget, "Exceeded application memory budget!")
