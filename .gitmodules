@@ -11,9 +11,6 @@
 	path = Editor/Vendor/imgui
 	url = https://github.com/AhsanSarwar45/imgui
 	branch = docking
-[submodule "Tests/Vendor/GoogleTests"]
-	path = Tests/Vendor/GoogleTests
-	url = https://github.com/google/googletest/
 [submodule "Editor/Vendor/implot"]
 	path = Editor/Vendor/implot
 	url = https://github.com/epezent/implot
