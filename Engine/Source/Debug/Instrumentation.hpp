@@ -3,6 +3,7 @@
 #include "QMBTPCH.hpp"
 
 #include "Core/Aliases.hpp"
+#include "Core/Collections.hpp"
 #include "Core/Logging/Logger.hpp"
 #include "Core/Macros.hpp"
 
@@ -44,7 +45,7 @@ namespace QMBT
 
 	struct Frame
 	{
-		std::vector<std::vector<ProfileData>> Data;
+		Vector<Vector<ProfileData>> Data;
 	};
 
 	struct InstrumentationSession
@@ -52,7 +53,7 @@ namespace QMBT
 		std::string Name;
 	};
 
-	using TimesArray = std::array<std::vector<double>, static_cast<int>(ProfileCategory::Other) + 1>;
+	using TimesArray = Array<Vector<double>, static_cast<int>(ProfileCategory::Other) + 1>;
 
 	// Singleton class
 	class Instrumentor
@@ -118,7 +119,7 @@ namespace QMBT
 				}
 				else
 				{
-					m_CurrentFrame.Data.push_back(std::vector<ProfileData>());
+					m_CurrentFrame.Data.push_back(Vector<ProfileData>());
 					m_CurrentFrame.Data.back().push_back(data);
 					found = true;
 				}
@@ -146,7 +147,7 @@ namespace QMBT
 				{
 					vec.push_back(0);
 				}
-				std::array<double, static_cast<int>(ProfileCategory::Other) + 1> endTimes{};
+				Array<double, static_cast<int>(ProfileCategory::Other) + 1> endTimes{};
 
 				for (auto& row : m_CurrentFrame.Data)
 				{
@@ -207,13 +208,12 @@ namespace QMBT
 			case TimeUnit::NanoSeconds:
 				return FloatingPointNanoseconds{time}.count();
 				break;
-
-			default:
-				break;
 			}
+			LOG_CORE_ERROR("Unknown time unit!");
+			return 0;
 		}
 
-		std::vector<Frame>* GetFrames()
+		Vector<Frame>* GetFrames()
 		{
 			return &m_Frames;
 		}
@@ -223,7 +223,7 @@ namespace QMBT
 		double GetFrameTime(int index) const { return m_TotalFrameTimes[index]; }
 
 		static Instrumentor&
-		Get()
+		GetInstance()
 		{
 			static Instrumentor instance;
 			return instance;
@@ -257,9 +257,9 @@ namespace QMBT
 		InstrumentationSession* m_CurrentSession;
 
 		TimesArray m_Times;
-		std::vector<double> m_TotalFrameTimes;
+		Vector<double> m_TotalFrameTimes;
 
-		std::vector<Frame> m_Frames;
+		Vector<Frame> m_Frames;
 		Frame m_CurrentFrame;
 		double m_CurrentFrameStartTime;
 
@@ -277,9 +277,9 @@ namespace QMBT
 		InstrumentationTimer(const char* name, ProfileCategory category = ProfileCategory::Other)
 			: m_Name(name), m_Category(category), m_Started(false)
 		{
-			if (Instrumentor::Get().IsRecording())
+			if (Instrumentor::GetInstance().IsRecording())
 			{
-				m_StartTime = Instrumentor::Get().GetCurrentTime();
+				m_StartTime = Instrumentor::GetInstance().GetCurrentTime();
 				m_Started = true;
 			}
 		}
@@ -288,8 +288,8 @@ namespace QMBT
 		{
 			if (m_Started)
 			{
-				double endTime = Instrumentor::Get().GetCurrentTime();
-				Instrumentor::Get()
+				double endTime = Instrumentor::GetInstance().GetCurrentTime();
+				Instrumentor::GetInstance()
 					.AddProfile({
 						m_Name,
 						m_Category,
@@ -307,36 +307,6 @@ namespace QMBT
 		bool m_Started;
 		ProfileCategory m_Category;
 	};
-
-	namespace InstrumentorUtils
-	{
-
-		template <size_t N>
-		struct ChangeResult
-		{
-			char Data[N];
-		};
-
-		template <size_t N, size_t K>
-		constexpr auto CleanupOutputString(const char (&expr)[N], const char (&remove)[K])
-		{
-			ChangeResult<N> result = {};
-
-			size_t srcIndex = 0;
-			size_t dstIndex = 0;
-			while (srcIndex < N)
-			{
-				size_t matchIndex = 0;
-				while (matchIndex < K - 1 && srcIndex + matchIndex < N - 1 && expr[srcIndex + matchIndex] == remove[matchIndex])
-					matchIndex++;
-				if (matchIndex == K - 1)
-					srcIndex += matchIndex;
-				result.Data[dstIndex++] = expr[srcIndex] == '"' ? '\'' : expr[srcIndex];
-				srcIndex++;
-			}
-			return result;
-		}
-	} // namespace InstrumentorUtils
 } // namespace QMBT
 
 #define QMBT_PROFILE 1

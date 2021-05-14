@@ -32,3 +32,6 @@
 #include <stdint.h>
 #include <string.h>
 #include <sys/types.h>
+
+#include <EASTL/vector.h>
+#include <EASTL/array.h>

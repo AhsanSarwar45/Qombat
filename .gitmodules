@@ -17,3 +17,6 @@
 [submodule "Tests/Vendor/Catch2"]
 	path = Tests/Vendor/Catch2
 	url = https://github.com/catchorg/Catch2
+[submodule "Engine/Vendor/eastl"]
+	path = Engine/Vendor/eastl
+	url = https://github.com/electronicarts/EASTL

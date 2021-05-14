@@ -27,7 +27,7 @@ namespace QCreate
 	  private:
 		UInt16 m_BarHeight;
 		RandomColors m_Colors;
-		std::vector<Frame>* m_Frames;
+		Vector<Frame>* m_Frames;
 		Frame* m_SelectedFrame;
 		double m_SelectedFrameTime;
 		double m_FrameMarkerPos;

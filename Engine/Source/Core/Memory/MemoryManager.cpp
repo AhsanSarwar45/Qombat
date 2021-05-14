@@ -1,18 +1,26 @@
 #include "MemoryManager.hpp"
+
 #include "Utility/Size.hpp"
+#include "VectorAllocatorGlobal.hpp"
 
 namespace QMBT
 {
+	MemoryManager::MemoryManager(Size applicationBudget)
+		: m_ApplicationBudget(applicationBudget), m_TotalAllocatedSize(0)
+	{
+
+		LOG_MEMORY_INFO("Instantiated Memory Manager with total memory budget of {0}",
+						Utility::ToReadable(m_ApplicationBudget));
+	}
+
 	MemoryManager& MemoryManager::GetInstance()
 	{
 		static MemoryManager* s_MemoryManager = nullptr;
 		if (!s_MemoryManager)
 		{
 			s_MemoryManager = new MemoryManager(500_MB);
-			LOG_MEMORY_INFO("Instantiated Memory Manager with total memory budget of {0}",
-							Utility::ToReadable(s_MemoryManager->GetApplicationMemoryBudget()));
+			VectorAllocatorGlobal::RegisterData();
 		}
-		QMBT_CORE_ASSERT(s_MemoryManager, "Memory Manager not initialized properly!");
 		return *s_MemoryManager;
 	}
 
@@ -26,12 +34,12 @@ namespace QMBT
 						Utility::ToReadable(m_TotalAllocatedSize),
 						Utility::ToReadable(m_ApplicationBudget - m_TotalAllocatedSize));
 		QMBT_CORE_ASSERT(m_TotalAllocatedSize < m_ApplicationBudget, "Exceeded application memory budget!")
-		allocators.push_back(allocatorData);
+		m_Allocators.push_back(allocatorData);
 	}
 
 	void MemoryManager::UnRegister(Ref<AllocatorData> allocatorData)
 	{
-		allocators.erase(std::remove(allocators.begin(), allocators.end(), allocatorData), allocators.end());
+		m_Allocators.erase(std::remove(m_Allocators.begin(), m_Allocators.end(), allocatorData), m_Allocators.end());
 
 		m_TotalAllocatedSize -= allocatorData->TotalSize;
 
@@ -46,7 +54,7 @@ namespace QMBT
 	Size MemoryManager::GetUsedAllocatedSize() const
 	{
 		Size usedSize = 0;
-		for (const auto& it : allocators)
+		for (const auto& it : m_Allocators)
 		{
 			usedSize += it->UsedSize;
 		}

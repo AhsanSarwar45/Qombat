@@ -2,27 +2,15 @@
 
 #include <QMBTPCH.hpp>
 
+#include "AllocatorData.hpp"
 #include "Core/Core.hpp"
 
 namespace QMBT
 {
-	struct AllocatorData
-	{
-		std::string DebugName;
-		Size TotalSize;
-		Size UsedSize;
-
-		AllocatorData(const std::string debugName, Size totalSize)
-			: DebugName(debugName), TotalSize(totalSize), UsedSize(0) {}
-	};
-
-	using AllocatorVector = std::vector<Ref<AllocatorData>>;
-
 	class MemoryManager
 	{
 	  public:
-		MemoryManager(Size applicationBudget)
-			: m_ApplicationBudget(applicationBudget), m_TotalAllocatedSize(0) {}
+		MemoryManager(Size applicationBudget);
 		~MemoryManager();
 
 		static MemoryManager& GetInstance();
@@ -35,10 +23,15 @@ namespace QMBT
 		Size GetUsedAllocatedSize() const;
 		inline Size GetTotalAllocatedSize() const { return m_TotalAllocatedSize; }
 		inline Size GetApplicationMemoryBudget() const { return m_ApplicationBudget; }
-		inline const AllocatorVector& GetAllocators() const { return allocators; }
+		inline const AllocatorVector& GetAllocators() const { return m_Allocators; }
+		//inline static const VectorAllocator& GetVectorAllocator() {return GetInstance().m_VectorAllocator;}
 
 	  private:
-		AllocatorVector allocators;
+		AllocatorVector m_Allocators;
+		//AllocatorVector vectorAllocators;
+
+		//VectorAllocator m_VectorAllocator;
+
 		Size m_ApplicationBudget;
 		Size m_TotalAllocatedSize;
 	};

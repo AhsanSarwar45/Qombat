@@ -87,12 +87,12 @@ namespace QCreate
 			}
 		}
 
-		if (Instrumentor::Get().IsStopped())
+		if (Instrumentor::GetInstance().IsStopped())
 		{
 			if (ImGui::Button("Record", ImVec2(50, 20)))
 			{
-				Instrumentor::Get().BeginSession();
-				m_Frames = Instrumentor::Get().GetFrames();
+				Instrumentor::GetInstance().BeginSession();
+				m_Frames = Instrumentor::GetInstance().GetFrames();
 			}
 		}
 		else
@@ -102,7 +102,7 @@ namespace QCreate
 				// LOG_CORE_INFO("Length: {0}", m_Data->size());
 				// LOG_CORE_INFO("Name: {0}, Start: {1}, Elapsed: {2}, Thread: {3}",
 				// 			  (*m_Data)[0]->Name, (*m_Data)[0]->Start.count(), (*m_Data)[0]->ElapsedTime.count(), (*m_Data)[0]->ThreadID);
-				Instrumentor::Get().EndSession();
+				Instrumentor::GetInstance().EndSession();
 				m_SelectedFrame = nullptr;
 				m_Frames = nullptr;
 				m_FrameMarkerPos = 0;
@@ -110,18 +110,18 @@ namespace QCreate
 
 			ImGui::SameLine();
 
-			if (Instrumentor::Get().IsPaused())
+			if (Instrumentor::GetInstance().IsPaused())
 			{
 				if (ImGui::Button("Resume", ImVec2(50, 20)))
 				{
-					Instrumentor::Get().Resume();
+					Instrumentor::GetInstance().Resume();
 				}
 			}
 			else
 			{
 				if (ImGui::Button("Pause", ImVec2(50, 20)))
 				{
-					Instrumentor::Get().Pause();
+					Instrumentor::GetInstance().Pause();
 				}
 			}
 		}
@@ -140,8 +140,8 @@ namespace QCreate
 				// ImPlot::PopStyleVar();
 
 				int length = (*m_Frames).size();
-				TimesArray* timesArray = Instrumentor::Get().GetCategoryTimes();
-				double* totalTimes = Instrumentor::Get().GetTotalTimes();
+				TimesArray* timesArray = Instrumentor::GetInstance().GetCategoryTimes();
+				double* totalTimes = Instrumentor::GetInstance().GetTotalTimes();
 
 				Size numCategories = static_cast<Size>(ProfileCategory::Other) + 1;
 
@@ -176,7 +176,7 @@ namespace QCreate
 			{
 
 				m_SelectedFrame = &((*m_Frames)[m_FrameMarkerPos]);
-				m_SelectedFrameTime = Instrumentor::Get().GetFrameTime(m_FrameMarkerPos);
+				m_SelectedFrameTime = Instrumentor::GetInstance().GetFrameTime(m_FrameMarkerPos);
 			}
 			else
 			{

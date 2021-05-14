@@ -10,7 +10,7 @@ namespace QCreate
 	{
 		for (size_t i = 0; i < m_Length; i++)
 		{
-			m_Colors.push_back(GenerateRandomColor());
+			m_Colors.push_back(ImColor::HSV(i / 7.0f, 0.6f, 0.6f));
 		}
 	}
 

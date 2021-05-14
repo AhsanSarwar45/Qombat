@@ -5,6 +5,7 @@
 
 #include "Core/LayerStack.hpp"
 #include "Core/Memory/StackAllocator.hpp"
+#include "Core/Memory/VectorAllocator.hpp"
 #include "Events/ApplicationEvent.hpp"
 
 namespace QMBT
@@ -43,6 +44,7 @@ namespace QMBT
 
 	  protected:
 		StackAllocator m_LayerStackAllocator;
+
 		//StackAllocator m_EditorLayerStackAllocator;
 
 	  private:

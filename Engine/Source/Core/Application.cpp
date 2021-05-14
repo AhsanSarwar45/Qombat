@@ -29,7 +29,7 @@ namespace QMBT
 
 		while (m_Running)
 		{
-			Instrumentor::Get().BeginFrame();
+			Instrumentor::GetInstance().BeginFrame();
 			{
 				float time = m_Window->GetTime();
 				TimeStep timeStep = time - m_LastFrameTime;
@@ -49,7 +49,7 @@ namespace QMBT
 				m_Window->OnUpdate();
 			}
 
-			Instrumentor::Get().EndFrame();
+			Instrumentor::GetInstance().EndFrame();
 		}
 	}
 

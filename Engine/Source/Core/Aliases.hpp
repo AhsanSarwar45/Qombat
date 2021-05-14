@@ -2,7 +2,6 @@
 
 #include <QMBTPCH.hpp>
 
-
 using Byte = uint8_t;
 using Size = size_t;
 
