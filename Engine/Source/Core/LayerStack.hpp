@@ -42,15 +42,15 @@ namespace QMBT
 		 */
 		void PopOverlay(Layer* overlay);
 
-		std::vector<Layer*>::iterator begin() { return m_Layers.begin(); }
-		std::vector<Layer*>::iterator end() { return m_Layers.end(); }
+		Vector<Layer*>::iterator begin() { return m_Layers.begin(); }
+		Vector<Layer*>::iterator end() { return m_Layers.end(); }
 
-		//const std::vector<Layer*>::iterator cbegin() { return m_Layers.cbegin(); }
-		//const std::vector<Layer*>::iterator cend() { return m_Layers.cend(); }
+		//const Vector<Layer*>::iterator cbegin() { return m_Layers.cbegin(); }
+		//const Vector<Layer*>::iterator cend() { return m_Layers.cend(); }
 
 	  private:
 		//Stores all the layers and overlays
-		std::vector<Layer*> m_Layers;
+		Vector<Layer*> m_Layers;
 		/*
 		Acts as the barrier between layers and overlays. Layers are stored in the first half
 		before the insert), while overlays are stored after the insert.

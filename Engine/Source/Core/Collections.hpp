@@ -10,6 +10,9 @@ namespace QMBT
 	template <typename T, typename Allocator = VectorAllocatorGlobal>
 	using Vector = eastl::vector<T, Allocator>;
 
+	template <typename T>
+	using BasicVector = eastl::vector<T>;
+
 	template <typename T, Size N>
 	using Array = eastl::array<T, N>;
-}
+} // namespace QMBT

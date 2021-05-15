@@ -132,6 +132,7 @@ namespace QCreate
 		ImPlot::SetNextPlotLimitsX(0, 240);
 		if (ImPlot::BeginPlot("CPU time", "Frame No.", "Execution Time (us)"))
 		{
+			PROFILE_SCOPE("CPU Time", ProfileCategory::Editor);
 			if (m_Frames)
 			{
 
@@ -145,13 +146,18 @@ namespace QCreate
 
 				Size numCategories = static_cast<Size>(ProfileCategory::Other) + 1;
 
-				for (int i = 0; i < numCategories; i++)
 				{
-					double* times = &(*timesArray)[i][0];
-					int length = (*timesArray)[i].size();
+					PROFILE_SCOPE("Plotting", ProfileCategory::Editor);
+					for (int i = 0; i < numCategories; i++)
+					{
 
-					ImPlot::PlotLine(Utility::EnumToString(Utility::IntegralToEnum<ProfileCategory>(i)).data(),
-									 times, length, 1);
+						double* times = &(*timesArray)[i][0];
+						int length = (*timesArray)[i].size();
+
+						PROFILE_SCOPE("ImPlot::PlotLine", ProfileCategory::Editor);
+						ImPlot::PlotLine(Utility::EnumToString(Utility::IntegralToEnum<ProfileCategory>(i)).data(),
+										 times, length, 1);
+					}
 				}
 
 				ImPlot::PlotLine("Total",
@@ -226,12 +232,13 @@ namespace QCreate
 			ImPlot::SetNextPlotLimitsX(0, m_SelectedFrame->Data[0].back().EndTime);
 			if (ImPlot::BeginPlot("Frame Analyser", "Time since frame start (us)", (const char*)__null, ImVec2(-1, 150), 0, 0, yAxisFlags))
 			{
+				PROFILE_SCOPE("Frame Analyser", ProfileCategory::Editor);
 				ImPlot::PushPlotClipRect();
 				Size frameDataLength = m_SelectedFrame->Data.size();
 				int index = 0;
 				for (int r = frameDataLength - 1; r >= 0; r--)
 				{
-					auto row = m_SelectedFrame->Data[r];
+					auto& row = m_SelectedFrame->Data[r];
 
 					Size length = row.size();
 					for (Size i = 0; i < length; i++)
@@ -242,7 +249,7 @@ namespace QCreate
 						ImVec2 point2 = ImPlot::PlotToPixels(ImPlotPoint((data.EndTime - frameStartTime), -index - 1));
 						ImPlot::GetPlotDrawList()->AddRectFilled(point1, point2, ImColor::HSV(i / 7.0f, 0.6f, 0.6f));
 						ImGui::PushClipRect(point1, point2, true);
-						ImPlot::GetPlotDrawList()->AddText(point1, IM_COL32_WHITE, data.Name.c_str());
+						ImPlot::GetPlotDrawList()->AddText(point1, IM_COL32_WHITE, data.Name);
 						ImGui::PopClipRect();
 					}
 					index++;
@@ -271,7 +278,7 @@ namespace QCreate
 						ImGui::TableNextRow();
 
 						ImGui::TableSetColumnIndex(0);
-						ImGui::Text(data.Name.c_str());
+						ImGui::Text(data.Name);
 
 						ImGui::TableSetColumnIndex(1);
 						ImGui::Text("%f", data.ElapsedTime);

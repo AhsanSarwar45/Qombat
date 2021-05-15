@@ -16,5 +16,17 @@ namespace QMBT
 			: DebugName(debugName), TotalSize(totalSize), UsedSize(0) {}
 	};
 
-	using AllocatorVector = std::vector<Ref<AllocatorData>>;
+	using AllocatorVector = eastl::vector<Ref<AllocatorData>>;
+
+	struct Chunk
+	{
+		/*
+		When a chunk is free, the `next` contains the
+		address of the next chunk in a list.
+		
+		When it's allocated, this space is used by
+		the user.
+		*/
+		Chunk* next;
+	};
 }

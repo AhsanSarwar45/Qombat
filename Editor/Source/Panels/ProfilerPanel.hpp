@@ -24,6 +24,9 @@ namespace QCreate
 		void SetFrameData();
 		bool OnMouseScroll(MouseScrolledEvent& event);
 
+		void DrawCPUProfiler();
+		void DrawMemoryProfiler();
+
 	  private:
 		UInt16 m_BarHeight;
 		RandomColors m_Colors;

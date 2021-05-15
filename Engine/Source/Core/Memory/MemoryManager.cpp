@@ -44,7 +44,6 @@ namespace QMBT
 		m_TotalAllocatedSize -= allocatorData->TotalSize;
 
 		LOG_MEMORY_INFO("UnRegistering Allocator of total size {0}",
-						allocatorData->TotalSize,
 						Utility::ToReadable(allocatorData->TotalSize));
 		LOG_MEMORY_INFO("Total size allocated decreased to  {0}. Total budget left is {1}",
 						Utility::ToReadable(m_TotalAllocatedSize),
