@@ -11,10 +11,16 @@ namespace QMBT
 		MemoryManager::GetInstance().Register(m_Data);
 		LOG_MEMORY_INFO("Initialized {0}", debugName);
 	}
+
 	VectorAllocator::VectorAllocator(const VectorAllocator& other)
 		: m_Data(other.m_Data)
 	{
 		//m_Data = CreateRef<AllocatorData>(other.m_Data->DebugName, other.m_Data->TotalSize);
+	}
+
+	VectorAllocator::~VectorAllocator()
+	{
+		MemoryManager::GetInstance().UnRegister(m_Data);
 	}
 
 	VectorAllocator& VectorAllocator::operator=(const VectorAllocator& x)
@@ -68,4 +74,4 @@ namespace QMBT
 	{
 		return false;
 	}
-}
+} // namespace QMBT

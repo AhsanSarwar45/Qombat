@@ -13,6 +13,7 @@ namespace QMBT
 		EASTL_ALLOCATOR_EXPLICIT VectorAllocator(const char* debugName = EASTL_NAME_VAL(EASTL_ALLOCATOR_DEFAULT_NAME));
 		VectorAllocator(const VectorAllocator& other);
 		VectorAllocator(const VectorAllocator& other, const char* debugName);
+		~VectorAllocator();
 
 		VectorAllocator& operator=(const VectorAllocator& x);
 

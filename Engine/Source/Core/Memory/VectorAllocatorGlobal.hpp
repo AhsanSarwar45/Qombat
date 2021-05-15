@@ -11,6 +11,7 @@ namespace QMBT
 	{
 	  public:
 		VectorAllocatorGlobal(const char* debugName);
+		~VectorAllocatorGlobal();
 
 		void* allocate(size_t num_of_bytes, int flags = 0);
 		void* allocate(size_t num_of_bytes, size_t alignment, size_t offset, int flags = 0);

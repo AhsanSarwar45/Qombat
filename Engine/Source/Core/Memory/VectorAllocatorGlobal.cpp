@@ -12,6 +12,11 @@ namespace QMBT
 		LOG_MEMORY_INFO("Initialized Vector Allocator");
 	}
 
+	VectorAllocatorGlobal::~VectorAllocatorGlobal()
+	{
+		MemoryManager::GetInstance().UnRegister(m_Data);
+	}
+
 	void* VectorAllocatorGlobal::allocate(size_t numBytes, int flags)
 	{
 		m_Data->TotalSize += numBytes;
