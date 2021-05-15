@@ -3,9 +3,9 @@
 
 namespace QMBT
 {
-	StackAllocator::StackAllocator(const std::string& debugName, Size totalSize)
+	StackAllocator::StackAllocator(const char* debugName, Size totalSize)
 	{
-		QMBT_CORE_ASSERT(totalSize < 1_GB, "Total size of allocator cannot be larger than 1 GB");
+		QMBT_CORE_ASSERT(totalSize < 1_GB && totalSize > 0, "Total size of allocator cannot be more than 1 GB or less than 0");
 
 		m_Data = std::make_shared<AllocatorData>(debugName, totalSize);
 

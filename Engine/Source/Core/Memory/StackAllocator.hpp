@@ -34,7 +34,7 @@ namespace QMBT
 		 * @param totalSize This will be allocated up-front. Even if the stack allocator is empty, it will
 		 * consume this amount of memory.
 		 */
-		StackAllocator(const std::string& debugName = "Allocator", const Size totalSize = 50_MB);
+		StackAllocator(const char* debugName = "Allocator", const Size totalSize = 50_MB);
 
 		~StackAllocator();
 
@@ -78,7 +78,7 @@ namespace QMBT
 		template <typename Object>
 		void Delete(Object* ptr);
 
-		inline Size GetUsedSpace() const { return m_Data->UsedSize; }
+		inline Size GetUsedSize() const { return m_Data->UsedSize; }
 
 	  private:
 		StackAllocator(StackAllocator& stackAllocator); //Restrict copying

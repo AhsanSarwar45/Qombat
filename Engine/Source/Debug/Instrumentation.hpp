@@ -35,12 +35,14 @@ namespace QMBT
 
 	struct ProfileData
 	{
-		std::string Name;
-		ProfileCategory Category;
+		const char* Name;
 		double StartTime;
 		double EndTime;
 		double ElapsedTime;
 		std::thread::id ThreadID;
+		ProfileCategory Category;
+
+		// Size: 48, Alignment: 8
 	};
 
 	struct Frame
@@ -231,8 +233,12 @@ namespace QMBT
 
 	  private:
 		Instrumentor()
-			: m_CurrentSession(nullptr)
+			: m_CurrentSession(nullptr), m_TotalFrameTimes(10000, "Total Frame Times Allocator"), m_Frames(10000)
 		{
+			for (auto& vec : m_Times)
+			{
+				vec.reserve(10000);
+			}
 		}
 
 		~Instrumentor()
@@ -257,7 +263,7 @@ namespace QMBT
 		InstrumentationSession* m_CurrentSession;
 
 		TimesArray m_Times;
-		Vector<double> m_TotalFrameTimes;
+		Vector<double, VectorAllocator> m_TotalFrameTimes;
 
 		Vector<Frame> m_Frames;
 		Frame m_CurrentFrame;
@@ -290,14 +296,12 @@ namespace QMBT
 			{
 				double endTime = Instrumentor::GetInstance().GetCurrentTime();
 				Instrumentor::GetInstance()
-					.AddProfile({
-						m_Name,
-						m_Category,
-						m_StartTime,
-						endTime,
-						endTime - m_StartTime,
-						std::this_thread::get_id(),
-					});
+					.AddProfile({m_Name,
+								 m_StartTime,
+								 endTime,
+								 endTime - m_StartTime,
+								 std::this_thread::get_id(),
+								 m_Category});
 			}
 		}
 
@@ -309,8 +313,7 @@ namespace QMBT
 	};
 } // namespace QMBT
 
-#define QMBT_PROFILE 1
-#if QMBT_PROFILE
+#if QMBT_DEBUG
 
 #define PROFILE_SCOPE_LINE_INTERNAL2(name, line) \
 	::QMBT::InstrumentationTimer timer##line(name);
