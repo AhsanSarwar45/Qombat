@@ -15,6 +15,7 @@ add_library(Engine STATIC
 "Source/Core/Memory/StackAllocator.cpp"
 "Source/Core/Memory/VectorAllocator.cpp"
 "Source/Core/Memory/VectorAllocatorGlobal.cpp"
+"Source/Core/Memory/FreeListAllocator.cpp"
 "Source/Core/Memory/MemoryManager.cpp"
 "Source/Core/LayerStack.cpp"
 "Source/Core/Layer.cpp"

@@ -7,16 +7,16 @@
 
 using namespace QMBT;
 
-TEST_CASE("PoolAllocator Initialisation Test", "[core]")
+TEST_CASE("PoolAllocatorBlocked Initialisation Test", "[core]")
 {
-	PoolAllocator<TestObject> poolAllocator = PoolAllocator<TestObject>("Allocator", 50);
+	PoolAllocatorBlocked<TestObject> poolAllocator = PoolAllocatorBlocked<TestObject>("Allocator", 8);
 
 	REQUIRE(poolAllocator.GetUsedSize() == 0);
 }
 
-TEST_CASE("PoolAllocator Allocation Test", "[core]")
+TEST_CASE("PoolAllocatorBlocked Allocation Test", "[core]")
 {
-	PoolAllocator<TestObject> poolAllocator = PoolAllocator<TestObject>("Allocator", 50);
+	PoolAllocatorBlocked<TestObject> poolAllocator = PoolAllocatorBlocked<TestObject>("Allocator", 8);
 	std::vector<TestObject*> objectPtrs = std::vector<TestObject*>();
 
 	int numAllocations = 0;
@@ -54,9 +54,9 @@ TEST_CASE("PoolAllocator Allocation Test", "[core]")
 	}
 }
 
-TEST_CASE("PoolAllocator Deallocation Test", "[core]")
+TEST_CASE("PoolAllocatorBlocked Deallocation Test", "[core]")
 {
-	PoolAllocator<TestObject> poolAllocator = PoolAllocator<TestObject>("Allocator", 50);
+	PoolAllocatorBlocked<TestObject> poolAllocator = PoolAllocatorBlocked<TestObject>("Allocator", 8);
 	std::vector<TestObject*> objectPtrs = std::vector<TestObject*>();
 
 	int numAllocations = 0;
@@ -122,9 +122,9 @@ TEST_CASE("PoolAllocator Deallocation Test", "[core]")
 	REQUIRE(poolAllocator.GetUsedSize() == 0);
 }
 
-TEST_CASE("PoolAllocator Reallocation Test", "[core]")
+TEST_CASE("PoolAllocatorBlocked Reallocation Test", "[core]")
 {
-	PoolAllocator<TestObject> poolAllocator = PoolAllocator<TestObject>("Allocator", 50);
+	PoolAllocatorBlocked<TestObject> poolAllocator = PoolAllocatorBlocked<TestObject>("Allocator", 8);
 	std::vector<TestObject*> objectPtrs = std::vector<TestObject*>();
 	int numAllocations = 0;
 

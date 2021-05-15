@@ -8,38 +8,43 @@ namespace QMBT
 {
 	namespace Utility
 	{
-		constexpr inline Size ToKB(Size x)
+		constexpr inline float ToKB(Size x)
 		{
-			return x / 1024;
+			return x / 1024.0f;
 		}
 
-		constexpr inline Size ToMB(Size x)
+		constexpr inline float ToMB(Size x)
 		{
-			return x / 1048576;
+			return x / 1048576.0f;
 		}
 
-		constexpr inline Size ToGB(Size x)
+		constexpr inline float ToGB(Size x)
 		{
-			return x / 1073741824;
+			return x / 1073741824.0f;
 		}
 
 		inline std::string ToReadable(Size x)
 		{
+			std::stringstream stream;
 			if (x < 1024)
 			{
-				return Concatenate(std::to_string(x), " B");
+				stream << std::fixed << std::setprecision(2) << x;
+				return Concatenate(stream.str(), " B");
 			}
 			else if (x < 1048576)
 			{
-				return Concatenate(std::to_string(x / 1024), " KB");
+				stream << std::fixed << std::setprecision(2) << x / 1024.0f;
+				return Concatenate(stream.str(), " KB");
 			}
 			else if (x < 1073741824)
 			{
-				return Concatenate(std::to_string(x / 1048576), " MB");
+				stream << std::fixed << std::setprecision(2) << x / 1048576.0f;
+				return Concatenate(stream.str(), " MB");
 			}
 			else
 			{
-				return Concatenate(std::to_string(x / 1073741824), " GB");
+				stream << std::fixed << std::setprecision(2) << x / 1073741824.0f;
+				return Concatenate(stream.str(), " GB");
 			}
 		}
 	} // namespace Utility
