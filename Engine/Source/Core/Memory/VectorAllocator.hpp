@@ -21,9 +21,6 @@ namespace QMBT
 		void* allocate(size_t num_of_bytes, size_t alignment, size_t offset, int flags = 0);
 		void deallocate(void* ptr, size_t num_of_bytes);
 
-		const char* get_name() const;
-		void set_name(const char* debugName);
-
 	  protected:
 		Ref<AllocatorData> m_Data;
 	};

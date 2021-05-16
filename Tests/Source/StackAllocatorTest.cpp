@@ -6,14 +6,14 @@
 
 using namespace QMBT;
 
-TEST_CASE("StackAllocator Initialisation Test", "[core]")
+TEST_CASE("StackAllocator Initialisation Test", "[Memory]")
 {
 	StackAllocator stackAllocator = StackAllocator("Allocator", 10_MB);
 
 	REQUIRE(stackAllocator.GetUsedSize() == 0);
 }
 
-TEST_CASE("StackAllocator Allocation Test", "[core]")
+TEST_CASE("StackAllocator Allocation Test", "[Memory]")
 {
 	StackAllocator stackAllocator = StackAllocator("Allocator", 10_MB);
 
@@ -47,7 +47,7 @@ TEST_CASE("StackAllocator Allocation Test", "[core]")
 	}
 }
 
-TEST_CASE("StackAllocator Deallocation Test", "[core]")
+TEST_CASE("StackAllocator Deallocation Test", "[Memory]")
 {
 	StackAllocator stackAllocator = StackAllocator("Stack Allocator", 10_MB);
 
@@ -68,7 +68,7 @@ TEST_CASE("StackAllocator Deallocation Test", "[core]")
 	}
 }
 
-TEST_CASE("StackAllocator Reallocation Test", "[core]")
+TEST_CASE("StackAllocator Reallocation Test", "[Memory]")
 {
 	StackAllocator stackAllocator = StackAllocator("Stack Allocator", 10_MB);
 

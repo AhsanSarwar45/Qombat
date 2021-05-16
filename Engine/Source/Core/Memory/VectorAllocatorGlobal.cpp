@@ -43,15 +43,6 @@ namespace QMBT
 		MemoryManager::GetInstance().Register(m_Data);
 	}
 
-	const char* VectorAllocatorGlobal::get_name() const
-	{
-		return m_Data->DebugName.c_str();
-	}
-	void VectorAllocatorGlobal::set_name(const char* debugName)
-	{
-		m_Data->DebugName = debugName;
-	}
-
 	bool operator==(const VectorAllocatorGlobal& a, const VectorAllocatorGlobal& b)
 	{
 		if (&a == &b)

@@ -15,7 +15,7 @@ namespace QMBT
 		{
 			FIND_FIRST, // For better speed, finds the first block of memory of sufficeint size.
 			FIND_BEST	// For better memory packing, finds all the blocks of memory of sufficient size and chooses the
-			// one with the tightest fit.
+						// one with the tightest fit.
 		};
 
 	  private:
@@ -49,6 +49,8 @@ namespace QMBT
 		void Init();
 
 		void Reset();
+
+		inline Size GetUsedSize() const { return m_Data->UsedSize; }
 
 	  private:
 		FreeListAllocator(FreeListAllocator& freeListAllocator);

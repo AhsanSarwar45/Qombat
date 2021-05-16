@@ -33,5 +33,6 @@
 #include <string.h>
 #include <sys/types.h>
 
-#include <EASTL/vector.h>
 #include <EASTL/array.h>
+#include <EASTL/shared_ptr.h>
+#include <EASTL/vector.h>

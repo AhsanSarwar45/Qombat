@@ -7,14 +7,14 @@
 
 using namespace QMBT;
 
-TEST_CASE("PoolAllocator Initialisation Test", "[core]")
+TEST_CASE("PoolAllocator Initialisation Test", "[Memory]")
 {
 	PoolAllocator<TestObject> poolAllocator = PoolAllocator<TestObject>("Allocator", 50);
 
 	REQUIRE(poolAllocator.GetUsedSize() == 0);
 }
 
-TEST_CASE("PoolAllocator Allocation Test", "[core]")
+TEST_CASE("PoolAllocator Allocation Test", "[Memory]")
 {
 	PoolAllocator<TestObject> poolAllocator = PoolAllocator<TestObject>("Allocator", 50);
 	std::vector<TestObject*> objectPtrs = std::vector<TestObject*>();
@@ -54,7 +54,7 @@ TEST_CASE("PoolAllocator Allocation Test", "[core]")
 	}
 }
 
-TEST_CASE("PoolAllocator Deallocation Test", "[core]")
+TEST_CASE("PoolAllocator Deallocation Test", "[Memory]")
 {
 	PoolAllocator<TestObject> poolAllocator = PoolAllocator<TestObject>("Allocator", 50);
 	std::vector<TestObject*> objectPtrs = std::vector<TestObject*>();
@@ -122,7 +122,7 @@ TEST_CASE("PoolAllocator Deallocation Test", "[core]")
 	REQUIRE(poolAllocator.GetUsedSize() == 0);
 }
 
-TEST_CASE("PoolAllocator Reallocation Test", "[core]")
+TEST_CASE("PoolAllocator Reallocation Test", "[Memory]")
 {
 	PoolAllocator<TestObject> poolAllocator = PoolAllocator<TestObject>("Allocator", 50);
 	std::vector<TestObject*> objectPtrs = std::vector<TestObject*>();

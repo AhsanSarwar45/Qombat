@@ -2,45 +2,121 @@
 
 #include <Qombat/Tests.hpp>
 
+#include "MemoryTestObjects.hpp"
+
 using namespace QMBT;
 
-struct TestObject
+TEST_CASE("FreeListAllocator Initialisation Test", "[Memory]")
 {
-	int a;
-	float b;
-	char c;
-	bool d;
-	float e;
+	FreeListAllocator freeListAllocator = FreeListAllocator("FreeList Allocator", 10_MB);
 
-	TestObject(int _a, float _b, char _c, bool _d, float _e)
-		: a(_a), b(_b), c(_c), d(_d), e(_e) {}
-};
+	REQUIRE(freeListAllocator.GetUsedSize() == 0);
+}
 
-TEST_CASE("FreeList Allocation Test", "[core]")
+TEST_CASE("FreeListAllocator Allocation Test", "[Memory]")
 {
-	SECTION("NumAllocations == 1")
+	FreeListAllocator freeListAllocator = FreeListAllocator("FreeList Allocator", 10_MB);
+
+	SECTION("Single Object")
 	{
-		FreeListAllocator allocator = FreeListAllocator();
+		TestObject* object = freeListAllocator.New<TestObject>(1, 2.1f, 'a', false, 10.6f);
 
-		TestObject* object = allocator.New<TestObject>(2, 5.2f, 'c', false, 0.3f);
-
-		REQUIRE(object->a == 2);
-		REQUIRE(object->b == 5.2f);
-		REQUIRE(object->c == 'c');
+		REQUIRE(object->a == 1);
+		REQUIRE(object->b == 2.1f);
+		REQUIRE(object->c == 'a');
 		REQUIRE(object->d == false);
-		REQUIRE(object->e == 0.3f);
+		REQUIRE(object->e == 10.6f);
+	}
 
-		allocator.Delete(object);
+	SECTION("Multiple Objects")
+	{
+		TestObject* object = freeListAllocator.New<TestObject>(1, 2.1f, 'a', false, 10.6f);
+		TestObject2* object2 = freeListAllocator.New<TestObject2>(2, 5.4, 8.2, false, std::vector<int>(6));
+
+		REQUIRE(object->a == 1);
+		REQUIRE(object->b == 2.1f);
+		REQUIRE(object->c == 'a');
+		REQUIRE(object->d == false);
+		REQUIRE(object->e == 10.6f);
+
+		REQUIRE(object2->a == 2);
+		REQUIRE(object2->b == 5.4);
+		REQUIRE(object2->c == 8.2);
+		REQUIRE(object2->d == false);
+		REQUIRE(object2->e.size() == 6);
 	}
 }
 
-// TEST_CASE("PoolAllocator Deallocation Test", "[core]")
-// {
-// 	PoolAllocator poolAllocator = PoolAllocator<TestObject>("Allocator", 8);
+TEST_CASE("FreeListAllocator Deallocation Test", "[Memory]")
+{
+	FreeListAllocator freeListAllocator = FreeListAllocator("Stack Allocator", 10_MB);
 
-// 	TestObject* object = poolAllocator.New(2, 5.2f, 'c', false, 0.3f);
+	SECTION("Single Object")
+	{
+		TestObject* object = freeListAllocator.New<TestObject>(1, 2.1f, 'a', false, 10.6f);
 
-// 	poolAllocator.Deallocate(object);
+		freeListAllocator.Delete(object);
+	}
 
-// 	REQUIRE(poolAllocator.GetUsedSpace() == 0);
-// }
+	SECTION("Multiple Objects")
+	{
+		TestObject* object = freeListAllocator.New<TestObject>(1, 2.1f, 'a', false, 10.6f);
+		TestObject2* object2 = freeListAllocator.New<TestObject2>(2, 5.4, 8.2, false, std::vector<int>(6));
+
+		SECTION("Normal Order")
+		{
+			freeListAllocator.Delete(object2);
+			freeListAllocator.Delete(object);
+		}
+
+		SECTION("Reverse Order")
+		{
+			freeListAllocator.Delete(object);
+			freeListAllocator.Delete(object2);
+		}
+	}
+}
+
+TEST_CASE("FreeListAllocator Reallocation Test", "[Memory]")
+{
+	FreeListAllocator freeListAllocator = FreeListAllocator("Stack Allocator", 10_MB);
+
+	SECTION("Single Object")
+	{
+		TestObject* object = freeListAllocator.New<TestObject>(1, 2.1f, 'a', false, 10.6f);
+
+		freeListAllocator.Delete(object);
+
+		TestObject* objectNew = freeListAllocator.New<TestObject>(2, 2.1f, 'a', false, 10.6f);
+
+		REQUIRE(objectNew->a == 2);
+		REQUIRE(objectNew->b == 2.1f);
+		REQUIRE(objectNew->c == 'a');
+		REQUIRE(objectNew->d == false);
+		REQUIRE(objectNew->e == 10.6f);
+	}
+
+	SECTION("Multiple Objects")
+	{
+		TestObject* object = freeListAllocator.New<TestObject>(1, 2.1f, 'a', false, 10.6f);
+		TestObject2* object2 = freeListAllocator.New<TestObject2>(2, 5.4, 8.2, false, std::vector<int>(6));
+
+		freeListAllocator.Delete(object2);
+		freeListAllocator.Delete(object);
+
+		TestObject* objectNew = freeListAllocator.New<TestObject>(2, 2.1f, 'a', false, 10.6f);
+		TestObject2* object2New = freeListAllocator.New<TestObject2>(3, 5.4, 8.2, false, std::vector<int>(6));
+
+		REQUIRE(objectNew->a == 2);
+		REQUIRE(objectNew->b == 2.1f);
+		REQUIRE(objectNew->c == 'a');
+		REQUIRE(objectNew->d == false);
+		REQUIRE(objectNew->e == 10.6f);
+
+		REQUIRE(object2New->a == 3);
+		REQUIRE(object2New->b == 5.4);
+		REQUIRE(object2New->c == 8.2);
+		REQUIRE(object2New->d == false);
+		REQUIRE(object2New->e.size() == 6);
+	}
+}

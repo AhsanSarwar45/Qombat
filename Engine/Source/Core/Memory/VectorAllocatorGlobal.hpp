@@ -19,8 +19,7 @@ namespace QMBT
 
 		static void RegisterData();
 
-		const char* get_name() const;
-		void set_name(const char* debugName);
+		inline Size GetUsedSize() const { return m_Data->UsedSize; }
 
 	  protected:
 		static Ref<AllocatorData> m_Data;

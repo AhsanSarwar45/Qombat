@@ -20,7 +20,7 @@ class ConfigTestClass
 	inline static std::string s_Member2 = "member";
 };
 
-TEST_CASE("Config Test", "[core]")
+TEST_CASE("Configuration Test", "[Core]")
 {
 	ConfigTestClass::Init();
 

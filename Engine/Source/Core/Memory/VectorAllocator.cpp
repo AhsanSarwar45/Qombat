@@ -50,15 +50,6 @@ namespace QMBT
 		delete[](char*) ptr;
 	}
 
-	const char* VectorAllocator::get_name() const
-	{
-		return m_Data->DebugName.c_str();
-	}
-	void VectorAllocator::set_name(const char* debugName)
-	{
-		m_Data->DebugName = debugName;
-	}
-
 	bool operator==(const VectorAllocator& a, const VectorAllocator& b)
 	{
 		if (&a == &b)
