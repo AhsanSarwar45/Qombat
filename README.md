@@ -2,7 +2,7 @@
 
 ![Linux Build](https://github.com/AhsanSarwar45/Qombat/actions/workflows/Build.yml/badge.svg)
 
-An RTS Game Engine based on the [Hazel](https://github.com/TheCherno/Hazel) Game Engine by [TheCherno](https://github.com/TheCherno)
+An RTS Game Engine based on the [Hazel](https://github.com/TheCherno/Hazel) Game Engine by [TheCherno](https://github.com/TheCherno). Till now just the core systems and basic editor GUI has been implemented.
 
 ## Links
 
