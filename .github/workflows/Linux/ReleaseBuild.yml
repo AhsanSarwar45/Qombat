@@ -24,11 +24,15 @@ jobs:
     - name: Initialise Submodules
       run: git submodule update --init
       
-    - name: Navigate to EASTL
-      run: cd Engine/Source/Vendor/EASTL
+#     - name: Navigate to EASTL
+#       run: cd Engine/Vendor/EASTL
       
-    -name: Initialise EASTL Submodules
+    - name: Initialise EASTL Submodules
+      working-directory: Engine/Vendor/EASTL
       run: git submodule update --init
+      
+    - name: Install RandR
+      run: sudo apt-get install xorg-dev libglu1-mesa-dev     
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
