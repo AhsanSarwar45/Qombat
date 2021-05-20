@@ -53,21 +53,21 @@ namespace QMBT
 
 		return isDoubleClicked;
 	}
-	glm::vec2 Input::GetMousePosition()
-	{
-		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
-		double xPos, yPos;
-		glfwGetCursorPos(window, &xPos, &yPos);
-		return {(float)xPos, (float)yPos};
-	}
-	float Input::GetMouseX()
-	{
-		return GetMousePosition().x;
-	}
+	// glm::vec2 Input::GetMousePosition()
+	// {
+	// 	auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
+	// 	double xPos, yPos;
+	// 	glfwGetCursorPos(window, &xPos, &yPos);
+	// 	return {(float)xPos, (float)yPos};
+	// }
+	// float Input::GetMouseX()
+	// {
+	// 	return GetMousePosition().x;
+	// }
 
-	float Input::GetMouseY()
-	{
-		return GetMousePosition().y;
-	}
+	// float Input::GetMouseY()
+	// {
+	// 	return GetMousePosition().y;
+	// }
 
 } // namespace QMBT
