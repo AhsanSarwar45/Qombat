@@ -1,4 +1,5 @@
 #include "StackAllocator.hpp"
+#include "Core/Core.hpp"
 #include "Utility/Size.hpp"
 
 namespace QMBT
@@ -7,7 +8,7 @@ namespace QMBT
 	{
 		QMBT_CORE_ASSERT(totalSize < 1_GB && totalSize > 0, "Total size of allocator cannot be more than 1 GB or less than 0");
 
-		m_Data = std::make_shared<AllocatorData>(debugName, totalSize);
+		m_Data = MakeShared<AllocatorData>(debugName, totalSize);
 
 		// Allows the memory manager to keep track of total allocated memory
 		MemoryManager::GetInstance().Register(m_Data);

@@ -2,9 +2,10 @@
 
 #include <QMBTPCH.hpp>
 
+#include "AllocatorData.hpp"
 #include "Core/Aliases.hpp"
-#include "Core/Core.hpp"
 #include "Core/Types/SinglyLinkedList.hpp"
+#include "Core/Types/SharedPtr.hpp"
 
 namespace QMBT
 {
@@ -36,12 +37,12 @@ namespace QMBT
 
 		~FreeListAllocator();
 
-		void* Allocate(const Size size, const Size alignment = 8);
+		void* Allocate(const Size size, const Size alignment = 8, const char* name = "");
 
 		template <typename Object, typename... Args>
 		Object* New(Args... argList);
 
-		void Deallocate(void* ptr);
+		void Deallocate(void* ptr, const char* name = "");
 
 		template <typename Object>
 		void Delete(Object* ptr);
@@ -65,7 +66,7 @@ namespace QMBT
 		void* m_StartPtr = nullptr;
 		PlacementPolicy m_Policy;
 		SinglyLinkedList<FreeHeader> m_FreeList;
-		Ref<AllocatorData> m_Data;
+		SharedPtr<AllocatorData> m_Data;
 	};
 
 	template <typename Object, typename... Args>

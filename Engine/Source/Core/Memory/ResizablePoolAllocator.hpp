@@ -2,29 +2,29 @@
 
 #include <QMBTPCH.hpp>
 
-#include "Core/Collections.hpp"
-
+#include "Core/Core.hpp"
 #include "Core/Memory/MemoryManager.hpp"
+#include "Core/Types/BasicVector.hpp"
 
 namespace QMBT
 {
 	/**
-	 * @brief A templated allocator that can only be used to allocate memory for a 
+	 * @brief A templated allocator that can only be used to Allocate memory for a 
 	 * collection of the same type. 
 	 * 
 	 * @tparam Object 
 	 */
 	template <typename Object>
-	class PoolAllocatorBlocked
+	class ResizablePoolAllocator
 	{
 	  public:
 		//Prohibit default construction, moving and assignment
 		// ! For some reason, the default constructor does not get deleted
 
-		PoolAllocatorBlocked(const PoolAllocatorBlocked&) = delete;
-		PoolAllocatorBlocked(PoolAllocatorBlocked&&) = delete;
-		PoolAllocatorBlocked& operator=(const PoolAllocatorBlocked&) = delete;
-		PoolAllocatorBlocked& operator=(PoolAllocatorBlocked&&) = delete;
+		ResizablePoolAllocator(const ResizablePoolAllocator&) = delete;
+		ResizablePoolAllocator(ResizablePoolAllocator&&) = delete;
+		ResizablePoolAllocator& operator=(const ResizablePoolAllocator&) = delete;
+		ResizablePoolAllocator& operator=(ResizablePoolAllocator&&) = delete;
 
 		/**
 		 * @brief Construct a new Pool Allocator object.
@@ -33,8 +33,8 @@ namespace QMBT
 		 * @param chunksPerBlock After this many items have been allocated, the allocator allocates
 		 * a new block of size equal to chunksPerBlock * sizeof(Object). 
 		 */
-		PoolAllocatorBlocked(const char* debugName = "Allocator", Size chunksPerBlock = 8);
-		~PoolAllocatorBlocked();
+		ResizablePoolAllocator(const char* debugName = "Allocator", Size chunksPerBlock = 8);
+		~ResizablePoolAllocator();
 
 		/**
 		 * @brief Gets an address in the pool, constructs the object at the address and returns the address
@@ -50,14 +50,15 @@ namespace QMBT
 			return new (address) Object(argList...); //Call the placement new operator, which constructs the Object
 		}
 
-		void Deallocate(Object* ptr);
+		void Deallocate(void* ptr);
+
 		void Delete(Object* ptr);
 
 		inline Size GetUsedSize() const { return m_Data->UsedSize; }
 
 	  private:
-		PoolAllocatorBlocked();
-		PoolAllocatorBlocked(PoolAllocatorBlocked&);
+		ResizablePoolAllocator();
+		ResizablePoolAllocator(ResizablePoolAllocator&);
 		Chunk* AllocateBlock(Size chunkSize);
 
 	  private:
@@ -71,14 +72,14 @@ namespace QMBT
 	};
 
 	template <typename Object>
-	PoolAllocatorBlocked<Object>::PoolAllocatorBlocked(const char* debugName, Size chunksPerBlock)
+	ResizablePoolAllocator<Object>::ResizablePoolAllocator(const char* debugName, Size chunksPerBlock)
 		: m_ChunksPerBlock(chunksPerBlock)
 	{
 		QMBT_CORE_ASSERT(m_ChunksPerBlock > 0, "Chunks per block have to be more than 0!");
 
 		m_ObjectSize = sizeof(Object);
 
-		m_Data = std::make_shared<AllocatorData>(debugName, 0);
+		m_Data = MakeShared<AllocatorData>(debugName, 0);
 
 		MemoryManager::GetInstance()
 			.Register(m_Data);
@@ -88,7 +89,7 @@ namespace QMBT
 	}
 
 	template <typename Object>
-	PoolAllocatorBlocked<Object>::~PoolAllocatorBlocked()
+	ResizablePoolAllocator<Object>::~ResizablePoolAllocator()
 	{
 		MemoryManager::GetInstance().UnRegister(m_Data);
 		for (auto& ptr : m_AllocatedBlocks)
@@ -96,12 +97,11 @@ namespace QMBT
 			free(ptr);
 		}
 	}
-
 	template <typename Object>
-	void* PoolAllocatorBlocked<Object>::Allocate()
+	void* ResizablePoolAllocator<Object>::Allocate()
 	{
 		// No chunks left in the current block, or no block
-		// exists yet, allocate a new one.
+		// exists yet, Allocate a new one.
 		if (m_CurrentPtr == nullptr)
 		{
 			m_CurrentPtr = AllocateBlock(m_ObjectSize);
@@ -122,8 +122,9 @@ namespace QMBT
 
 		return freeChunk;
 	}
+
 	template <typename Object>
-	void PoolAllocatorBlocked<Object>::Deallocate(Object* ptr)
+	void ResizablePoolAllocator<Object>::Deallocate(void* ptr)
 	{
 		// The freed chunk's next pointer points to the
 		// current allocation pointer:
@@ -139,14 +140,14 @@ namespace QMBT
 	}
 
 	template <typename Object>
-	void PoolAllocatorBlocked<Object>::Delete(Object* ptr)
+	void ResizablePoolAllocator<Object>::Delete(Object* ptr)
 	{
 		ptr->~Object();	 // Call the destructor on the object
 		Deallocate(ptr); // Deallocate the pointer
 	}
 
 	template <typename Object>
-	Chunk* PoolAllocatorBlocked<Object>::AllocateBlock(Size chunkSize)
+	Chunk* ResizablePoolAllocator<Object>::AllocateBlock(Size chunkSize)
 	{
 		QMBT_CORE_ASSERT(chunkSize > sizeof(Chunk), "Object size must be larger than pointer size");
 

@@ -2,8 +2,9 @@
 
 #include "Core/Logging/Logger.hpp"
 #include "Events/ApplicationEvent.hpp"
-
 #include "glad/glad.h"
+
+#include "Core/Memory/STLAllocator.hpp"
 
 namespace QMBT
 {
@@ -16,6 +17,8 @@ namespace QMBT
 		s_Instance = this;
 
 		m_Window = Window::Create(WindowProperties(m_Name));
+		m_Test = AllocateShared<float>(STLAllocator("Test"), 5.6f);
+
 		QMBT_CORE_ASSERT(m_Window, "Window was not initialized properly!");
 		m_Window->SetEventCallback(BIND_EVENT_FUNCTION(Application::OnEvent));
 	}

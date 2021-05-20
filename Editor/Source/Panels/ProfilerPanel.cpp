@@ -27,6 +27,8 @@ namespace QCreate
 
 		ImDrawList* drawList = ImGui::GetWindowDrawList();
 
+		static ImGuiTableFlags tableFlags = ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Sortable;
+
 		const AllocatorVector& allocators = MemoryManager::GetInstance().GetAllocators();
 		const Size totalBudget = MemoryManager::GetInstance().GetApplicationMemoryBudget();
 		const Size totalAllocated = MemoryManager::GetInstance().GetTotalAllocatedSize();
@@ -51,7 +53,7 @@ namespace QCreate
 			float width = (static_cast<float>(allocator->TotalSize) / static_cast<float>(totalBudget)) * totalWidth;
 
 			ImGuiHelper::DrawHoverableRect(startPos, ImVec2(startPos.x + width, bottomEdge), m_Colors.GetRandomColor(),
-										   "%s: %s", allocator->DebugName.c_str(),
+										   "%s: %s", allocator->DebugName,
 										   QMBT::Utility::ToReadable(allocator->TotalSize).c_str());
 			startPos.x += width;
 		}
@@ -62,7 +64,7 @@ namespace QCreate
 
 		for (auto allocator : allocators)
 		{
-			bool open = ImGui::TreeNodeEx(allocator->DebugName.c_str(), treeNodeFlags);
+			bool open = ImGui::TreeNodeEx(allocator->DebugName, treeNodeFlags);
 			if (open)
 			{
 				ImGui::Text("Memory Usage: ");
@@ -83,6 +85,26 @@ namespace QCreate
 
 				ImGui::SetCursorScreenPos(ImVec2(cursorPos.x, bottomEdge + ImGuiStyleVar_FramePadding));
 
+				if (ImGui::BeginTable("table1", 2, tableFlags))
+				{
+					ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_DefaultSort);
+					ImGui::TableSetupColumn("Allocated Size", ImGuiTableColumnFlags_PreferSortDescending);
+
+					ImGui::TableHeadersRow();
+
+					for (auto& allocation : allocator->Allocations)
+					{
+						ImGui::TableNextRow();
+
+						ImGui::TableSetColumnIndex(0);
+						ImGui::Text(allocation.first.c_str());
+
+						ImGui::TableSetColumnIndex(1);
+						ImGui::Text(QMBT::Utility::ToReadable(allocation.second).c_str());
+					}
+
+					ImGui::EndTable();
+				}
 				ImGui::TreePop();
 			}
 		}
@@ -258,9 +280,9 @@ namespace QCreate
 				ImPlot::EndPlot();
 			}
 
-			ImGuiTableFlags tableFlags = ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_SizingFixedFit;
 			if (ImGui::BeginTable("table", 6, tableFlags))
 			{
+				PROFILE_SCOPE("Table", ProfileCategory::Editor);
 				ImGui::TableSetupColumn("Function Name");
 				ImGui::TableSetupColumn("Elapsed Time");
 				ImGui::TableSetupColumn("Start Time");

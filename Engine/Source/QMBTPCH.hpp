@@ -35,4 +35,7 @@
 
 #include <EASTL/array.h>
 #include <EASTL/shared_ptr.h>
+#include <EASTL/string.h>
+#include <EASTL/unique_ptr.h>
+#include <EASTL/unordered_map.h>
 #include <EASTL/vector.h>

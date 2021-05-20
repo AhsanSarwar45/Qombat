@@ -9,7 +9,7 @@
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
-#include <Core/Aliases.hpp>
+#include "Core/Types/SharedPtr.hpp"
 
 namespace QMBT
 {
@@ -19,7 +19,7 @@ namespace QMBT
 	{
 	  public:
 		static void InitializeEngineLoggers();
-		static void InitializeClientLogger(Ref<Console> console);
+		static void InitializeClientLogger(SharedPtr<Console> console);
 
 		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
 		inline static std::shared_ptr<spdlog::logger>& GetMemoryLogger() { return s_MemoryLogger; }

@@ -14,8 +14,9 @@ add_executable(${PROJECT_NAME}
 "Source/ConfigurationTest.cpp"
 "Source/StackAllocatorTest.cpp"
 "Source/PoolAllocatorTest.cpp"
-"Source/PoolAllocatorBlockedTest.cpp"
+"Source/ResizablePoolAllocatorTest.cpp"
 "Source/VectorAllocatorTest.cpp"
+"Source/SharedPtrTest.cpp"
 "Source/FreeListAllocatorTest.cpp"
 
 )

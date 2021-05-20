@@ -48,7 +48,7 @@ namespace QMBT
 		LOG_CORE_INFO("Initialized Core Logger");
 	}
 
-	void Logger::InitializeClientLogger(Ref<Console> console)
+	void Logger::InitializeClientLogger(SharedPtr<Console> console)
 	{
 		s_ClientLogger = spdlog::ConsoleSink_mt("App", console);
 		s_ClientLogger->set_level(spdlog::level::trace);

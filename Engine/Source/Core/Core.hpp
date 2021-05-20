@@ -6,7 +6,6 @@
 #include "Core/Compatibility/PlatformDetection.hpp"
 #include "Core/Compatibility/PrettyFunction.hpp"
 
-#include "Core/Aliases.hpp"
 #include "Core/Logging/Logger.hpp"
 #include "Core/Macros.hpp"
 #include "Debug/Instrumentation.hpp"

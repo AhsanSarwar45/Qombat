@@ -4,8 +4,9 @@
 #include "Display/Window.hpp"
 
 #include "Core/LayerStack.hpp"
+#include "Core/Memory/FreeListAllocator.hpp"
 #include "Core/Memory/StackAllocator.hpp"
-#include "Core/Memory/VectorAllocator.hpp"
+#include "Core/Types/UniquePtr.hpp"
 #include "Events/ApplicationEvent.hpp"
 
 namespace QMBT
@@ -39,18 +40,22 @@ namespace QMBT
 		inline static Application& Get() { return *s_Instance; }
 		inline Window& GetWindow() { return *m_Window; }
 
+		inline static FreeListAllocator* GetFreeListAllocator() { return &(s_Instance->m_GlobalAllocator); }
+
 	  private:
 		bool OnWindowClose(const WindowCloseEvent& event);
 
 	  protected:
 		StackAllocator m_LayerStackAllocator;
 
+		FreeListAllocator m_GlobalAllocator;
+
 		//StackAllocator m_EditorLayerStackAllocator;
 
 	  private:
 		static Application* s_Instance;
 
-		Scope<Window> m_Window;
+		UniquePtr<Window> m_Window;
 		LayerStack m_LayerStack;
 		//LayerStack m_EditorLayerStack;
 

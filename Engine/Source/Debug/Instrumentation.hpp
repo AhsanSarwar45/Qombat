@@ -3,9 +3,11 @@
 #include "QMBTPCH.hpp"
 
 #include "Core/Aliases.hpp"
-#include "Core/Collections.hpp"
 #include "Core/Logging/Logger.hpp"
 #include "Core/Macros.hpp"
+#include "Core/Types/Array.hpp"
+#include "Core/Types/String.hpp"
+#include "Core/Types/Vector.hpp"
 
 namespace QMBT
 {
@@ -52,7 +54,7 @@ namespace QMBT
 
 	struct InstrumentationSession
 	{
-		std::string Name;
+		String Name;
 	};
 
 	using TimesArray = Array<Vector<double>, static_cast<int>(ProfileCategory::Other) + 1>;
@@ -233,8 +235,12 @@ namespace QMBT
 
 	  private:
 		Instrumentor()
-			: m_CurrentSession(nullptr), m_TotalFrameTimes(10000, "Total Frame Times Allocator"), m_Frames(10000)
+			: m_CurrentSession(nullptr),
+			  m_Frames("Profiler Frames"),
+			  m_TotalFrameTimes("Total Frame Times Allocator")
 		{
+			m_TotalFrameTimes.reserve(10000);
+			m_Frames.reserve(10000);
 			for (auto& vec : m_Times)
 			{
 				vec.reserve(10000);
@@ -263,7 +269,7 @@ namespace QMBT
 		InstrumentationSession* m_CurrentSession;
 
 		TimesArray m_Times;
-		Vector<double, VectorAllocator> m_TotalFrameTimes;
+		Vector<double> m_TotalFrameTimes;
 
 		Vector<Frame> m_Frames;
 		Frame m_CurrentFrame;

@@ -4,6 +4,7 @@
 
 #include "Core/Memory/MemoryManager.hpp"
 #include "Core/Memory/Utility/MemoryUtils.hpp"
+#include "Core/Types/SharedPtr.hpp"
 
 namespace QMBT
 {
@@ -83,7 +84,7 @@ namespace QMBT
 	  private:
 		StackAllocator(StackAllocator& stackAllocator); //Restrict copying
 
-		Ref<AllocatorData> m_Data;
+		SharedPtr<AllocatorData> m_Data;
 
 		void* m_HeadPtr = nullptr; // Points to the first available location
 		Size m_Offset;

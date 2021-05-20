@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Core/Logging/Logger.hpp"
+#include "Core/Types/UniquePtr.hpp"
 #include "Display/Window.hpp"
 #include "Rendering/GraphicsContext.hpp"
 
@@ -40,7 +41,7 @@ namespace QMBT
 
 	  private:
 		GLFWwindow* m_Window;
-		Scope<GraphicsContext> m_Context;
+		UniquePtr<GraphicsContext> m_Context;
 
 		//Struct to pass windows data to GLFW as custom user data
 		struct WindowData

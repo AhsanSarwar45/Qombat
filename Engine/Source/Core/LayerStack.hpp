@@ -2,6 +2,7 @@
 
 #include "Core/Aliases.hpp"
 #include "Core/Layer.hpp"
+#include "Core/Types/Vector.hpp"
 
 namespace QMBT
 {
@@ -53,7 +54,7 @@ namespace QMBT
 		Vector<Layer*> m_Layers;
 		/*
 		Acts as the barrier between layers and overlays. Layers are stored in the first half
-		before the insert), while overlays are stored after the insert.
+		(before the insert), while overlays are stored after the insert.
 		New layers are added at the current insert position while overlays are added at the end 
 		of the list.
 		*/

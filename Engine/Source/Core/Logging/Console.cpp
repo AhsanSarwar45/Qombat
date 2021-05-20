@@ -17,16 +17,16 @@ namespace QMBT
 
 	void Console::Initialize()
 	{
-		m_Logs = CreateRef<std::deque<Ref<Log>>>();
+		m_Logs = MakeShared<Logs>();
 	}
 
-	void Console::AddLog(const std::string &log, LogLevel level)
+	void Console::AddLog(const std::string& log, LogLevel level)
 	{
 		if (m_Logs->size() >= m_MaxLogs)
 		{
 			m_Logs->pop_front();
 		}
-		m_Logs->push_back(CreateRef<Log>(log, level));
+		m_Logs->push_back(MakeShared<Log>(log, level));
 	}
 
-}
+} // namespace QMBT

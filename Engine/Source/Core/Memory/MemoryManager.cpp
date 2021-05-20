@@ -1,7 +1,7 @@
 #include "MemoryManager.hpp"
 
+#include "Core/Core.hpp"
 #include "Utility/Size.hpp"
-#include "VectorAllocatorGlobal.hpp"
 
 namespace QMBT
 {
@@ -19,16 +19,16 @@ namespace QMBT
 		if (!s_MemoryManager)
 		{
 			s_MemoryManager = new MemoryManager(500_MB);
-			VectorAllocatorGlobal::RegisterData();
 		}
 		return *s_MemoryManager;
 	}
 
-	void MemoryManager::Register(Ref<AllocatorData> allocatorData)
+	void MemoryManager::Register(SharedPtr<AllocatorData> allocatorData)
 	{
 		m_TotalAllocatedSize += allocatorData->TotalSize;
 
-		LOG_MEMORY_INFO("Registering Allocator of total size {0}",
+		LOG_MEMORY_INFO("Registering {0} of total size {1}",
+						allocatorData->DebugName,
 						Utility::ToReadable(allocatorData->TotalSize));
 		LOG_MEMORY_INFO("Total size allocated increased to {0}. Total budget left is {1}",
 						Utility::ToReadable(m_TotalAllocatedSize),
@@ -37,13 +37,14 @@ namespace QMBT
 		m_Allocators.push_back(allocatorData);
 	}
 
-	void MemoryManager::UnRegister(Ref<AllocatorData> allocatorData)
+	void MemoryManager::UnRegister(SharedPtr<AllocatorData> allocatorData)
 	{
 		m_Allocators.erase(std::remove(m_Allocators.begin(), m_Allocators.end(), allocatorData), m_Allocators.end());
 
 		m_TotalAllocatedSize -= allocatorData->TotalSize;
 
-		LOG_MEMORY_INFO("UnRegistering Allocator of total size {0}",
+		LOG_MEMORY_INFO("UnRegistering {0} of total size {1}",
+						allocatorData->DebugName,
 						Utility::ToReadable(allocatorData->TotalSize));
 		LOG_MEMORY_INFO("Total size allocated decreased to  {0}. Total budget left is {1}",
 						Utility::ToReadable(m_TotalAllocatedSize),

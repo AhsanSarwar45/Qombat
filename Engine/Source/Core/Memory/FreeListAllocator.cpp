@@ -1,5 +1,6 @@
 #include "FreeListAllocator.hpp"
 
+#include "Core/Core.hpp"
 #include "MemoryManager.hpp"
 #include "Utility/MemoryUtils.hpp"
 
@@ -8,7 +9,7 @@ namespace QMBT
 	FreeListAllocator::FreeListAllocator(const char* debugName, const Size totalSize, const PlacementPolicy policy)
 		: m_Policy(policy)
 	{
-		m_Data = std::make_shared<AllocatorData>(debugName, totalSize);
+		m_Data = MakeShared<AllocatorData>(debugName, totalSize);
 
 		// Allows the memory manager to keep track of total allocated memory
 		MemoryManager::GetInstance().Register(m_Data);
@@ -34,9 +35,9 @@ namespace QMBT
 		free(m_StartPtr);
 	}
 
-	void* FreeListAllocator::Allocate(const Size size, const Size alignment)
+	void* FreeListAllocator::Allocate(const Size size, const Size alignment, const char* name)
 	{
-		QMBT_CORE_ASSERT(size >= sizeof(Node), "Allocation size must be bigger than size of Node");
+		//QMBT_CORE_ASSERT(size >= sizeof(Node), "Allocation size must be bigger than size of Node");
 		QMBT_CORE_ASSERT(alignment >= 8, "Alignment must be 8 at least");
 
 		static Size allocationHeaderSize = sizeof(FreeListAllocator::AllocationHeader);
@@ -70,6 +71,11 @@ namespace QMBT
 		((FreeListAllocator::AllocationHeader*)headerAddress)->padding = alignmentPadding;
 
 		m_Data->UsedSize += requiredSize;
+
+		if (*name != 0)
+		{
+			m_Data->Allocations[name] += requiredSize;
+		}
 
 		return (void*)dataAddress;
 	}
@@ -130,11 +136,10 @@ namespace QMBT
 		foundNode = bestBlock;
 	}
 
-	void FreeListAllocator::Deallocate(void* ptr)
+	void FreeListAllocator::Deallocate(void* ptr, const char* name)
 	{
 		// Insert it in a sorted position by the address number
-		const Size currentAddress = (Size)ptr;
-		const Size headerAddress = currentAddress - sizeof(FreeListAllocator::AllocationHeader);
+		const Size headerAddress = (Size)ptr - sizeof(FreeListAllocator::AllocationHeader);
 		const FreeListAllocator::AllocationHeader* allocationHeader{(FreeListAllocator::AllocationHeader*)headerAddress};
 
 		Node* freeNode = (Node*)(headerAddress);
@@ -156,6 +161,10 @@ namespace QMBT
 
 		m_Data->UsedSize -= freeNode->data.blockSize;
 
+		if (*name != 0)
+		{
+			m_Data->Allocations[name] -= freeNode->data.blockSize;
+		}
 		// Merge contiguous nodes
 		Coalescence(itPrev, freeNode);
 	}
@@ -186,4 +195,5 @@ namespace QMBT
 		m_FreeList.head = nullptr;
 		m_FreeList.Insert(nullptr, firstNode);
 	}
+
 } // namespace QMBT

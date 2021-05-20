@@ -1,18 +1,12 @@
 #pragma once
 
-namespace Qombat
-{
+#include <QMBTPCH.hpp>
 
-	template <typename T>
-	class Vector
-	{
-	  public:
-		typedef T Type;
-		typedef T* Pointer;
-		typedef const T* ConstPointer;
-		typedef T& Reference;
-		typedef const T& ConstReference;
-		typedef T* Iterator;
-		typedef const T* ConstIterator;
-	};
-} // namespace Qombat
+#include "Core/Memory/STLAllocator.hpp"
+
+namespace QMBT
+{
+	template <typename T, typename Allocator = STLAllocator>
+	using Vector = eastl::vector<T, Allocator>;
+
+} // namespace QMBT

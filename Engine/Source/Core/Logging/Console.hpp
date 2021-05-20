@@ -5,11 +5,14 @@
 #include <spdlog/spdlog.h>
 
 #include "Core/Core.hpp"
+#include "Core/Types/SharedPtr.hpp"
+#include "Core/Types/String.hpp"
 
 namespace QMBT
 {
 
 	using LogLevel = spdlog::level::level_enum;
+
 	struct Log
 	{
 		std::string message;
@@ -21,6 +24,8 @@ namespace QMBT
 		}
 	};
 
+	using Logs = std::deque<SharedPtr<Log>>;
+
 	class Console
 	{
 	  public:
@@ -28,16 +33,16 @@ namespace QMBT
 		Console(int maxLogs);
 
 		void AddLog(const std::string& log, LogLevel level);
-		inline void Clear() { std::deque<Ref<Log>>().swap(*m_Logs); }
+		inline void Clear() { Logs().swap(*m_Logs); }
 
-		inline Ref<std::deque<Ref<Log>>> GetLogs() const { return m_Logs; }
+		inline SharedPtr<Logs> GetLogs() const { return m_Logs; }
 
 	  private:
 		void Initialize();
 
 	  private:
 		int m_MaxLogs;
-		Ref<std::deque<Ref<Log>>> m_Logs;
+		SharedPtr<Logs> m_Logs;
 	};
 } // namespace QMBT
 
@@ -64,7 +69,7 @@ namespace spdlog::sinks
 	{
 
 	  public:
-		explicit ConsoleSink(Ref<QMBT::Console> console)
+		explicit ConsoleSink(QMBT::SharedPtr<QMBT::Console> console)
 		{
 			m_Console = console;
 		}
@@ -90,7 +95,7 @@ namespace spdlog::sinks
 		}
 
 	  private:
-		Ref<QMBT::Console> m_Console;
+		QMBT::SharedPtr<QMBT::Console> m_Console;
 	};
 } // namespace spdlog::sinks
 
@@ -99,7 +104,7 @@ namespace spdlog
 	// A Factory for the multi threaded version of the CustomSink
 	// Multi-threaded version is slower than a single-threaded version due to thread locking but is thread-safe
 	template <typename Factory = synchronous_factory>
-	inline std::shared_ptr<logger> ConsoleSink_mt(const std::string& logger_name, Ref<QMBT::Console> console)
+	inline std::shared_ptr<logger> ConsoleSink_mt(const std::string& logger_name, QMBT::SharedPtr<QMBT::Console> console)
 	{
 		return Factory::template create<sinks::ConsoleSink<std::mutex>>(logger_name, console);
 	}

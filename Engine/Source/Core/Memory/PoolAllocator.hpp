@@ -73,7 +73,7 @@ namespace QMBT
 
 		m_ObjectSize = sizeof(Object);
 
-		m_Data = std::make_shared<AllocatorData>(debugName, 0);
+		m_Data = MakeShared<AllocatorData>(debugName, 0);
 
 		MemoryManager::GetInstance()
 			.Register(m_Data);

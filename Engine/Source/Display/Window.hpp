@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Core.hpp"
+#include "Core/Types/UniquePtr.hpp"
 #include "Events/Events.hpp"
 
 namespace QMBT
@@ -50,7 +51,7 @@ namespace QMBT
 
 		virtual void* GetNativeWindow() const = 0;
 
-		static Scope<Window> Create(const WindowProperties& props = WindowProperties());
+		static UniquePtr<Window> Create(const WindowProperties& props = WindowProperties());
 	};
 
 } // namespace QMBT

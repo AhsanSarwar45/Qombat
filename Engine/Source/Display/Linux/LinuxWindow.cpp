@@ -166,9 +166,9 @@ namespace QMBT
 		Shutdown();
 	}
 
-	Scope<Window> Window::Create(const WindowProperties& properties)
+	UniquePtr<Window> Window::Create(const WindowProperties& properties)
 	{
-		return CreateScope<LinuxWindow>(properties);
+		return MakeUnique<LinuxWindow>(properties);
 	}
 
 	void LinuxWindow::Shutdown()

@@ -3,20 +3,26 @@
 #include <QMBTPCH.hpp>
 
 #include "Core/Aliases.hpp"
+#include "Core/Types/SharedPtr.hpp"
+#include "Core/Types/String.hpp"
+#include "Core/Types/UnorderedMap.hpp"
 
 namespace QMBT
 {
 	struct AllocatorData
 	{
-		std::string DebugName;
+		const char* DebugName;
 		Size TotalSize;
 		Size UsedSize;
+		UnorderedMap<String, Size> Allocations;
 
-		AllocatorData(const std::string debugName, Size totalSize)
-			: DebugName(debugName), TotalSize(totalSize), UsedSize(0) {}
+		AllocatorData(const char* debugName, Size totalSize)
+			: DebugName(debugName), TotalSize(totalSize), UsedSize(0)
+		{
+		}
 	};
 
-	using AllocatorVector = eastl::vector<Ref<AllocatorData>>;
+	using AllocatorVector = eastl::vector<SharedPtr<AllocatorData>>;
 
 	struct Chunk
 	{
@@ -29,4 +35,4 @@ namespace QMBT
 		*/
 		Chunk* next;
 	};
-}
+} // namespace QMBT
