@@ -22,7 +22,7 @@ An RTS Game Engine based on the [Hazel](https://github.com/TheCherno/Hazel) Game
 
 ### Requirements
 
-- Windows, Linux, MacOS
+- Linux (Windows, Mac have not been tested yet, but will be supported in the future)
 - CMake version 1.16+
 
 ### Steps
