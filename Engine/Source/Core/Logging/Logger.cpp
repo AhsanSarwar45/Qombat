@@ -48,14 +48,14 @@ namespace QMBT
 		LOG_CORE_INFO("Initialized Core Logger");
 	}
 
-	void Logger::InitializeClientLogger(SharedPtr<Console> console)
-	{
-		s_ClientLogger = spdlog::ConsoleSink_mt("App", console);
-		s_ClientLogger->set_level(spdlog::level::trace);
-		s_ClientLogger->set_pattern(s_Pattern);
+	// void Logger::InitializeClientLogger(SharedPtr<Console> console)
+	// {
+	// 	s_ClientLogger = spdlog::ConsoleSink_mt("App", console);
+	// 	s_ClientLogger->set_level(spdlog::level::trace);
+	// 	s_ClientLogger->set_pattern(s_Pattern);
 
-		LOG_CORE_INFO("Initialized Client Logger");
-	}
+	// 	LOG_CORE_INFO("Initialized Client Logger");
+	// }
 
 	void Logger::SetVerbosity(bool verbosity)
 	{
