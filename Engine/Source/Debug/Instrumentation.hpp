@@ -349,7 +349,7 @@ namespace QMBT
 	GET_MACRO_1(__VA_ARGS__, PROFILE_FUNCTION3, PROFILE_FUNCTION2) \
 	(__VA_ARGS__)
 #else
-#define PROFILE_SCOPE(name)
-#define PROFILE_FUNCTION()
+#define PROFILE_SCOPE(...)
+#define PROFILE_FUNCTION(...)
 
 #endif

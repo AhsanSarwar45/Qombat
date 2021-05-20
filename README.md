@@ -45,11 +45,17 @@ An RTS Game Engine based on the [Hazel](https://github.com/TheCherno/Hazel) Game
 
  -->
 
+### Using the terminal
+
+1. Navigate to the cloned directory.
+2. Configure CMake using `cmake -B ../build -DCMAKE_BUILD_TYPE=[BuildType]`. Example for Debug build: `cmake -B ../build -DCMAKE_BUILD_TYPE=Debug`.
+3. Build using `cmake --build ../build --config [BuildType] --target Editor`.
+
 ### Using VSCode + [CMake Tools extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools)
 
 1.  Open cloned directory in VSCode.
 2.  Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> to open the command pallette.
-3.  Type `CMake: Configure` to configure the cmake files.
+3.  Type `CMake: Configure` to configure the CMake files.
 4.  Select a compiler from the list.
 5.  Type `CMake: Set Build Target` and select 'Editor'.
 6.  Type `CMake: Build` to build the project.
