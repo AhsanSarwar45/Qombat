@@ -1,6 +1,6 @@
 # QOMBAT
 
-![Linux Build](https://github.com/AhsanSarwar45/Qombat/actions/workflows/Linux.yml/badge.svg)
+![Linux Build](https://github.com/AhsanSarwar45/Qombat/actions/workflows/Build.yml/badge.svg)
 
 An RTS Game Engine based on the [Hazel](https://github.com/TheCherno/Hazel) Game Engine by [TheCherno](https://github.com/TheCherno)
 
