@@ -27,8 +27,10 @@ An RTS Game Engine based on the [Hazel](https://github.com/TheCherno/Hazel) Game
 
 ### Steps
 
-1.  Clone the git repository to local machine using: `git clone --recurse-submodules -j8 https://github.com/AhsanSarwar45/Qombat `
-2.  You can now build either using the terminal or VSCode.
+1.  Clone the git repository to local machine using: `git clone https://github.com/AhsanSarwar45/Qombat`. It is recommended not to use `git clone --recurse-submodules` as the project includes the EASTL library which has infinitely-recursive submodules.
+2.  Initialize all the submodules using `git submodule update --init`.
+3.  Initialize the EASTL submodules using `cd Engine/Vendor/EASTL` and then `git submodule update --init`.
+4.  You can now build either using the terminal or VSCode.
 
 <!-- ### Using terminal
 
