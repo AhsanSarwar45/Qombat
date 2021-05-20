@@ -6,8 +6,6 @@ on:
   pull_request:
     branches: [main]
 
-env:
-
 jobs:
   build:
     name: ${{ matrix.os }} ${{ matrix.build_type }} Build
