@@ -1,5 +1,5 @@
 #pragma once
-#include <imgui/imgui.h>
+#include <ImGui/imgui.h>
 
 #include "Geometry.hpp"
 

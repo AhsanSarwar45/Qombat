@@ -65,11 +65,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/Vendor")
 # =======================================================
 # Adding libraries with CMakeLists.txt as subdirectories
 # =======================================================
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/spdlog")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/magic_enum")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/glfw")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/glad")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/eastl")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/Spdlog")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/MagicEnum")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/GLFW")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/Glad")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/EASTL")
 
 # set(EASTL_ROOT_DIR "${CMAKE_SOURCE_DIR}/Vendor/eastl")
 

@@ -1,6 +1,6 @@
 #include "TestPanel.hpp"
 
-#include <imgui/imgui.h>
+#include <ImGui/imgui.h>
 
 #include <Qombat/Core.hpp>
 

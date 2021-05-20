@@ -1,6 +1,6 @@
 #include <vector>
 
-#include <imgui/imgui.h>
+#include <ImGui/imgui.h>
 
 #include <Qombat/Core.hpp>
 #include <Qombat/Events.hpp>

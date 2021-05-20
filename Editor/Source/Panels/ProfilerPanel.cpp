@@ -1,7 +1,7 @@
 #include "ProfilerPanel.hpp"
 
-#include <implot/implot.h>
-#include <implot/implot_internal.h>
+#include <ImPlot/implot.h>
+#include <ImPlot/implot_internal.h>
 
 #include <Qombat/Utility.hpp>
 

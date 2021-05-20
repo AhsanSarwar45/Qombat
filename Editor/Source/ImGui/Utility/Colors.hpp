@@ -2,7 +2,7 @@
 #include <random>
 #include <vector>
 
-#include <imgui/imgui.h>
+#include <ImGui/imgui.h>
 
 namespace QCreate
 {

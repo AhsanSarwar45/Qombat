@@ -19,15 +19,15 @@ add_executable(${PROJECT_NAME}
 "Source/ImGui/GLFW/ImGuiGLFW.cpp"
 "Source/ImGui/Utility/Colors.cpp"
 
-"Vendor/imgui/imgui.cpp"
-"Vendor/imgui/imgui_draw.cpp"
-"Vendor/imgui/imgui_demo.cpp"
-"Vendor/imgui/imgui_tables.cpp"
-"Vendor/imgui/imgui_widgets.cpp"
+"Vendor/ImGui/imgui.cpp"
+"Vendor/ImGui/imgui_draw.cpp"
+"Vendor/ImGui/imgui_demo.cpp"
+"Vendor/ImGui/imgui_tables.cpp"
+"Vendor/ImGui/imgui_widgets.cpp"
 
-"Vendor/implot/implot.cpp"
-"Vendor/implot/implot_items.cpp"
-"Vendor/implot/implot_demo.cpp"
+"Vendor/ImPlot/implot.cpp"
+"Vendor/ImPlot/implot_items.cpp"
+"Vendor/ImPlot/implot_demo.cpp"
 
 )
 
@@ -45,7 +45,7 @@ target_compile_definitions(${PROJECT_NAME}
 # Including vendor libraries
 # =======================================================
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Vendor")
-target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Vendor/imgui")
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Vendor/ImGui")
 
 
 # Link the static library from Engine

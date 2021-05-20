@@ -1,6 +1,6 @@
 #include <stdarg.h>
 
-#include <imgui/imgui.h>
+#include <ImGui/imgui.h>
 
 #include <Qombat/Core.hpp>
 
@@ -24,7 +24,6 @@ namespace QCreate
 			}
 		}
 
-
-	}
+	} // namespace ImGuiHelper
 
 } // namespace QCreate

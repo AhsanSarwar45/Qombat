@@ -4,6 +4,7 @@ An RTS Game Engine based on the [Hazel](https://github.com/TheCherno/Hazel) Game
 
 ## Dependencies
 
+- [EASTL](https://github.com/electronicarts/EASTL)
 - [Dear ImGui](https://github.com/ocornut/imgui)
 - [Glad](https://github.com/Dav1dde/glad)
 - [GLFW](https://github.com/glfw/glfw)

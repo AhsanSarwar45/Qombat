@@ -1,7 +1,7 @@
 #include "ImGuiLayer.hpp"
 
-#include <imgui/imgui.h>
-#include <implot/implot.h>
+#include <ImGui/imgui.h>
+#include <ImPlot/implot.h>
 
 #include "ImGui/GLFW/ImGuiGLFW.hpp"
 #include "ImGui/OpenGL/ImGuiOpenGL.hpp"

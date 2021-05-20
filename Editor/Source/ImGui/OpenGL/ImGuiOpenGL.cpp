@@ -79,7 +79,7 @@
 #endif
 
 #include "ImGuiOpenGL.hpp"
-#include <imgui/imgui.h>
+#include <imgui.h>
 
 #include <stdio.h>
 #if defined(_MSC_VER) && _MSC_VER <= 1500 // MSVC 2008 or earlier
