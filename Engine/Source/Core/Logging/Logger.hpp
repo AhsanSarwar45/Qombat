@@ -95,11 +95,17 @@ namespace QMBT
 	if (::QMBT::Logger::s_LogMemoryOn) \
 	SPDLOG_LOGGER_ERROR(::QMBT::Logger::GetAppLogger(), __VA_ARGS__)
 #else
-#define LOG_TRACE(...)
-#define LOG_INFO(...)
-#define LOG_WARN(...)
-#define LOG_CRITICAL(...)
-#define LOG_ERROR(...)
+#define LOG_CORE_TRACE(...)
+#define LOG_CORE_INFO(...)
+#define LOG_CORE_WARN(...)
+#define LOG_CORE_CRITICAL(...)
+#define LOG_CORE_ERROR(...)
+
+#define LOG_MEMORY_TRACE(...)
+#define LOG_MEMORY_INFO(...)
+#define LOG_MEMORY_WARN(...)
+#define LOG_MEMORY_CRITICAL(...)
+#define LOG_MEMORY_ERROR(...)
 #endif
 
 // Client log macros
