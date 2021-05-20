@@ -27,7 +27,7 @@ jobs:
     - name: Navigate to EASTL
       run: cd Engine/Source/Vendor/EASTL
       
-    -name: Initialise EASTL Submodules
+    - name: Initialise EASTL Submodules
       run: git submodule update --init
 
     - name: Configure CMake
