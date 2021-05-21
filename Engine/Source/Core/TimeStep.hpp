@@ -5,7 +5,7 @@ namespace QMBT
 	class TimeStep
 	{
 	  public:
-		TimeStep(float time)
+		explicit TimeStep(float time)
 			: m_Time(time) {}
 
 		operator float() const { return m_Time; }

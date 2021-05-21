@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: ${{ matrix.os_name }} ${{ matrix.compiler }} ${{ matrix.build_type }} Build
+    name: ${{ matrix.os_name }} ${{ matrix.compiler_name }} ${{ matrix.build_type }} Build
 
     runs-on: ${{ matrix.os }}
 
@@ -20,6 +20,10 @@ jobs:
         include:
           - os: ubuntu-latest
             os_name: Linux
+          - compiler: gcc
+            compiler_name: GCC
+          - compiler: clang
+            compiler_name: Clang
 
     steps:
       - uses: actions/checkout@v2

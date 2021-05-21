@@ -13,7 +13,7 @@ namespace QMBT
 	class LinuxWindow : public Window
 	{
 	  public:
-		LinuxWindow(const WindowProperties& properties);
+		explicit LinuxWindow(const WindowProperties& properties);
 		virtual ~LinuxWindow();
 
 		//Update GLFW stuff, swap buffers, poll the input events

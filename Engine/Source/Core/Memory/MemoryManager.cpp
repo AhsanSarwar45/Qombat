@@ -8,7 +8,6 @@ namespace QMBT
 	MemoryManager::MemoryManager(Size applicationBudget)
 		: m_ApplicationBudget(applicationBudget), m_TotalAllocatedSize(0)
 	{
-
 		LOG_MEMORY_INFO("Instantiated Memory Manager with total memory budget of {0}",
 						Utility::ToReadable(m_ApplicationBudget));
 	}

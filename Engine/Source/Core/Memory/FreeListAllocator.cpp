@@ -7,10 +7,8 @@
 namespace QMBT
 {
 	FreeListAllocator::FreeListAllocator(const char* debugName, const Size totalSize, const PlacementPolicy policy)
-		: m_Policy(policy)
+		: m_Policy(policy), m_Data(MakeShared<AllocatorData>(debugName, totalSize))
 	{
-		m_Data = MakeShared<AllocatorData>(debugName, totalSize);
-
 		// Allows the memory manager to keep track of total allocated memory
 		MemoryManager::GetInstance().Register(m_Data);
 

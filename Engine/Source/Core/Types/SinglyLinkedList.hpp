@@ -11,7 +11,7 @@ namespace QMBT
 			T data;
 			Node* next;
 		};
-		Node* head;
+		Node* head{nullptr};
 
 	  public:
 		SinglyLinkedList() {}

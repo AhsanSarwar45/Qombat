@@ -27,10 +27,10 @@ An RTS Game Engine that I am developing as a hobby. Till now just the core syste
 
 ### Steps
 
-1.  Clone the git repository to local machine using: `git clone https://github.com/AhsanSarwar45/Qombat`. It is recommended not to use `git clone --recurse-submodules` as the project includes the EASTL library which has infinitely-recursive submodules.
-2.  Initialize all the submodules using `git submodule update --init`.
-3.  Initialize the EASTL submodules using `cd Engine/Vendor/EASTL` and then `git submodule update --init`.
-4.  You can now build either using the terminal or VSCode.
+1. Clone the git repository to local machine using: `git clone https://github.com/AhsanSarwar45/Qombat`. It is recommended not to use `git clone --recurse-submodules` as the project includes the EASTL library which has infinitely-recursive submodules.
+2. Initialize all the submodules using `git submodule update --init`.
+3. Initialize the EASTL submodules using `cd Engine/Vendor/EASTL` and then `git submodule update --init`.
+4. You can now build either using the terminal or VSCode.
 
 ### Using the terminal
 
@@ -40,9 +40,9 @@ An RTS Game Engine that I am developing as a hobby. Till now just the core syste
 
 ### Using VSCode + [CMake Tools extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools)
 
-1.  Open cloned directory in VSCode.
-2.  Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> to open the command pallette.
-3.  Type `CMake: Configure` to configure the CMake files.
-4.  Select a compiler from the list.
-5.  Type `CMake: Set Build Target` and select 'Editor'.
-6.  Type `CMake: Build` to build the project.
+1. Open cloned directory in VSCode.
+2. Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> to open the command pallette.
+3. Type `CMake: Configure` to configure the CMake files.
+4. Select a compiler from the list.
+5. Type `CMake: Set Build Target` and select 'Editor'.
+6. Type `CMake: Build` to build the project.

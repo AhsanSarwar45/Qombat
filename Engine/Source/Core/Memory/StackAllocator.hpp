@@ -86,8 +86,8 @@ namespace QMBT
 
 		SharedPtr<AllocatorData> m_Data;
 
-		void* m_HeadPtr = nullptr; // Points to the first available location
-		Size m_Offset;
+		void* m_HeadPtr{nullptr}; // Points to the first available location
+		Size m_Offset{0};
 
 		struct AllocationHeader
 		{

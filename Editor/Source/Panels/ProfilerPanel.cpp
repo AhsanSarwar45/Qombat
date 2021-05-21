@@ -12,7 +12,6 @@
 namespace QCreate
 {
 	ProfilerPanel::ProfilerPanel()
-		: m_BarHeight(30), m_Colors(10)
 	{
 	}
 

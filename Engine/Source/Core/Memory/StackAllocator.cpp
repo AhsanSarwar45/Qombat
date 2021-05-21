@@ -5,16 +5,13 @@
 namespace QMBT
 {
 	StackAllocator::StackAllocator(const char* debugName, Size totalSize)
+		: m_Data(MakeShared<AllocatorData>(debugName, totalSize)), m_HeadPtr(malloc(m_Data->TotalSize))
 	{
 		QMBT_CORE_ASSERT(totalSize < 1_GB && totalSize > 0, "Total size of allocator cannot be more than 1 GB or less than 0");
-
-		m_Data = MakeShared<AllocatorData>(debugName, totalSize);
 
 		// Allows the memory manager to keep track of total allocated memory
 		MemoryManager::GetInstance().Register(m_Data);
 
-		// Allocate all the memory upfront using malloc and store the address
-		m_HeadPtr = malloc(m_Data->TotalSize);
 		m_Offset = 0;
 
 		LOG_MEMORY_INFO("Initialized {0} of size {1}", m_Data->DebugName, Utility::ToReadable(m_Data->TotalSize));
@@ -44,14 +41,12 @@ namespace QMBT
 		const Size nextAddress = currentAddress + padding;
 		const Size headerAddress = nextAddress - sizeof(AllocationHeader);
 		AllocationHeader allocationHeader{static_cast<unsigned char>(padding)};
-		AllocationHeader* headerPtr = (AllocationHeader*)headerAddress;
-		headerPtr = &allocationHeader;
 
 		m_Offset += size;
 
 		m_Data->UsedSize = m_Offset;
 		LOG_MEMORY_INFO("{0} Allocated {1} bytes with alignment {2}", m_Data->DebugName, size, alignment);
-		return (void*)nextAddress;
+		return reinterpret_cast<void*>(nextAddress);
 	}
 
 	void StackAllocator::Deallocate(const Size ptr)

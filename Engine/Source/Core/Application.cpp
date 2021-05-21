@@ -34,7 +34,7 @@ namespace QMBT
 			Instrumentor::GetInstance().BeginFrame();
 			{
 				float time = m_Window->GetTime();
-				TimeStep timeStep = time - m_LastFrameTime;
+				TimeStep timeStep{time - m_LastFrameTime};
 				m_LastFrameTime = time;
 
 				if (!m_Minimized)

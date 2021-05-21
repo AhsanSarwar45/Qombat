@@ -9,7 +9,7 @@ namespace QCreate
 	class RandomColors
 	{
 	  public:
-		RandomColors(int length);
+		explicit RandomColors(int length);
 
 		inline ImColor GetRandomColor() { return m_Colors[m_CurrentIndex++]; }
 		inline void Reset() { m_CurrentIndex = 0; }
@@ -19,6 +19,6 @@ namespace QCreate
 
 		std::vector<ImColor> m_Colors;
 		int m_Length;
-		int m_CurrentIndex;
+		int m_CurrentIndex{0};
 	};
 } // namespace QCreate

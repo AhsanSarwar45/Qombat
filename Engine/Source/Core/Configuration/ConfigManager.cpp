@@ -3,14 +3,12 @@
 namespace QMBT
 {
 	ConfigInt::ConfigInt(int& dataReference, const char* name, const char* description, int min, int max)
-		: m_Data(dataReference), m_Name(name), m_Description(description), m_Max(max), m_Min(min)
+		: m_Data(dataReference), m_Name(name), m_Description(description), m_Max(max), m_Min(min), m_NameHash(Utility::GenerateHash(name))
 	{
 		if (max == 0 && min == 0)
 		{
 			m_Ranged = true;
 		}
-
-		m_NameHash = Utility::GenerateHash(name);
 	}
 
 	void ConfigInt::SetData(int data)
@@ -34,10 +32,8 @@ namespace QMBT
 	}
 
 	ConfigString::ConfigString(std::string& dataReference, const char* name, const char* description)
-		: m_Data(dataReference), m_Name(name), m_Description(description)
+		: m_Data(dataReference), m_Name(name), m_Description(description), m_NameHash(Utility::GenerateHash(name))
 	{
-
-		m_NameHash = Utility::GenerateHash(name);
 	}
 
 	void ConfigManager::Register(const UInt32 groupHash, const ConfigVariant& configVar)

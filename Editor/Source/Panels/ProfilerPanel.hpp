@@ -28,12 +28,12 @@ namespace QCreate
 		void DrawMemoryProfiler();
 
 	  private:
-		UInt16 m_BarHeight;
-		RandomColors m_Colors;
-		Vector<Frame>* m_Frames;
-		Frame* m_SelectedFrame;
-		double m_SelectedFrameTime;
-		double m_FrameMarkerPos;
-		float m_FrameAnalyserZoom = 200;
+		UInt16 m_BarHeight {30};
+		RandomColors m_Colors {10};
+		Vector<Frame>* m_Frames {nullptr};
+		Frame* m_SelectedFrame {nullptr};
+		double m_SelectedFrameTime {0};
+		double m_FrameMarkerPos {0};
+		float m_FrameAnalyserZoom {200};
 	};
 } // namespace QCreate

@@ -11,7 +11,7 @@ namespace QMBT
 
 	class MouseMovedEvent : public Event
 	{
-	public:
+	  public:
 		MouseMovedEvent(float x, float y)
 			: m_MouseX(x), m_MouseY(y) {}
 
@@ -28,13 +28,13 @@ namespace QMBT
 
 		EVENT_CLASS_TYPE(MouseMoved)
 		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
-	private:
+	  private:
 		float m_MouseX, m_MouseY;
 	};
 
 	class MouseScrolledEvent : public Event
 	{
-	public:
+	  public:
 		MouseScrolledEvent(float xOffset, float yOffset)
 			: m_XOffset(xOffset), m_YOffset(yOffset) {}
 
@@ -53,17 +53,17 @@ namespace QMBT
 
 		EVENT_CLASS_TYPE(MouseScrolled)
 		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
-	private:
+	  private:
 		float m_XOffset, m_YOffset;
 	};
 
 	class MouseButtonEvent : public Event
 	{
-	public:
+	  public:
 		inline MouseCode GetMouseButton() const { return m_Button; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
-	protected:
+	  protected:
 		MouseButtonEvent(MouseCode button)
 			: m_Button(button) {}
 		MouseButtonEvent(int button)
@@ -74,10 +74,10 @@ namespace QMBT
 
 	class MouseButtonClickedEvent : public MouseButtonEvent
 	{
-	public:
-		MouseButtonClickedEvent(MouseCode button)
+	  public:
+		explicit MouseButtonClickedEvent(MouseCode button)
 			: MouseButtonEvent(button) {}
-		MouseButtonClickedEvent(int button)
+		explicit MouseButtonClickedEvent(int button)
 			: MouseButtonEvent(button) {}
 
 		std::string ToString() const override
@@ -93,10 +93,10 @@ namespace QMBT
 
 	class MouseDoubleClickedEvent : public MouseButtonEvent
 	{
-	public:
-		MouseDoubleClickedEvent(MouseCode button)
+	  public:
+		explicit MouseDoubleClickedEvent(MouseCode button)
 			: MouseButtonEvent(button) {}
-		MouseDoubleClickedEvent(int button)
+		explicit MouseDoubleClickedEvent(int button)
 			: MouseButtonEvent(button) {}
 
 		std::string ToString() const override
@@ -111,10 +111,10 @@ namespace QMBT
 
 	class MouseButtonReleasedEvent : public MouseButtonEvent
 	{
-	public:
-		MouseButtonReleasedEvent(MouseCode button)
+	  public:
+		explicit MouseButtonReleasedEvent(MouseCode button)
 			: MouseButtonEvent(button) {}
-		MouseButtonReleasedEvent(int button)
+		explicit MouseButtonReleasedEvent(int button)
 			: MouseButtonEvent(button) {}
 
 		std::string ToString() const override
@@ -127,4 +127,4 @@ namespace QMBT
 		EVENT_CLASS_TYPE(MouseButtonReleased)
 	};
 
-}
+} // namespace QMBT

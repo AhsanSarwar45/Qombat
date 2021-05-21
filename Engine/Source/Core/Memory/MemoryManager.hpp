@@ -12,7 +12,7 @@ namespace QMBT
 	class MemoryManager
 	{
 	  public:
-		MemoryManager(Size applicationBudget);
+		explicit MemoryManager(Size applicationBudget);
 		~MemoryManager();
 
 		static MemoryManager& GetInstance();

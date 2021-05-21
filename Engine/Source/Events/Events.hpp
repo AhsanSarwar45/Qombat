@@ -85,7 +85,7 @@ namespace QMBT
 	{
 
 	  public:
-		EventDispatcher(Event& event)
+		explicit EventDispatcher(Event& event)
 			: m_Event(event) {}
 
 		template <typename T, typename Function>

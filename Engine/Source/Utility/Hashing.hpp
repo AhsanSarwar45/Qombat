@@ -117,7 +117,7 @@ namespace QMBT
 		{
 		  public:
 			template <typename T>
-			StringHash(const T& str)
+			explicit StringHash(const T& str)
 				: m_Hash(GenerateHash(str))
 			{
 			}

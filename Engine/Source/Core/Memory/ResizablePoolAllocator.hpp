@@ -5,6 +5,7 @@
 #include "Core/Core.hpp"
 #include "Core/Memory/MemoryManager.hpp"
 #include "Core/Types/BasicVector.hpp"
+#include "Core/Types/SharedPtr.hpp"
 
 namespace QMBT
 {
@@ -62,7 +63,7 @@ namespace QMBT
 		Chunk* AllocateBlock(Size chunkSize);
 
 	  private:
-		Ref<AllocatorData> m_Data;
+		SharedPtr<AllocatorData> m_Data;
 
 		Size m_ChunksPerBlock;
 		Size m_ObjectSize;

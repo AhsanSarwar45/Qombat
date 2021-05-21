@@ -12,16 +12,16 @@ namespace QMBT
 	// Base (and abstract) class for all key events
 	class KeyEvent : public Event
 	{
-	public:
+	  public:
 		inline KeyCode GetKeyCode() const { return m_KeyCode; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 
-	protected:
+	  protected:
 		//Protected constructor to inhibit direct creation
-		KeyEvent(KeyCode keyCode)
+		explicit KeyEvent(KeyCode keyCode)
 			: m_KeyCode(keyCode) {}
-		KeyEvent(int keyCode)
+		explicit KeyEvent(int keyCode)
 			: m_KeyCode(static_cast<KeyCode>(keyCode)) {}
 
 		KeyCode m_KeyCode;
@@ -29,11 +29,12 @@ namespace QMBT
 
 	class KeyPressedEvent : public KeyEvent
 	{
-	public:
-		KeyPressedEvent(KeyCode keyCode, int repeatCount)
+	  public:
+		explicit KeyPressedEvent(KeyCode keyCode, int repeatCount)
 			: KeyEvent(keyCode), m_RepeatCount(repeatCount) {}
-		KeyPressedEvent(int keyCode, int repeatCount)
+		explicit KeyPressedEvent(int keyCode, int repeatCount)
 			: KeyEvent(keyCode), m_RepeatCount(repeatCount) {}
+
 		using RepeatCount = uint32_t;
 		inline RepeatCount GetRepeatCount() const { return m_RepeatCount; }
 
@@ -47,16 +48,16 @@ namespace QMBT
 
 		EVENT_CLASS_TYPE(KeyPressed)
 
-	private:
+	  private:
 		RepeatCount m_RepeatCount;
 	};
 
 	class KeyTypedEvent : public KeyEvent
 	{
-	public:
-		KeyTypedEvent(KeyCode keyCode)
+	  public:
+		explicit KeyTypedEvent(KeyCode keyCode)
 			: KeyEvent(keyCode) {}
-		KeyTypedEvent(int keyCode)
+		explicit KeyTypedEvent(int keyCode)
 			: KeyEvent(keyCode) {}
 		std::string ToString() const override
 		{
@@ -71,10 +72,10 @@ namespace QMBT
 
 	class KeyReleasedEvent : public KeyEvent
 	{
-	public:
-		KeyReleasedEvent(KeyCode keyCode)
+	  public:
+		explicit KeyReleasedEvent(KeyCode keyCode)
 			: KeyEvent(keyCode) {}
-		KeyReleasedEvent(int keyCode)
+		explicit KeyReleasedEvent(int keyCode)
 			: KeyEvent(keyCode) {}
 
 		std::string ToString() const override
@@ -87,4 +88,4 @@ namespace QMBT
 
 		EVENT_CLASS_TYPE(KeyReleased)
 	};
-}
+} // namespace QMBT

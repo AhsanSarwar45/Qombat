@@ -80,12 +80,12 @@ static GLFWcharfun g_PrevUserCallbackChar = NULL;
 
 static const char* ImGui_ImplGlfw_GetClipboardText(void* user_data)
 {
-	return glfwGetClipboardString((GLFWwindow*)user_data);
+	return glfwGetClipboardString(reinterpret_cast<GLFWwindow*>(user_data));
 }
 
 static void ImGui_ImplGlfw_SetClipboardText(void* user_data, const char* text)
 {
-	glfwSetClipboardString((GLFWwindow*)user_data, text);
+	glfwSetClipboardString(reinterpret_cast<GLFWwindow*>(user_data), text);
 }
 
 void ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)

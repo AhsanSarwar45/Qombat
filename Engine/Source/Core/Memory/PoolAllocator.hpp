@@ -3,6 +3,7 @@
 #include <QMBTPCH.hpp>
 
 #include "Core/Memory/MemoryManager.hpp"
+#include "Core/Types/SharedPtr.hpp"
 
 namespace QMBT
 {
@@ -56,7 +57,7 @@ namespace QMBT
 		Chunk* AllocateBlock(Size chunkSize);
 
 	  private:
-		Ref<AllocatorData> m_Data;
+		SharedPtr<AllocatorData> m_Data;
 
 		Size m_NumObjects;
 		Size m_ObjectSize;
@@ -67,18 +68,14 @@ namespace QMBT
 
 	template <typename Object>
 	PoolAllocator<Object>::PoolAllocator(const char* debugName, Size numObjects)
-		: m_NumObjects(numObjects)
+		: m_NumObjects(numObjects), m_ObjectSize(sizeof(Object)), m_Data(MakeShared<AllocatorData>(debugName, 0)),
+		  m_HeadPtr(AllocateBlock(m_ObjectSize))
 	{
 		QMBT_CORE_ASSERT(numObjects > 0, "Number of objects have to be more than 0!");
-
-		m_ObjectSize = sizeof(Object);
-
-		m_Data = MakeShared<AllocatorData>(debugName, 0);
 
 		MemoryManager::GetInstance()
 			.Register(m_Data);
 
-		m_HeadPtr = AllocateBlock(m_ObjectSize);
 		m_CurrentPtr = m_HeadPtr;
 	}
 

@@ -286,7 +286,7 @@ namespace QMBT
 	class InstrumentationTimer
 	{
 	  public:
-		InstrumentationTimer(const char* name, ProfileCategory category = ProfileCategory::Other)
+		explicit InstrumentationTimer(const char* name, ProfileCategory category = ProfileCategory::Other)
 			: m_Name(name), m_Category(category), m_Started(false)
 		{
 			if (Instrumentor::GetInstance().IsRecording())
