@@ -39,8 +39,6 @@ namespace QMBT
 		m_Offset += padding;
 
 		const Size nextAddress = currentAddress + padding;
-		const Size headerAddress = nextAddress - sizeof(AllocationHeader);
-		AllocationHeader allocationHeader{static_cast<unsigned char>(padding)};
 
 		m_Offset += size;
 
@@ -55,7 +53,7 @@ namespace QMBT
 
 		// Move offset back to clear address
 		const Size headerAddress = ptr - sizeof(AllocationHeader);
-		const AllocationHeader* allocationHeader{(AllocationHeader*)headerAddress};
+		const AllocationHeader* allocationHeader{reinterpret_cast<AllocationHeader*>(headerAddress)};
 
 		m_Offset = ptr - allocationHeader->padding - (Size)m_HeadPtr;
 		m_Data->UsedSize = m_Offset;
