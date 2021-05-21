@@ -7,10 +7,21 @@ on:
     branches: [main]
 
 jobs:
-  prepare:
-    name: Initialize Repository
+  build:
+    name: ${{ matrix.os_name }} ${{ matrix.compiler_name }} ${{ matrix.build_type }} Build
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        build_type: [Debug, Release]
+        compiler: [gcc]
+        include:
+          - os: ubuntu-latest
+            os_name: Linux
+          - compiler: gcc
+            compiler_name: GCC
 
     steps:
       - uses: actions/checkout@v2
@@ -21,24 +32,6 @@ jobs:
       - name: Initialise EASTL Submodules
         working-directory: Engine/Vendor/EASTL
         run: git submodule update --init
-
-  build:
-    name: ${{ matrix.os_name }} ${{ matrix.build_type }} Build
-
-    needs: prepare
-
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        build_type: [Debug, Release]
-        include:
-          - os: ubuntu-latest
-            os_name: Linux
-
-    steps:
-      - uses: actions/checkout@v2
 
       - name: Install RandR
         if: startsWith(matrix.os,'ubuntu')
