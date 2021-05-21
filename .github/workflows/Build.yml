@@ -24,7 +24,7 @@ jobs:
             cxx_compiler: g++
             compiler_name: GCC
           - compiler: clang
-            cxx_compiler: clang
+            cxx_compiler: clang++
             compiler_name: Clang
 
     steps:
