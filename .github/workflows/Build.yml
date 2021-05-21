@@ -56,3 +56,9 @@ jobs:
       - name: Build Editor
         # Build your program with the given configuration
         run: cmake --build ${{github.workspace}}/build --config ${{ matrix.build_type }} --target Editor
+
+      - name: Run Tests
+        run: |
+          cmake --build ${{github.workspace}}/build --config ${{ matrix.build_type }} --target Tests
+          cd build/Tests
+          ./Tests
