@@ -16,14 +16,14 @@ An RTS Game Engine that I am developing as a hobby. Till now just the core syste
 - [GLFW](https://github.com/glfw/glfw)
 - [Magic Enum C++](https://github.com/Neargye/magic_enum)
 - [spdlog](https://github.com/gabime/spdlog)
-- [Catch2](https://github.com/catchorg/Catch2)
 
 ## Build Instructions
 
 ### Requirements
 
 - Linux (Windows, Mac are not supported yet, but will be supported in the future)
-- CMake version 1.16+
+- [CMake](https://cmake.org/) version 1.16+
+- [Catch2](https://github.com/catchorg/Catch2) (Only for Testing)
 
 ### Steps
 
