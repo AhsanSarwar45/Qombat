@@ -7,12 +7,11 @@ on:
     branches: [main]
 
 jobs:
-  
   build:
     name: ${{ matrix.os_name }} ${{ matrix.compiler_name }} ${{ matrix.build_type }} Build
     runs-on: ${{ matrix.os }}
     continue-on-error: true
-    
+
     strategy:
       matrix:
         os: [ubuntu-latest]

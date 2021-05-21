@@ -1,7 +1,6 @@
-#define CATCH_CONFIG_RUNNER
-#include <catch2/catch.hpp>
 
 #include <Qombat/Tests.hpp>
+#include <catch2/catch_session.hpp>
 
 class TestApplication : public QMBT::Application
 {

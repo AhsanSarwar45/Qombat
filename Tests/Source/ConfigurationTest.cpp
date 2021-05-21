@@ -1,6 +1,5 @@
-#include <catch2/catch.hpp>
-
 #include <Qombat/Tests.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 using namespace QMBT;
 
