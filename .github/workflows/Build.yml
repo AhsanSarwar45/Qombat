@@ -16,12 +16,14 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         build_type: [Debug, Release]
-        compiler: [gcc]
+        compiler: [gcc, clang]
         include:
           - os: ubuntu-latest
             os_name: Linux
           - compiler: gcc
             compiler_name: GCC
+          - compiler: clang
+            compiler_name: Clang
 
     steps:
       - uses: actions/checkout@v2
