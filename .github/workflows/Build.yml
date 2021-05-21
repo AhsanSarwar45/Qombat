@@ -53,12 +53,6 @@ jobs:
           CXX: ${{ matrix.cxx_compiler }}
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_CXX_STANDARD=17 -G Ninja
 
-      - name: Build Editor
+      - name: Build
         # Build your program with the given configuration
-        run: cmake --build ${{github.workspace}}/build --config ${{ matrix.build_type }} --target Editor
-
-      - name: Run Tests
-        run: |
-          cmake --build ${{github.workspace}}/build --config ${{ matrix.build_type }} --target Tests
-          cd build/Tests
-          ./Tests
+        run: cmake --build ${{github.workspace}}/build --config ${{ matrix.build_type }}
