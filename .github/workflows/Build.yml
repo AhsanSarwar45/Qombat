@@ -16,7 +16,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         build_type: [Debug, Release]
-        compiler: [gcc]
+        compiler: [gcc, clang]
         include:
           - os: ubuntu-latest
             os_name: Linux
