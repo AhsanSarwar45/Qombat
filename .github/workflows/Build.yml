@@ -21,8 +21,10 @@ jobs:
           - os: ubuntu-latest
             os_name: Linux
           - compiler: gcc
+            cxx_compiler: g++
             compiler_name: GCC
           - compiler: clang
+            cxx_compiler: clang
             compiler_name: Clang
 
     steps:
@@ -48,6 +50,7 @@ jobs:
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         env:
           CC: ${{ matrix.compiler }}
+          CXX: ${{ matrix.cxx_compiler }}
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_CXX_STANDARD=17 -G Ninja
 
       - name: Build Editor
