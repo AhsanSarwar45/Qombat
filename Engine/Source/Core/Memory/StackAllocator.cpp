@@ -43,7 +43,7 @@ namespace QMBT
 
 		const Size nextAddress = currentAddress + padding;
 		const Size headerAddress = nextAddress - sizeof(AllocationHeader);
-		AllocationHeader allocationHeader{padding};
+		AllocationHeader allocationHeader{static_cast<unsigned char>(padding)};
 		AllocationHeader* headerPtr = (AllocationHeader*)headerAddress;
 		headerPtr = &allocationHeader;
 

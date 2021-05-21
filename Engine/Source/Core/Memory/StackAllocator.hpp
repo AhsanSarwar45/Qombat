@@ -91,7 +91,7 @@ namespace QMBT
 
 		struct AllocationHeader
 		{
-			char padding;
+			unsigned char padding;
 		};
 	};
 
