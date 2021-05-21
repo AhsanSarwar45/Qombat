@@ -22,7 +22,7 @@ An RTS Game Engine that I am developing as a hobby. Till now just the core syste
 
 ### Requirements
 
-- Linux (Windows, Mac have not been tested yet, but will be supported in the future)
+- Linux (Windows, Mac are not supported yet, but will be supported in the future)
 - CMake version 1.16+
 
 ### Steps
@@ -31,23 +31,6 @@ An RTS Game Engine that I am developing as a hobby. Till now just the core syste
 2.  Initialize all the submodules using `git submodule update --init`.
 3.  Initialize the EASTL submodules using `cd Engine/Vendor/EASTL` and then `git submodule update --init`.
 4.  You can now build either using the terminal or VSCode.
-
-<!-- ### Using terminal
-
-1. Navigate to cloned directory.
-2. Type `mkdir build` to create the build directory.
-3. Navigate to the directory using `cd build`.
-4. Type `cmake ..\` to configure the cmake files.
-
-
-```bash
-   mkdir build
-   cd build
-   cmake ../Qombat
-   cmake --build .
-```
-
- -->
 
 ### Using the terminal
 
