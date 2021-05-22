@@ -24,8 +24,6 @@ namespace QCreate
 		PROFILE_FUNCTION(ProfileCategory::Editor);
 		ImGui::Begin("Profiler");
 
-		ImDrawList* drawList = ImGui::GetWindowDrawList();
-
 		static ImGuiTableFlags tableFlags = ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Sortable;
 
 		const AllocatorVector& allocators = MemoryManager::GetInstance().GetAllocators();

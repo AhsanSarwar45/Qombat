@@ -64,9 +64,9 @@ namespace QMBT
 
 		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	  protected:
-		MouseButtonEvent(MouseCode button)
+		explicit MouseButtonEvent(MouseCode button)
 			: m_Button(button) {}
-		MouseButtonEvent(int button)
+		explicit MouseButtonEvent(int button)
 			: m_Button(static_cast<MouseCode>(button)) {}
 
 		MouseCode m_Button;

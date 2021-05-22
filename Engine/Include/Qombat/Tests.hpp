@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Aliases.hpp"
-#include "Core/Application.hpp"
 #include "Core/Configuration/Configuration.hpp"
 #include "Core/Logging/Logger.hpp"
 #include "Core/Memory/FreeListAllocator.hpp"

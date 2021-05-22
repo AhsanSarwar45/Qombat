@@ -35,8 +35,8 @@ An RTS Game Engine that I am developing as a hobby. Till now just the core syste
 ### Using the terminal
 
 1. Navigate to the cloned directory.
-2. Configure CMake using `cmake -B ../build -DCMAKE_BUILD_TYPE=[BuildType]`. Example for Debug build: `cmake -B ../build -DCMAKE_BUILD_TYPE=Debug`.
-3. Build using `cmake --build ../build --config [BuildType] --target Editor`.
+2. Configure CMake using `cmake -B build -DCMAKE_BUILD_TYPE=[BuildType]`. Example for Debug build: `cmake -B ../build -DCMAKE_BUILD_TYPE=Debug`.
+3. Build using `cmake --build build --config [BuildType] --target Editor`.
 
 ### Using VSCode + [CMake Tools extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools)
 
