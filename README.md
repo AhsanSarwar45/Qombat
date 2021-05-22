@@ -23,6 +23,7 @@ An RTS Game Engine that I am developing as a hobby. Till now just the core syste
 ### Requirements
 
 - Linux (Windows, Mac are not supported yet, but will be supported in the future)
+- GCC/Clang (MSVC++ has not been tested yet. It will be supported in the future)
 - [CMake](https://cmake.org/) version 1.16+
 
 ### Steps
@@ -35,7 +36,7 @@ An RTS Game Engine that I am developing as a hobby. Till now just the core syste
 ### Using the terminal
 
 1. Navigate to the cloned directory.
-2. Configure CMake using `cmake -B build -DCMAKE_BUILD_TYPE=[BuildType]`. Example for Debug build: `cmake -B ../build -DCMAKE_BUILD_TYPE=Debug`.
+2. Configure CMake using `cmake -B build -DCMAKE_BUILD_TYPE=[BuildType]`. Example for Debug build: `cmake -B build -DCMAKE_BUILD_TYPE=Debug`.
 3. Build using `cmake --build build --config [BuildType] --target Editor`.
 
 ### Using VSCode + [CMake Tools extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools)
