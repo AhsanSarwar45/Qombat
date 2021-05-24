@@ -1,6 +1,6 @@
 # QOMBAT
 
-![Linux Build](https://github.com/AhsanSarwar45/Qombat/actions/workflows/Build.yml/badge.svg)
+![Linux Build](https://github.com/AhsanSarwar45/Qombat/actions/workflows/BuildAndTest.yml/badge.svg)
 
 An RTS Game Engine that I am developing as a hobby. Till now just the core systems and basic editor GUI has been implemented.
 
