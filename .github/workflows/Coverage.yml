@@ -44,3 +44,7 @@ jobs:
         with:
           files: ${{github.workspace}}/build/TestCoverageXML.xml
           flags: unittests # optional
+      
+      - name: Upload to Codacy
+        run: (curl -Ls https://coverage.codacy.com/get.sh) report -r ${{github.workspace}}/build/TestCoverageXML.xml
+         
