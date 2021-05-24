@@ -9,11 +9,12 @@ cmake_minimum_required (VERSION 3.16) #3.16 for support for precompiled headers
 
 project(Qombat)
 
+SET(BUILD_COVERAGE FALSE CACHE BOOL "Specify if coverage report is to be generated")
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 # set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE ON)
-
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 
@@ -27,7 +28,7 @@ add_subdirectory("${CMAKE_SOURCE_DIR}/Engine/Vendor/Glad")
 add_subdirectory("${CMAKE_SOURCE_DIR}/Engine/Vendor/EASTL")
 add_subdirectory("${CMAKE_SOURCE_DIR}/Tests/Vendor/Catch2")
 
-if(CMAKE_BUILD_TYPE MATCHES Debug)
+if(BUILD_COVERAGE)
     message("-- Setting flags for coverage")
     include(CodeCoverage)
     append_coverage_compiler_flags()
@@ -45,7 +46,7 @@ enable_testing()
 
 add_subdirectory(Tests)
 
-if(CMAKE_BUILD_TYPE MATCHES Debug)
+if(BUILD_COVERAGE)
     message("-- Setting up targets for coverage")
     setup_target_for_coverage_lcov(
         NAME TestCoverageHTML
