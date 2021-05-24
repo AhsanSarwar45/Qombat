@@ -27,15 +27,12 @@ jobs:
         run: git submodule update --init
 
       - name: Install RandR
-        if: startsWith(matrix.os,'ubuntu')
         run: sudo apt-get install xorg-dev libglu1-mesa-dev
 
       - name: Install Ninja
-        if: startsWith(matrix.os,'ubuntu')
         run: sudo apt-get install ninja-build
 
       - name: Install gcovr
-        if: startsWith(matrix.os,'ubuntu')
         run: sudo apt-get install -y gcovr
 
       - name: Configure CMake
