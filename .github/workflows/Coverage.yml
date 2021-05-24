@@ -14,11 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: codecov/codecov-action@v1
-        with:
-          files: ${{github.workspace}}/build/TestCoverageXML.xml
-          flags: unittests # optional
-
       - name: Initialise Submodules
         run: git submodule update --init
 
@@ -44,3 +39,8 @@ jobs:
       - name: Build
         # Build your program with the given configuration
         run: cmake --build ${{github.workspace}}/build --config Debug --target TestCoverageXML
+
+      - uses: codecov/codecov-action@v1
+        with:
+          files: ${{github.workspace}}/build/TestCoverageXML.xml
+          flags: unittests # optional
