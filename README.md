@@ -2,6 +2,7 @@
 
 ![Linux Build](https://github.com/AhsanSarwar45/Qombat/actions/workflows/BuildAndTest.yml/badge.svg)
 ![Code Coverage](https://img.shields.io/codecov/c/github/AhsanSarwar45/Qombat?label=Coverage&token=8BNX12GVB6)
+![Code Quality](https://img.shields.io/codacy/grade/c8364eb7ce024bd0a3f63ff09e15e13e?label=Code%20Quality)
 
 An RTS Game Engine that I am developing as a hobby. Till now just the core systems and basic editor GUI has been implemented.
 
