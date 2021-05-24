@@ -5,6 +5,8 @@
 # to the frontend Application. 
 # ========================================================
 project(Engine)
+
+
 # We add all the source files manually to the library instead of 
 # GLOB/Wildcards. This is recommended by the CMake documentation.
 add_library(Engine STATIC 
@@ -19,9 +21,7 @@ add_library(Engine STATIC
 "Source/Core/LayerStack.cpp"
 "Source/Core/Layer.cpp"
 "Source/Core/Configuration/ConfigManager.cpp"
-
 "Source/Display/Linux/LinuxWindow.cpp"
-
 "Source/Input/Linux/LinuxInput.cpp"
 )
 
@@ -38,7 +38,6 @@ target_compile_definitions(${PROJECT_NAME}
       $<$<CONFIG:Release>:QMBT_RELEASE>
       $<$<CONFIG:MinSizeRel>:QMBT_RELEASE>
 )
-
 
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Source")
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Source/Core/EntryPoint")
@@ -60,29 +59,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/I
 # =======================================================
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/Vendor")
 
-
-
-# =======================================================
-# Adding libraries with CMakeLists.txt as subdirectories
-# =======================================================
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/Spdlog")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/MagicEnum")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/GLFW")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/Glad")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Vendor/EASTL")
-
-# set(EASTL_ROOT_DIR "${CMAKE_SOURCE_DIR}/Vendor/eastl")
-
-# target_include_directories (${PROJECT_NAME} PRIVATE "${EASTL_ROOT_DIR}/include")
-# target_include_directories (${PROJECT_NAME} PRIVATE "${EASTL_ROOT_DIR}/test/packages/EAAssert/include")
-# target_include_directories (${PROJECT_NAME} PRIVATE "${EASTL_ROOT_DIR}/test/packages/EABase/include/Common")
-# target_include_directories (${PROJECT_NAME} PRIVATE "${EASTL_ROOT_DIR}/test/packages/EAMain/include")
-# target_include_directories (${PROJECT_NAME} PRIVATE "${EASTL_ROOT_DIR}/test/packages/EAStdC/include")
-# target_include_directories (${PROJECT_NAME} PRIVATE "${EASTL_ROOT_DIR}/test/packages/EATest/include")
-# target_include_directories (${PROJECT_NAME} PRIVATE "${EASTL_ROOT_DIR}/test/packages/EAThread/include")
-
-# set(EASTL_LIBRARY debug "${EASTL_ROOT_DIR}/build/Debug/EASTL.lib" optimized "${EASTL_ROOT_DIR}/build/Release/EASTL.lib")
-# add_custom_target(NatVis SOURCES "${EASTL_ROOT_DIR}/doc/EASTL.natvis")
 
 # =======================================================
 # Linking vendor libraries
