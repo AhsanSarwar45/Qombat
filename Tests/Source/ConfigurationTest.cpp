@@ -19,11 +19,20 @@ class ConfigTestClass
 	inline static std::string s_Member2 = "member";
 };
 
-TEST_CASE("Configuration Test", "[Core]")
+TEST_CASE("Int Configuration Test", "[Core]")
 {
 	ConfigTestClass::Init();
 
-	ConfigManager::SetConfigInt("TestGroup", "Member", 23);
+	ConfigManager::SetConfig("TestGroup", "Member", 23);
 
 	REQUIRE(ConfigTestClass::s_Member == 23);
+}
+
+TEST_CASE("String Configuration Test", "[Core]")
+{
+	ConfigTestClass::Init();
+
+	ConfigManager::SetConfig("TestGroup", "Member2", "foo");
+
+	REQUIRE(ConfigTestClass::s_Member2 == "foo");
 }

@@ -39,30 +39,6 @@ namespace QMBT
 	void ConfigManager::Register(const UInt32 groupHash, const ConfigVariant& configVar)
 	{
 		m_ConfigGroupMap[groupHash][std::visit([](auto&& arg) -> UInt32 { return arg.GetNameHash(); }, configVar)] = std::make_shared<ConfigVariant>(configVar);
-		// LOG_CORE_INFO("Added Config with Hash {0} in Group {1}",
-		// 			  std::visit([](auto&& arg) -> const std::string& { return arg.GetName(); }, configVar),
-		// 			  groupHash);
 	}
 
-	void ConfigManager::SetConfigInt(const char* groupName, const char* configName, int value)
-	{
-		auto groupHash = Utility::GenerateHash(groupName);
-		QMBT_CORE_ASSERT(m_ConfigGroupMap.find(groupHash) != m_ConfigGroupMap.end(), "Group does not exist!");
-
-		auto nameHash = Utility::GenerateHash(configName);
-		QMBT_CORE_ASSERT(m_ConfigGroupMap[groupHash].find(nameHash) != m_ConfigGroupMap[groupHash].end(), "Config variable doesnot exist!");
-
-		std::get<ConfigInt>(*m_ConfigGroupMap[groupHash][nameHash]).SetData(value);
-	}
-
-	void ConfigManager::SetConfigString(const char* groupName, const char* configName, const std::string& value)
-	{
-		auto groupHash = Utility::GenerateHash(groupName);
-		QMBT_CORE_ASSERT(m_ConfigGroupMap.find(groupHash) != m_ConfigGroupMap.end(), "Group does not exist!");
-
-		auto nameHash = Utility::GenerateHash(configName);
-		QMBT_CORE_ASSERT(m_ConfigGroupMap[groupHash].find(nameHash) != m_ConfigGroupMap[groupHash].end(), "Config variable doesnot exist!");
-
-		std::get<ConfigString>(*m_ConfigGroupMap[groupHash][nameHash]).SetData(value);
-	}
 } // namespace QMBT

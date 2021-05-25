@@ -5,6 +5,7 @@
 #include "Core/Aliases.hpp"
 #include "Core/Core.hpp"
 #include "Utility/Hashing.hpp"
+#include "Utility/Types.hpp"
 
 namespace QMBT
 {
@@ -70,8 +71,16 @@ namespace QMBT
 		static void Register(const UInt32 groupHash, const ConfigVariant& configVar, Args&&... configVars);
 		static void Register(const UInt32 groupHash, const ConfigVariant& configVar);
 
-		static void SetConfigInt(const char* groupName, const char* configName, const int value);
-		static void SetConfigString(const char* groupName, const char* configName, const std::string& value);
+		/**
+		 * @brief Sets a Config Setting to a value
+		 * 
+		 * @tparam T The type of the value
+		 * @param groupName The group in which the config setting is stored
+		 * @param configName The name of the config setting
+		 * @param value The value to which the config setting needs to be set
+		 */
+		template <typename T>
+		static void SetConfig(const char* groupName, const char* configName, T value);
 
 	  private:
 		static inline ConfigGroupMap m_ConfigGroupMap;
@@ -86,6 +95,37 @@ namespace QMBT
 					  std::visit([](auto&& arg) -> const std::string& { return arg.GetName(); }, configVar),
 					  groupHash);
 		Register(groupHash, configVars...);
+	}
+
+	template <typename T>
+	void ConfigManager::SetConfig(const char* groupName, const char* configName, T value)
+	{
+		auto groupHash = Utility::GenerateHash(groupName);
+		QMBT_CORE_ASSERT(m_ConfigGroupMap.find(groupHash) != m_ConfigGroupMap.end(), "Group does not exist!");
+
+		auto nameHash = Utility::GenerateHash(configName);
+		QMBT_CORE_ASSERT(m_ConfigGroupMap[groupHash].find(nameHash) != m_ConfigGroupMap[groupHash].end(), "Config variable doesnot exist!");
+
+		try
+		{
+			if constexpr (std::is_same<T, int>::value)
+			{
+				std::get<ConfigInt>(*m_ConfigGroupMap[groupHash][nameHash]).SetData(value);
+			}
+			else if constexpr (std::is_same<T, std::string>::value or std::is_same<T, const char*>::value)
+			{
+				std::get<ConfigString>(*m_ConfigGroupMap[groupHash][nameHash]).SetData(value);
+			}
+			else
+			{
+				LOG_CORE_ERROR("The config type is not supported yet!");
+			}
+		}
+		// If the passed value type cannot be used to set the value of the config
+		catch (std::bad_variant_access const& exception)
+		{
+			LOG_CORE_ERROR("{0}: Wrong config type!", exception.what());
+		}
 	}
 
 } // namespace QMBT
