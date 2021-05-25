@@ -33,6 +33,8 @@
 #include <string.h>
 #include <sys/types.h>
 
+#define EASTL_USER_CONFIG_HEADER "Core/CoreConfig.hpp"
+
 #include <EASTL/array.h>
 #include <EASTL/shared_ptr.h>
 #include <EASTL/string.h>

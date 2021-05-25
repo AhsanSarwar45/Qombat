@@ -9,12 +9,17 @@
 
 namespace QMBT
 {
+	/**
+	 * @brief A structure to store debug informations regarding each allocator.
+	 * TODO: Make it not be used in Release builds
+	 * 
+	 */
 	struct AllocatorData
 	{
 		const char* DebugName;
 		Size TotalSize;
 		Size UsedSize;
-		UnorderedMap<String, Size> Allocations;
+		std::unordered_map<std::string, Size> Allocations;
 
 		AllocatorData(const char* debugName, Size totalSize)
 			: DebugName(debugName), TotalSize(totalSize), UsedSize(0)
@@ -22,7 +27,7 @@ namespace QMBT
 		}
 	};
 
-	using AllocatorVector = eastl::vector<SharedPtr<AllocatorData>>;
+	using AllocatorVector = std::vector<std::shared_ptr<AllocatorData>>;
 
 	enum class ResizePolicy : UInt8
 	{

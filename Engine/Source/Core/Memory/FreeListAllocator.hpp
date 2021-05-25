@@ -5,7 +5,6 @@
 #include "AllocatorData.hpp"
 #include "Core/Aliases.hpp"
 #include "Core/Types/SinglyLinkedList.hpp"
-#include "Core/Types/SharedPtr.hpp"
 
 namespace QMBT
 {
@@ -66,7 +65,7 @@ namespace QMBT
 		void* m_StartPtr = nullptr;
 		PlacementPolicy m_Policy;
 		SinglyLinkedList<FreeHeader> m_FreeList;
-		SharedPtr<AllocatorData> m_Data;
+		std::shared_ptr<AllocatorData> m_Data;
 	};
 
 	template <typename Object, typename... Args>

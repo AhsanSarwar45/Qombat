@@ -3,7 +3,6 @@
 #include <QMBTPCH.hpp>
 
 #include "AllocatorData.hpp"
-#include "Core/Types/SharedPtr.hpp"
 
 namespace QMBT
 {
@@ -17,8 +16,8 @@ namespace QMBT
 
 		static MemoryManager& GetInstance();
 
-		void Register(SharedPtr<AllocatorData> allocatorData);
-		void UnRegister(SharedPtr<AllocatorData> allocatorData);
+		void Register(std::shared_ptr<AllocatorData> allocatorData);
+		void UnRegister(std::shared_ptr<AllocatorData> allocatorData);
 
 		inline void UpdateTotalSize(Size size) { m_TotalAllocatedSize += size; }
 

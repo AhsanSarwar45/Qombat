@@ -1,7 +1,22 @@
-// #include "Core.hpp"
-// #include "Core/Memory/FreeListAllocator.hpp"
+#include "Memory/STLAllocator.hpp"
 
-// #define EASTL_DEFAULT_NAME_PREFIX "Qombat"
+namespace QMBT
+{
+	STLAllocator* GetDefaultGlobalAllocator();
+
+	class FreeListAllocator;
+
+	FreeListAllocator* GetGlobalAllocator();
+
+} // namespace QMBT
+
+#define EASTL_DEFAULT_NAME_PREFIX "Qombat"
+
+#define EASTLAllocatorType QMBT::STLAllocator
+
+#define EASTL_USER_DEFINED_ALLOCATOR
+
+#define EASTLAllocatorDefault QMBT::GetDefaultGlobalAllocator
 
 // #define EASTL_ASSERT_MSG(expression, message) QMBT_ASSERT(expression, message);
 
@@ -16,9 +31,3 @@
 // #define EASTLAllocAlignedFlags(allocator, n, alignment, offset, flags) (allocator).Allocate((n), (alignment), (offset), (flags));
 
 // #define EASTLFree(allocator, p, size) (allocator).Deallocate((void*)(p), (size));
-
-// // template <>
-// // inline ::QMBT::FreeListAllocator* get_default_allocator<::QMBT::FreeListAllocator>(const ::QMBT::FreeListAllocator*)
-// // {
-// // 	return ::QMBT::Application::GetFreeListAllocator(); // By default we return NULL; the user must make specialization of this function in order to provide their own implementation.
-// // }

@@ -1,10 +1,7 @@
 #pragma once
 
-#include <QMBTPCH.hpp>
-
 #include "Core/Memory/MemoryManager.hpp"
 #include "Core/Memory/Utility/MemoryUtils.hpp"
-#include "Core/Types/SharedPtr.hpp"
 
 namespace QMBT
 {
@@ -84,7 +81,7 @@ namespace QMBT
 	  private:
 		StackAllocator(StackAllocator& stackAllocator); //Restrict copying
 
-		SharedPtr<AllocatorData> m_Data;
+		std::shared_ptr<AllocatorData> m_Data;
 
 		void* m_HeadPtr{nullptr}; // Points to the first available location
 		Size m_Offset{0};

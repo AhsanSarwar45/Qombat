@@ -20,6 +20,7 @@ add_library(Engine STATIC
 "Source/Core/Memory/MemoryManager.cpp"
 "Source/Core/LayerStack.cpp"
 "Source/Core/Layer.cpp"
+"Source/Core/CoreConfig.cpp"
 "Source/Core/Configuration/ConfigManager.cpp"
 "Source/Display/Linux/LinuxWindow.cpp"
 "Source/Input/Linux/LinuxInput.cpp"

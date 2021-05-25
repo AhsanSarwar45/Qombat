@@ -4,7 +4,6 @@
 
 #include "Core/Memory/MemoryManager.hpp"
 #include "Core/Types/BasicVector.hpp"
-#include "Core/Types/SharedPtr.hpp"
 
 namespace QMBT
 {
@@ -88,18 +87,18 @@ namespace QMBT
 
 	  private:
 		// Declaration order is important
-		SharedPtr<AllocatorData> m_Data;
+		std::shared_ptr<AllocatorData> m_Data;
 
 		Size m_BlockSize;
 		Size m_ObjectSize;
 
 		Chunk* m_CurrentPtr = nullptr;
-		BasicVector<Chunk*> m_AllocatedBlocks;
+		std::vector<Chunk*> m_AllocatedBlocks;
 	};
 
 	template <typename Object, ResizePolicy Policy>
 	PoolAllocator<Object, Policy>::PoolAllocator(const char* debugName, Size blockSize)
-		: m_Data(MakeShared<AllocatorData>(debugName, 0)), m_BlockSize(blockSize), m_ObjectSize(sizeof(Object)),
+		: m_Data(std::make_shared<AllocatorData>(debugName, 0)), m_BlockSize(blockSize), m_ObjectSize(sizeof(Object)),
 		  m_CurrentPtr(AllocateBlock(m_ObjectSize))
 	{
 		QMBT_CORE_ASSERT(blockSize > 0, "Block size has to be more than 0!");

@@ -40,17 +40,14 @@ namespace QMBT
 		inline static Application& Get() { return *s_Instance; }
 		inline Window& GetWindow() { return *m_Window; }
 
-		inline static FreeListAllocator* GetFreeListAllocator() { return &(s_Instance->m_GlobalAllocator); }
+		//inline static FreeListAllocator* GetFreeListAllocator() { return &(s_Instance->m_GlobalAllocator); }
 
 	  private:
 		bool OnWindowClose(const WindowCloseEvent& event);
 
 	  protected:
+		//FreeListAllocator m_GlobalAllocator;
 		StackAllocator m_LayerStackAllocator;
-
-		FreeListAllocator m_GlobalAllocator;
-
-		//StackAllocator m_EditorLayerStackAllocator;
 
 	  private:
 		static Application* s_Instance;
