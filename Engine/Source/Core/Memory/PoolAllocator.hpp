@@ -3,17 +3,19 @@
 #include <QMBTPCH.hpp>
 
 #include "Core/Memory/MemoryManager.hpp"
+#include "Core/Types/BasicVector.hpp"
 #include "Core/Types/SharedPtr.hpp"
 
 namespace QMBT
 {
+
 	/**
 	 * @brief A templated allocator that can only be used to allocate memory for a 
 	 * collection of the same type. 
 	 * 
 	 * @tparam Object 
 	 */
-	template <typename Object>
+	template <typename Object, ResizePolicy Policy = ResizePolicy::Fixed>
 	class PoolAllocator
 	{
 	  public:
@@ -30,7 +32,12 @@ namespace QMBT
 		 * @param chunksPerBlock After this many items have been allocated, the allocator allocates
 		 * a new block of size equal to chunksPerBlock * sizeof(Object). 
 		 */
-		PoolAllocator(const char* debugName = "Allocator", Size numObjects = 1);
+		PoolAllocator(const char* debugName = "Allocator", Size blockSize = 1);
+
+		/**
+		 * @brief Destroy the Pool Allocator object and frees all the allocated memory
+		 * 
+		 */
 		~PoolAllocator();
 
 		/**
@@ -40,6 +47,15 @@ namespace QMBT
 		 */
 		void* Allocate();
 
+		/**
+		 * @brief Allocates a new block of memory and calls the constructor
+		 * @details Allocation complexity is O(1)
+		 * 
+		 * @tparam Object The type to be created
+		 * @tparam Args Variadic arguments
+		 * @param argList The arguments to the constructor of the type Object
+		 * @return Object* The pointer to the newly allocated and created object
+		 */
 		template <typename... Args>
 		Object* New(Args... argList)
 		{
@@ -47,7 +63,21 @@ namespace QMBT
 			return new (address) Object(argList...); //Call the placement new operator, which constructs the Object
 		}
 
+		/**
+		 * @brief Deallocates raw memory without calling any destructor
+		 * @details Deallocation complexity is O(1)
+		 * 
+		 * @param ptr The pointer to the memory to be deallocated
+		 */
 		void Deallocate(Object* ptr);
+
+		/**
+		 * @brief Deallocates a pointer and calls the destructor
+		 * @details Deallocation complexity is O(1)
+		 * 
+		 * @tparam Object The type of the passed pointer
+		 * @param ptr The pointer to the memory to be deallocated
+		 */
 		void Delete(Object* ptr);
 
 		inline Size GetUsedSize() const { return m_Data->UsedSize; }
@@ -57,40 +87,58 @@ namespace QMBT
 		Chunk* AllocateBlock(Size chunkSize);
 
 	  private:
+		// Declaration order is important
 		SharedPtr<AllocatorData> m_Data;
 
-		Size m_NumObjects;
+		Size m_BlockSize;
 		Size m_ObjectSize;
 
-		Chunk* m_HeadPtr = nullptr;
 		Chunk* m_CurrentPtr = nullptr;
+		BasicVector<Chunk*> m_AllocatedBlocks;
 	};
 
-	template <typename Object>
-	PoolAllocator<Object>::PoolAllocator(const char* debugName, Size numObjects)
-		: m_NumObjects(numObjects), m_ObjectSize(sizeof(Object)), m_Data(MakeShared<AllocatorData>(debugName, 0)),
-		  m_HeadPtr(AllocateBlock(m_ObjectSize))
+	template <typename Object, ResizePolicy Policy>
+	PoolAllocator<Object, Policy>::PoolAllocator(const char* debugName, Size blockSize)
+		: m_Data(MakeShared<AllocatorData>(debugName, 0)), m_BlockSize(blockSize), m_ObjectSize(sizeof(Object)),
+		  m_CurrentPtr(AllocateBlock(m_ObjectSize))
 	{
-		QMBT_CORE_ASSERT(numObjects > 0, "Number of objects have to be more than 0!");
+		QMBT_CORE_ASSERT(blockSize > 0, "Block size has to be more than 0!");
 
 		MemoryManager::GetInstance()
 			.Register(m_Data);
 
-		m_CurrentPtr = m_HeadPtr;
+		m_AllocatedBlocks.push_back(m_CurrentPtr);
 	}
 
-	template <typename Object>
-	PoolAllocator<Object>::~PoolAllocator()
+	template <typename Object, ResizePolicy Policy>
+	PoolAllocator<Object, Policy>::~PoolAllocator()
 	{
 		MemoryManager::GetInstance().UnRegister(m_Data);
-		free(m_HeadPtr);
+		for (auto& ptr : m_AllocatedBlocks)
+		{
+			free(ptr);
+		}
 	}
 
-	template <typename Object>
-	void* PoolAllocator<Object>::Allocate()
+	template <typename Object, ResizePolicy Policy>
+	void* PoolAllocator<Object, Policy>::Allocate()
 	{
 
-		QMBT_CORE_ASSERT(m_CurrentPtr, "Allocator out of memory!");
+		// No chunks left in the current block, or no block
+		// exists yet, Allocate a new one. If resize policy is fixed,
+		// then log an error.
+		if (m_CurrentPtr == nullptr)
+		{
+			if constexpr (Policy == ResizePolicy::Fixed)
+			{
+				LOG_CORE_ERROR("{0} out of memory!", m_Data->DebugName);
+			}
+			else
+			{
+				m_CurrentPtr = AllocateBlock(m_ObjectSize);
+				m_AllocatedBlocks.push_back(m_CurrentPtr);
+			}
+		}
 
 		// The return value is the current position of
 		// the allocation pointer:
@@ -106,8 +154,8 @@ namespace QMBT
 
 		return freeChunk;
 	}
-	template <typename Object>
-	void PoolAllocator<Object>::Deallocate(Object* ptr)
+	template <typename Object, ResizePolicy Policy>
+	void PoolAllocator<Object, Policy>::Deallocate(Object* ptr)
 	{
 		// The freed chunk's next pointer points to the
 		// current allocation pointer:
@@ -122,20 +170,20 @@ namespace QMBT
 		LOG_CORE_INFO("{0} Deallocated {1} bytes", m_Data->DebugName, m_ObjectSize);
 	}
 
-	template <typename Object>
-	void PoolAllocator<Object>::Delete(Object* ptr)
+	template <typename Object, ResizePolicy Policy>
+	void PoolAllocator<Object, Policy>::Delete(Object* ptr)
 	{
 		ptr->~Object();	 // Call the destructor on the object
 		Deallocate(ptr); // Deallocate the pointer
 	}
 
-	template <typename Object>
-	Chunk* PoolAllocator<Object>::AllocateBlock(Size chunkSize)
+	template <typename Object, ResizePolicy Policy>
+	Chunk* PoolAllocator<Object, Policy>::AllocateBlock(Size chunkSize)
 	{
 		QMBT_CORE_ASSERT(chunkSize > sizeof(Chunk), "Object size must be larger than pointer size");
 
 		// The total memory (in Bytes), to be allocated
-		Size blockSize = m_NumObjects * chunkSize;
+		Size blockSize = m_BlockSize * chunkSize;
 
 		// The first chunk of the new block
 		Chunk* blockBegin = reinterpret_cast<Chunk*>(malloc(blockSize));
@@ -148,7 +196,7 @@ namespace QMBT
 
 		Chunk* chunk = blockBegin;
 
-		for (int i = 0; i < m_NumObjects - 1; ++i)
+		for (int i = 0; i < m_BlockSize - 1; ++i)
 		{
 			chunk->next =
 				reinterpret_cast<Chunk*>(reinterpret_cast<char*>(chunk) + chunkSize);
@@ -157,7 +205,7 @@ namespace QMBT
 
 		chunk->next = nullptr;
 
-		LOG_CORE_INFO("{0} Allocated block ({1} chunks)", m_Data->DebugName, m_NumObjects);
+		LOG_CORE_INFO("{0} Allocated block ({1} chunks)", m_Data->DebugName, m_BlockSize);
 
 		return blockBegin;
 	}

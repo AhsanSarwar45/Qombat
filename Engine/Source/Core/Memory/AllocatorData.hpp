@@ -24,6 +24,12 @@ namespace QMBT
 
 	using AllocatorVector = eastl::vector<SharedPtr<AllocatorData>>;
 
+	enum class ResizePolicy : UInt8
+	{
+		Fixed,
+		Resizable
+	};
+
 	struct Chunk
 	{
 		/*

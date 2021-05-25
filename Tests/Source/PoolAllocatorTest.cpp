@@ -21,19 +21,14 @@ TEST_CASE("PoolAllocator Allocation Test", "[Memory]")
 
 	int numAllocations = 0;
 
-	SECTION("NumAllocations = 1")
+		SECTION("Single Allocation")
 	{
 		numAllocations = 1;
 	}
 
-	SECTION("1 < NumAllocations <= chunksPerBlock")
+	SECTION("Multiple Allocations")
 	{
 		numAllocations = 8;
-	}
-
-	SECTION("NumAllocations >= chunksPerBlock")
-	{
-		numAllocations = 12;
 	}
 
 	for (int i = 0; i < numAllocations; i++)
@@ -64,20 +59,15 @@ TEST_CASE("PoolAllocator Deallocation Test", "[Memory]")
 	SECTION("Normal Order")
 	{
 
-		SECTION("NumAllocations = 1")
-		{
-			numAllocations = 1;
-		}
+		SECTION("Single Allocation")
+	{
+		numAllocations = 1;
+	}
 
-		SECTION("1 < NumAllocations <= chunksPerBlock")
-		{
-			numAllocations = 8;
-		}
-
-		SECTION("NumAllocations >= chunksPerBlock")
-		{
-			numAllocations = 12;
-		}
+	SECTION("Multiple Allocations")
+	{
+		numAllocations = 8;
+	}
 
 		for (int i = 0; i < numAllocations; i++)
 		{
@@ -93,20 +83,15 @@ TEST_CASE("PoolAllocator Deallocation Test", "[Memory]")
 	SECTION("Reverse Order")
 	{
 
-		SECTION("NumAllocations = 1")
-		{
-			numAllocations = 1;
-		}
+		SECTION("Single Allocation")
+	{
+		numAllocations = 1;
+	}
 
-		SECTION("1 < NumAllocations <= chunksPerBlock")
-		{
-			numAllocations = 8;
-		}
-
-		SECTION("NumAllocations >= chunksPerBlock")
-		{
-			numAllocations = 12;
-		}
+	SECTION("Multiple Allocations")
+	{
+		numAllocations = 8;
+	}
 
 		for (int i = 0; i < numAllocations; i++)
 		{
@@ -131,20 +116,15 @@ TEST_CASE("PoolAllocator Reallocation Test", "[Memory]")
 	SECTION("Normal Order")
 	{
 
-		SECTION("NumAllocations = 1")
-		{
-			numAllocations = 1;
-		}
+		SECTION("Single Allocation")
+	{
+		numAllocations = 1;
+	}
 
-		SECTION("1 < NumAllocations <= chunksPerBlock")
-		{
-			numAllocations = 8;
-		}
-
-		SECTION("NumAllocations >= chunksPerBlock")
-		{
-			numAllocations = 12;
-		}
+	SECTION("Multiple Allocations")
+	{
+		numAllocations = 8;
+	}
 
 		for (int i = 0; i < numAllocations; i++)
 		{
@@ -159,21 +139,15 @@ TEST_CASE("PoolAllocator Reallocation Test", "[Memory]")
 
 	SECTION("Reverse Order")
 	{
+		SECTION("Single Allocation")
+	{
+		numAllocations = 1;
+	}
 
-		SECTION("NumAllocations = 1")
-		{
-			numAllocations = 1;
-		}
-
-		SECTION("1 < NumAllocations <= chunksPerBlock")
-		{
-			numAllocations = 8;
-		}
-
-		SECTION("NumAllocations >= chunksPerBlock")
-		{
-			numAllocations = 12;
-		}
+	SECTION("Multiple Allocations")
+	{
+		numAllocations = 8;
+	}
 
 		for (int i = 0; i < numAllocations; i++)
 		{

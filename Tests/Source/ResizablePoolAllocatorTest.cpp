@@ -9,14 +9,14 @@ using namespace QMBT;
 
 TEST_CASE("ResizablePoolAllocator Initialisation Test", "[Memory]")
 {
-	ResizablePoolAllocator<TestObject> poolAllocator = ResizablePoolAllocator<TestObject>("Allocator", 8);
+	PoolAllocator<TestObject, ResizePolicy::Resizable> poolAllocator{"Allocator", 8};
 
 	REQUIRE(poolAllocator.GetUsedSize() == 0);
 }
 
 TEST_CASE("ResizablePoolAllocator Allocation Test", "[Memory]")
 {
-	ResizablePoolAllocator<TestObject> poolAllocator = ResizablePoolAllocator<TestObject>("Allocator", 8);
+	PoolAllocator<TestObject, ResizePolicy::Resizable> poolAllocator{"Allocator", 8};
 	std::vector<TestObject*> objectPtrs = std::vector<TestObject*>();
 
 	int numAllocations = 0;
@@ -56,7 +56,7 @@ TEST_CASE("ResizablePoolAllocator Allocation Test", "[Memory]")
 
 TEST_CASE("ResizablePoolAllocator Deallocation Test", "[Memory]")
 {
-	ResizablePoolAllocator<TestObject> poolAllocator = ResizablePoolAllocator<TestObject>("Allocator", 8);
+	PoolAllocator<TestObject, ResizePolicy::Resizable> poolAllocator{"Allocator", 8};
 	std::vector<TestObject*> objectPtrs = std::vector<TestObject*>();
 
 	int numAllocations = 0;
@@ -124,7 +124,7 @@ TEST_CASE("ResizablePoolAllocator Deallocation Test", "[Memory]")
 
 TEST_CASE("ResizablePoolAllocator Reallocation Test", "[Memory]")
 {
-	ResizablePoolAllocator<TestObject> poolAllocator = ResizablePoolAllocator<TestObject>("Allocator", 8);
+	PoolAllocator<TestObject, ResizePolicy::Resizable> poolAllocator{"Allocator", 8};
 	std::vector<TestObject*> objectPtrs = std::vector<TestObject*>();
 	int numAllocations = 0;
 
