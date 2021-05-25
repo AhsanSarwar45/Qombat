@@ -8,6 +8,7 @@ namespace QMBT
 	  public:
 		STLAllocator(const char* debugName = "STL Allocator");
 		STLAllocator(const STLAllocator& other);
+		STLAllocator(const STLAllocator& other, const char* debugName);
 
 		STLAllocator& operator=(const STLAllocator& other);
 

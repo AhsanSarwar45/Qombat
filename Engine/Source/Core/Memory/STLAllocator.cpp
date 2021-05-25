@@ -17,6 +17,11 @@ namespace QMBT
 		m_DebugName = other.m_DebugName;
 	}
 
+	STLAllocator::STLAllocator(const STLAllocator& other, const char* debugName)
+	{
+		m_DebugName = (debugName) ? debugName : other.m_DebugName;
+	}
+
 	STLAllocator& STLAllocator::operator=(const STLAllocator& other)
 	{
 		m_DebugName = other.m_DebugName;
