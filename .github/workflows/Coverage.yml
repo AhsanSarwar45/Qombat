@@ -40,7 +40,15 @@ jobs:
         # Build your program with the given configuration
         run: cmake --build ${{github.workspace}}/build --config Debug --target TestCoverageXML
 
-      - uses: codecov/codecov-action@v1
+      - name: Upload report to codecov
+        uses: codecov/codecov-action@v1
         with:
           files: ${{github.workspace}}/build/TestCoverageXML.xml
           flags: unittests # optional
+      
+      - name: Upload report to codacy
+        uses: codacy/codacy-coverage-reporter-action@v1
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: ${{github.workspace}}/build/TestCoverageXML.xml
+         
