@@ -25,7 +25,7 @@ An RTS Game Engine that I am developing as a hobby. Till now just the core syste
 ### Requirements
 
 - Linux (Windows, Mac are not supported yet, but will be supported in the future)
-- GCC/Clang (MSVC++ has not been tested yet. It will be supported in the future)
+- GCC/Clang with C++17 (MSVC has not been tested yet. It will be supported in the future)
 - [CMake](https://cmake.org/) version 1.16+
 
 ### Steps
