@@ -32,7 +32,7 @@ namespace QMBT
 		// LOG_MEMORY_INFO("Total size allocated increased to {0}. Total budget left is {1}",
 		// 				Utility::ToReadable(m_TotalAllocatedSize),
 		// 				Utility::ToReadable(m_ApplicationBudget - m_TotalAllocatedSize));
-		QMBT_CORE_VERIFY(m_TotalAllocatedSize < m_ApplicationBudget, "Exceeded application memory budget!")
+		QMBT_BARE_ASSERT(m_TotalAllocatedSize < m_ApplicationBudget, "Exceeded application memory budget!");
 		m_Allocators.push_back(allocatorData);
 	}
 
