@@ -1,6 +1,5 @@
 #pragma once
 
-
 #ifdef QMBT_DEBUG
 #define QMBT_ENABLE_ASSERTS
 #define QMBT_ENABLE_VERIFICATION
@@ -25,19 +24,19 @@
 		}                                                         \
 	}
 
-#define QMBT_BARE_ASSERT(x, ...)                                  \
-	{                                                        \
-		if (!(x))                                            \
-		{                                                    \
-			debug_break();                                   \
-		}                                                    \
+#define QMBT_BARE_ASSERT(x, ...) \
+	{                            \
+		if (!(x))                \
+		{                        \
+			debug_break();       \
+		}                        \
 	}
-#define QMBT_CORE_BARE_ASSERT(x, ...                                  \
-	{                                                             \
-		if (!(x))                                                 \
-		{                                                         \
-			debug_break();                                        \
-		}                                                         \
+#define QMBT_CORE_BARE_ASSERT(x, ...) \
+	{                                 \
+		if (!(x))                     \
+		{                             \
+			debug_break();            \
+		}                             \
 	}
 #else
 #define QMBT_ASSERT(x, ...)
@@ -68,4 +67,3 @@
 #define QMBT_VERIFY(x, ...) x
 #define QMBT_CORE_VERIFY(x, ...) x
 #endif //  QMBT_ENABLE_ASSERTS
-
