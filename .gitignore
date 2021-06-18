@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+# Configurations
+*.ini
+
+# Cache
+*.idx
+
+# Directories
+build/
+.vscode/
