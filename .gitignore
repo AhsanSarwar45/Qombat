@@ -38,5 +38,7 @@
 *.idx
 
 # Directories
-build/
-.vscode/
+build/ # Build Directory
+.vscode/ # VSCode files
+.vs/ # Visual Studio files
+./out # Visual Studio build directory
