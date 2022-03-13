@@ -16,6 +16,7 @@ add_executable(${PROJECT_NAME}
 "Source/STLAllocatorTest.cpp"
 "Source/SharedPtrTest.cpp"
 "Source/FreeListAllocatorTest.cpp"
+"Source/TypesUtilityTest.cpp"
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Catch2::Catch2)
