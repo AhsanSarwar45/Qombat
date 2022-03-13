@@ -1,4 +1,4 @@
-# QOMBAT
+# QOMBAT [STALE]
 
 An amateur RTS Game Engine that I was developing as a hobby. Just the core systems and basic editor GUI were implemented. This is a stale project now. I have decided to master stuff like rendering, multi-threading and software architecture before moving back to a project like this.
 
